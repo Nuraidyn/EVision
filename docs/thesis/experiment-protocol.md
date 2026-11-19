@@ -327,6 +327,25 @@ added. Every result is reported on both the exploratory data and the hold-out pa
   (the confidence interval), not as present or absent; the 2 pp equivalence margin and the
   3 pp threshold of R4 are unchanged and are not justified beyond being fixed beforehand.
 
+### 2026-11-19 (seventh entry: two post hoc descriptive additions after the manuscript review)
+
+A review of the manuscript draft pointed out that the native (parametric) intervals of ARIMA
+and ETS were computed but not reported, and that the title mentions Kazakhstan while no
+Kazakhstan result is shown. Two additions are made, both labelled post hoc and both computed
+from existing outputs only:
+
+- S6, Kazakhstan (design panel, exploratory sample only): coverage, calibration error and
+  number of origins per method and horizon for Kazakhstan alone. Descriptive; no inference,
+  because the series has about 137 monthly origins after the 2015 float and Kazakhstan was one
+  of the 13 countries used to design the study.
+- S7, native intervals: calibration error of the native intervals of ARIMA and ETS against ACI
+  with ARIMA as the base model, per horizon, on the exploratory and the hold-out panels. For
+  ARIMA a block-bootstrap interval of the difference ACI - native (same bootstrap settings as
+  the primary contrasts, unadjusted p-values, secondary family); for ETS (no conformal
+  version was run) the calibration error is reported without a contrast.
+
+These results do not change R1-R5 and are not part of the pre-specified family.
+
 Boundary note, to be repeated in the write-up: the hold-out countries are untouched with
 respect to countries only; the set of methods, the form of the contrasts and the horizons were
 chosen on the exploratory countries, and the author had seen the post-2025-06 months of the
