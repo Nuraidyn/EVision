@@ -1,0 +1,65 @@
+# Review notes for `main.md` and `workshop.md` (not part of the paper)
+
+The manuscripts were written only from the project documents and the result tables in `docs/thesis/results/`. No analysis was re-run. Before the text is used, the following should be checked.
+
+## Numbers to re-check against the CSV tables (all in `docs/thesis/results/<run>/`)
+
+1. CE contrasts, confidence intervals and p-values in Tables 3, 4 and 5: `calibration_contrasts.csv` and `calibration_tost.csv` in `explore_v1`, `explore_v2_ncal96`, `holdout_ncal48`, `holdout_ncal96`.
+2. Pooled coverage in Tables 2 and 4 and the bootstrap limits quoted at h=12: `interval_summary.csv` (rows with `unit = ALL`, model `lgbm`; columns `cov_lo`, `cov_hi`).
+3. Delayed-feedback differences in Table 7: `robust/s3_feedback_diff.csv` (rows `unit = ALL`).
+4. S1, S2 and S4 (Tables 8 to 10b): `robust/s1_leave_one_out.csv`, `robust/s2_other_models.csv`, `robust/s4_compact.csv`.
+5. Minimum detectable differences: `power_mde_ce.csv` and `power_mde_ce_windows15.csv`.
+6. Winkler contrasts: `winkler_contrasts.csv` (including the warm-up 96 hold-out DRACP minus ACI value of -5.8 percent, CI [-14.2, +3.3], p 0.18, quoted in Section 7.2).
+7. Mean widths quoted in Sections 6.4 and 7.2 (4.28 and 3.95 exploratory; 5.856 and 5.786 hold-out at warm-up 48; 6.11 and 6.31 hold-out at warm-up 96, DRACP and ACI): `interval_summary.csv`.
+8. Post hoc additions: `results/extra_descriptive/s6_kazakhstan.csv`, `s7_native_ce.csv`, `s7_aci_vs_native_arima.csv` (Tables 11 to 13).
+
+## Places where the source documents and the CSV tables differ in the last digit
+
+The text follows the CSV in each case, with one exception noted last.
+
+- R1 at warm-up 96, h=3: `results-holdout-v1.md` gives -4.2 pp in an earlier version; the CSV gives -0.04150, which is -4.1 pp.
+- R1 at warm-up 48, h=6: p 0.0925 in the CSV, written 0.092.
+- FACI, instant minus delayed feedback, hold-out: `results-holdout-v1.md` gives +6.5 pp; the CSV and the robustness document give +6.4 pp (0.0644).
+- DRACP, S3, hold-out, upper limit: the CSV value is 0.0645, at the rounding boundary; the manuscripts write 6.5 as in `results-robustness-v1.md`.
+- Hold-out DRACP minus ACI at h=3 (LightGBM): CSV -0.149 pp, written -0.1 in Tables 5 and 9 (the robustness document writes -0.2).
+- Hold-out ACI minus rolling at h=3, p: CSV 0.08746, written 0.087 everywhere (the robustness document writes 0.088).
+- Exploratory ACI minus rolling at h=6, p: CSV 0.01949. By instruction it is written 0.020 everywhere; strict rounding to three decimals would give 0.019. Decide once and apply to both documents.
+- Table 10, DRACP at h=3, Winkler ratio: CSV 0.9649, written 0.96 (the robustness document writes 0.97).
+- The p-values reported for R1 in the results documents are unadjusted bootstrap p-values (the secondary contrast has no Holm column in the CSV), although R1 is written with "Holm p". Holm over the two horizons, as computed in `results-holdout-v1.md`, gives 0.108 at both horizons at warm-up 48, and 0.018 and 0.005 at warm-up 96; these Holm values come from that document and not from a CSV column.
+- S2: the unadjusted ACI minus rolling p-values range from 0.016 to 0.48 (the robustness document says 0.22 as the upper end and should be corrected).
+
+## Items marked [VERIFY] or [CITATION NEEDED]
+
+- [VERIFY] Section 2.3: the description of DRACP is as read by the project author from the HTML version of arXiv 2608.17079v2 (Sections 3 and 5 to 7). It should be checked against the paper (section numbers and wording) before submission.
+- [VERIFY] The exact command lines of the runs `explore_v2_ncal96` and `diag_instant_h12` (Section 9).
+- [VERIFY] Bibliographic details in `references.md`, including the first name or initial of the DRACP author.
+- [CITATION NEEDED] Statements about inflation volatility and regimes in commodity-dependent economies (Section 1).
+- [CITATION NEEDED] Statements about inflation forecast uncertainty in emerging markets (Section 2.4), including the Dallas Fed working paper (authors and title to be verified).
+- [CITATION NEEDED] ARIMA/ARMA modelling and the AICc criterion (Section 4.2).
+- [CITATION NEEDED] The novelty statement in Section 1 (no systematic literature search was run).
+
+Resolved in this revision: the commit of the fourth protocol entry is `0ff08d8` and that of the fifth entry is `1480604`; the shock rule document is dated 2026-11-18 and the first commit that contains it is `58871dc`.
+
+## Wording rules kept in both manuscripts
+
+- "Pre-specified", never "pre-registered" and never "independently timestamped": the history is self-attested, and R1-R5 were written after the exploratory results were known.
+- "Significant" is not used for anything outside the registered family.
+- "Not shown" is never turned into "no effect".
+- Warm-up 96 is a sensitivity run and is not promoted.
+- Narrower intervals: the median width ratio, the pooled mean width and the Winkler score are three statistics and are stated separately; no efficiency advantage is established.
+- The advantage over one-shot calibration is stated as a consistent direction, not as a clear result: at warm-up 48 the confidence intervals include zero.
+- At h=12: "pooled coverage is below nominal for every method", with the note that several pooled bootstrap intervals (ACI in the exploratory sample, [0.797, 0.914]) include 0.90.
+
+## Procedural boundary to keep in view
+
+Hold-out countries are untouched with respect to countries only; they share calendar months (2020 to 2022 shocks) with the design sample. The methods, contrasts and horizons were chosen on the 13 design countries. The author had seen the post-2025-06 months of the 13 countries before the amendments. The stress analysis, S1-S4, and the post hoc additions S6 and S7 are secondary. The run `confirm13` is degenerate and is not used.
+
+## Open items
+
+- Notify the author of DRACP before the text is posted (arXiv or a workshop). The study is a transfer study of a published method; it attributes to the author only the limitation that the authors themselves state (the advantage is specific to one-step-ahead forecasting and depends on the point forecaster), and it asks for a courtesy notice and for a check of the description in Section 2.3.
+- The size of the CE bootstrap at the boundary of the absolute value was not checked by simulation (Section 8, item 9).
+- The criterion for "commodity-dependent" is not measurable (no export-share rule); consider either adding a measurable criterion post hoc, labelled as such, or softening the title wording in the text.
+- The Kazakh abstract and the Russian abstract need a native-speaker check of terminology (see `abstracts.md`).
+- The Dallas Fed reference and the other [CITATION NEEDED] items need sources or removal.
+- `results-robustness-v1.md` should be corrected for the S2 p-value range (0.016 to 0.48) and for the roundings listed above, so that the documents agree.
+- The `workshop.md` version omits the commit history, the stress validity analysis and the platform; keep it consistent with `main.md` if numbers change.

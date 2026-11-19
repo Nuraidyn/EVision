@@ -1,6 +1,6 @@
 # References
 
-Only the works below are cited in `main.md`. Details marked [VERIFY] were given from memory and must be checked against the publisher or arXiv record before submission. No other work is cited; statements for which no listed source exists are marked [CITATION NEEDED] in the text.
+Only the works below are cited in `main.md` and `workshop.md`. Details marked [VERIFY] were given from memory and must be checked against the publisher or arXiv record before submission. No other work is cited; statements for which no listed source exists are marked [CITATION NEEDED] in the text.
 
 Angelopoulos, A. N., Candes, E. J. and Tibshirani, R. J. (2023). Conformal PID control for time series prediction. *Advances in Neural Information Processing Systems (NeurIPS) 36*. [VERIFY volume and pages]
 
@@ -22,7 +22,7 @@ Ke, G., Meng, Q., Finley, T., Wang, T., Chen, W., Ma, W., Ye, Q. and Liu, T.-Y. 
 
 Kunsch, H. R. (1989). The jackknife and the bootstrap for general stationary observations. *The Annals of Statistics*, 17(3), 1217-1241. [VERIFY pages]
 
-Oancea, B. (2026). Dynamic Regime-Aware Conformal Calibration for Reliable Economic Forecast Intervals under Multiple Distribution Shifts. arXiv:2608.17079. [VERIFY author's first name or initial, version and submission date; the paper's results are quoted in `main.md` only as recorded in `docs/thesis/experiment-protocol.md`]
+Oancea, B. (2026). Dynamic Regime-Aware Conformal Calibration for Reliable Economic Forecast Intervals under Multiple Distribution Shifts. arXiv:2608.17079. [VERIFY author's first name or initial, version and submission date; the reported results are quoted only as recorded in `docs/thesis/experiment-protocol.md`, and the description of the method in `main.md` Section 2.3 is as described by the authors, read from the HTML version of version 2 and to be checked against the paper]
 
 Schuirmann, D. J. (1987). A comparison of the two one-sided tests procedure and the power approach for assessing the equivalence of average bioavailability. *Journal of Pharmacokinetics and Biopharmaceutics*, 15(6), 657-680. [VERIFY pages]
 
