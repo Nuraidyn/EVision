@@ -1,6 +1,6 @@
 # Abstracts
 
-Title: Assessing the Calibration of Prediction Intervals for Machine-Learning Inflation Forecasts in Commodity-Dependent Economies: A Multi-Horizon Panel Benchmark of Conformal Methods
+Title: Comparing Methods for Building Reliable Prediction Intervals for Machine-Learning Inflation Forecasts in Commodity-Dependent Economies
 
 All numbers are those of `main.md` and the CSV tables in `docs/thesis/results/`.
 

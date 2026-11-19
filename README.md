@@ -52,7 +52,7 @@ Embedded in the analysis workspace — ask a question about any chart and receiv
 ## Research Component (Master's Thesis)
 
 EVision is the practical part of a master's thesis in Data Science:
-**Assessing the Calibration of Prediction Intervals for Machine-Learning Inflation Forecasts in Commodity-Dependent Economies: A Multi-Horizon Panel Benchmark of Conformal Methods.**
+**Comparing Methods for Building Reliable Prediction Intervals for Machine-Learning Inflation Forecasts in Commodity-Dependent Economies.**
 The title in Russian and Kazakh, the research question and the contribution are in
 [`docs/thesis/topic.md`](docs/thesis/topic.md).
 
