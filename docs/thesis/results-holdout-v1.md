@@ -23,7 +23,7 @@ jointly across the 7 units (205 months at h=3, 199 at h=6 for run A).
 | Conformal PID | 0.912 | 0.910 | 0.909 | 0.833 |
 | DRACP | 0.917 | 0.904 | 0.894 | 0.865 |
 
-## Decision rules, as pre-registered
+## Decision rules, as pre-specified
 
 | Rule | Outcome | Evidence |
 |---|---|---|

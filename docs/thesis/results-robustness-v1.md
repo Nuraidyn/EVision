@@ -2,7 +2,7 @@
 
 The analyses were written in `experiment-protocol.md` (sixth entry, commit `552fa67`) after the
 hold-out result and before they were computed. They are secondary: they qualify, and do not
-replace, the pre-registered rules R1-R5 (`results-holdout-v1.md`). No new data was read; they
+replace, the pre-specified rules R1-R5 (`results-holdout-v1.md`). No new data was read; they
 use the existing intervals of runs `explore_v1`, `explore_v2_ncal96`, `holdout_ncal48`,
 `holdout_ncal96` and the two instant-feedback diagnostics. Tables: `results/<run>/robust/`.
 Calibration error (CE) is the mean over countries of |coverage - 0.90|; a negative contrast
@@ -46,7 +46,7 @@ hold-out panel: -10.6 pp). All DRACP - ACI equivalence tests at warm-up 48 say "
 within 2 pp, except Naive B at h=6 on the hold-out panel (p 0.0515). At warm-up 96 on the
 hold-out panel most of them are "not shown". The direction ACI better than rolling holds for
 every base model and both samples, but the p-values range from 0.016 to 0.22 and none
-survives the correction of the pre-registered family.
+survives the correction of the pre-specified family.
 
 ## S3. Delayed feedback at h=12 (coverage with instant minus with delayed feedback, 95% interval)
 

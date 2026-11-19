@@ -16,12 +16,14 @@ adaptive conformal methods shown to work on euro-area and US data transfer to th
 
 Contribution. (1) A calibration benchmark of split, rolling, adaptive (ACI, FACI), conformal
 PID and regime-aware (DRACP) intervals on 20 economies (13 used to design the study and 7
-hold-out economies that were untouched until the pre-registered run), with calibration
+hold-out economies that were untouched until the pre-specified run), with calibration
 error, width and power-aware inference. (2) Results with their null outcomes recorded in
-advance: adaptive methods are better calibrated than a calibration performed once, no
+advance: adaptive methods are better calibrated than a calibration performed once and than
+the native intervals of the forecasting model (consistent direction in both samples; the
+registered threshold for the first comparison was met only at the longer warm-up), no
 advantage of ACI over a rolling window and no advantage of DRACP over ACI was established,
-and all methods under-cover at the 12-month horizon, where delayed feedback explains only
-part of the shortfall. (3) An exploratory analysis of coverage against exchange-rate stress.
+and pooled coverage is below nominal for every method at the 12-month horizon, where delayed
+feedback explains only part of the shortfall. (3) An exploratory analysis of coverage against exchange-rate stress.
 (4) An open, reproducible pipeline (hashed data snapshots, tests, committed protocol) and a
 platform module that serves calibrated inflation intervals.
 
@@ -39,9 +41,11 @@ PID и режимно-адаптивного DRACP на 20 экономиках 
 исследования и 7 контрольных, не тронутых до заранее зафиксированного прогона) с ошибкой
 калибровки, шириной интервалов и выводами, учитывающими мощность. (2) Результаты с заранее
 записанными нулевыми исходами: адаптивные методы калиброваны лучше, чем калибровка,
-выполненная один раз; преимущество ACI над скользящим окном и преимущество DRACP над ACI
-не установлены; на горизонте 12 месяцев все методы недопокрывают, и запаздывание обратной
-связи объясняет лишь часть недопокрытия. (3) Разведочный анализ покрытия в зависимости от
+выполненная один раз, и лучше нативных интервалов самой модели (направление согласуется в
+обеих выборках; заранее заданный порог для первого сравнения достигнут лишь при более длинном
+разогреве); преимущество ACI над скользящим окном и преимущество DRACP над ACI не установлены;
+на горизонте 12 месяцев покрытие всех методов ниже номинала, и запаздывание обратной связи
+объясняет лишь часть недопокрытия. (3) Разведочный анализ покрытия в зависимости от
 валютного стресса. (4) Открытый воспроизводимый конвейер (снимки данных с хешами, тесты,
 зафиксированный протокол) и модуль платформы, выдающий калиброванные интервалы инфляции.
 
@@ -59,9 +63,11 @@ PID и режимно-адаптивного DRACP на 20 экономиках 
 (ACI, FACI), conformal PID және режимді ескеретін DRACP интервалдарын калибрлеудің
 салыстырмалы талдауы: калибрлеу қатесі, интервал ені және қуатты ескеретін қорытындылар.
 (2) Нөлдік нәтижелері алдын ала жазылған нәтижелер: бейімделгіш әдістер бір рет жасалған
-калибрлеуден жақсырақ калибрленген; ACI әдісінің жылжымалы терезеден артықшылығы және DRACP
-әдісінің ACI әдісінен артықшылығы дәлелденбеді; 12 айлық горизонтта барлық әдістер қамтуды
-жеткілікті бермейді, ал кері байланыстың кешігуі бұл кемшіліктің тек бір бөлігін түсіндіреді.
+калибрлеуден және модельдің өзінің нативті интервалдарынан жақсырақ калибрленген (бағыты
+екі таңдамада да сәйкес келеді; бірінші салыстыру үшін алдын ала белгіленген шекке тек ұзағырақ
+бастапқы кезеңде жетілді); ACI әдісінің жылжымалы терезеден артықшылығы және DRACP әдісінің
+ACI әдісінен артықшылығы дәлелденбеді; 12 айлық горизонтта барлық әдістердің қамтуы номиналдан
+төмен, ал кері байланыстың кешігуі бұл кемшіліктің тек бір бөлігін түсіндіреді.
 (3) Қамтудың валюталық күйзеліске тәуелділігін барлау талдауы. (4) Ашық, қайта
 жаңғыртылатын құбыр (хэшті деректер снимоктары, тесттер, бекітілген хаттама) және
 калибрленген инфляция интервалдарын беретін платформа модулі.

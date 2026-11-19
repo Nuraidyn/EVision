@@ -13,6 +13,12 @@ Topic: see `topic.md` (English, Russian, Kazakh).
 | `topic.md` | Working title, research question and contribution in three languages |
 | `experiment-protocol.md` | Fixed design: data, forecasters, interval methods, evaluation, primary contrasts, claim hierarchy, reproduction status |
 | `shock-definition.md` | Frozen FX-stress rule, validity checks, disclosures, change log |
+| `results-exploratory-v1.md` | Exploratory run on the 13 design countries (data to 2025-06) |
+| `results-holdout-v1.md` | Hold-out run on 7 untouched countries, decision rules R1-R5 applied as written |
+| `results-robustness-v1.md` | Secondary robustness analyses S1-S4 (leave-one-out, other models, feedback delay, width) |
+| `results-addenda-v1.md` | Post hoc descriptive additions S6 (Kazakhstan) and S7 (native intervals) |
+| `results/` | Small result tables (CSV) behind the documents above |
+| `manuscript/` | Paper-style draft (`main.md`), abstracts in English, Russian and Kazakh, references |
 
 ## Code
 
@@ -21,7 +27,8 @@ Topic: see `topic.md` (English, Russian, Kazakh).
 | `scripts/thesis/*.mjs` | Data download (IMF via DBnomics and the IMF SDMX API), shock and stress rules, validity checks |
 | `scripts/thesis/data/` | Dated, hashed data snapshots (`snapshot.json` exploratory, `confirmatory.json` confirmatory) |
 | `scripts/thesis/repro_dracp.py` | Partial reproduction of the DRACP paper's one-step inflation setting |
-| `scripts/thesis/exp/` | Experiment engine (forecasters, interval methods, rolling-origin evaluation, power simulation) |
+| `scripts/thesis/exp/` | Experiment engine (forecasters, interval methods, rolling-origin evaluation, calibration-error contrasts, power simulation, robustness analyses); 72 tests |
+| `scripts/thesis/extra_descriptive.py` | Post hoc descriptive additions S6 and S7 |
 | `backend/fastapi_service/app/services/inflation_calibration.py` | Platform service for calibrated inflation intervals |
 | `frontend/` (calibrated inflation page) | User-facing view of those intervals |
 

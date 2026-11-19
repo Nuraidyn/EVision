@@ -319,7 +319,7 @@ added. Every result is reported on both the exploratory data and the hold-out pa
   conformal methods (LightGBM was the base model of the primary family).
 - S3, delayed feedback: the difference between the coverage with instant feedback and with
   delayed feedback at h=12 for ACI, DRACP and FACI, with a paired block-bootstrap interval,
-  on both samples. R4 keeps its pre-registered threshold and verdict; the interval only
+  on both samples. R4 keeps its pre-specified threshold and verdict; the interval only
   qualifies the wording.
 - S4, width and efficiency: per method and horizon, the ratio of the mean Winkler score and
   of the median interval width to rolling conformal, per unit and pooled, next to the CE.
