@@ -80,6 +80,31 @@ All models are refitted on an expanding window; hyperparameters are fixed in adv
 - Nominal level 0.90. Calibration window and learning rates are fixed in advance and not
   tuned on the test period.
 
+## Reproduction status of DRACP (2026-11-19)
+
+Done with `scripts/thesis/repro_dracp.py`, which calls the released `dracp` 0.2.0 through its
+public API and executes none of the authors' pipeline scripts. Setting copied from the
+authors' configs: annual HICP inflation, DE/FR/IT/ES/RO, 50/25/25 chronological split, base
+model fitted once, calibration updated online, nominal 0.90, one seed.
+
+Mean coverage over the 5 countries: ACI 0.874, DRACP 0.871, FACI 0.864, SAOCP 0.831,
+rolling 0.800, conformal PID 0.779, split 0.719. The paper reports 0.884, 0.890, 0.883,
+0.868, 0.841, 0.825 and 0.781 over 48 series with 20 seeds.
+
+Reading: the ordering is qualitatively the same (split clearly worst, adaptive methods near
+0.87), but the claim that DRACP is closest to nominal is not distinguishable from ACI here
+(about 84 test months per country, standard error about 3 percentage points per country,
+countries correlated). The criterion of reproducing a published number within 2 percentage
+points cannot be tested on this subset because the published numbers are averages over
+different series. Reproduction is therefore recorded as partial and qualitative. A stricter
+check needs the paper's per-class table for the 28 inflation series, or all 28 series run
+here, and the criterion must be restated before the confirmatory run. Until then the
+conditional claim "DRACP transfers" is not made.
+
+Difference to our design: the authors fit the model once and update only the calibration;
+we refit on an expanding window, and the target is the cumulative h-month log growth, not
+the annual rate. Our experiment is therefore a transfer, not a replication of their setup.
+
 ## Evaluation
 
 Rolling origin, one origin per month. Metrics:
