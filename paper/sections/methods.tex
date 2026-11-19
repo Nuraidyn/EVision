@@ -18,10 +18,10 @@ Forecasts are made at one origin per month with an expanding window, using only 
 \item \textbf{Naive B:} the last observed cumulative $h$-month growth (equal to the year-on-year rate at $h=12$).
 \item \textbf{ETS:} exponential smoothing in the state-space framework \citep{hyndman2002ets} with additive error, no trend and additive seasonality (period 12), fitted to monthly inflation; the $h$ monthly forecasts are summed.
 \item \textbf{ARIMA:} an ARMA$(p,q)$ model with $p,q\in\{0,1,2\}$, a constant and two annual harmonics as regressors, fitted to monthly inflation. The order is chosen by the corrected Akaike criterion every 12 origins and the parameters are re-estimated at every origin; the $h$ monthly forecasts are summed.
-\item \textbf{LightGBM} \citep{ke2017lightgbm}: a direct forecast, one model per horizon, 200 trees, learning rate 0.05, 8 leaves, subsample 0.8, column sample 0.8, refitted every 3 origins. Features are the current monthly inflation and its lags at 1, 2, 5 and 11 months, rolling means over 3 and 12 months, the exchange-rate and Brent log changes (current and lagged one month), and the sine and cosine of the calendar month. LightGBM is the primary base model in all contrasts of Sections~\ref{sec:explor} to~\ref{sec:native}.
+\item \textbf{LightGBM} \citep{ke2017lightgbm}: a direct forecast, one model per horizon, 200 trees, learning rate 0.05, 8 leaves, subsample 0.8, column sample 0.8, refitted every 3 origins. Features are the current monthly inflation and its lags at 1, 2, 5 and 11 months, rolling means over 3 and 12 months, the exchange-rate and Brent log changes (current and lagged one month), and the sine and cosine of the calendar month. LightGBM is the base model of the primary family and of the decision rules (Sections~\ref{sec:explor} and~\ref{sec:holdout}); the other base models appear in the ablations (Sections~\ref{sec:panel2} and~\ref{sec:ablation}).
 \item \textbf{Chronos} (extension; \citealp{ansari2024chronos}): a pretrained model used zero-shot, with no fine-tuning and no covariates, in the smallest Chronos-Bolt version that installs, \texttt{amazon/chronos-bolt-tiny}. It forecasts the monthly inflation series from all history up to the origin, truncated to a context of 2048 observations, and the $h$ median forecasts are summed. It has no native interval, because the sum of quantiles is not a quantile; conformal methods are applied on its point forecast, as for the other base models. \emph{Leakage flag.} Chronos may have met public CPI series during pretraining. Rows with a target month before 2025-01 carry the flag \texttt{possibly\_seen}. The pretraining cutoff of the model was not looked up and not verified; 2025-01 is a conservative assumption, and only target months from 2025-01 are treated as clean.
 \end{itemize}
-Forecast origins start no earlier than 2000-01, because the 1990s hyperinflation of Brazil and Mexico made native ARIMA intervals and LightGBM unusable in a check, and each country needs 60 months of training history. A failed ETS or ARIMA fit carries the previous point forecast forward and is counted; in the exploratory run no fit fell back (0 of 7628 rows per model). The conformal methods were run on three base models in the main runs (LightGBM, ARIMA and naive B) and on four in the extension (those three and Chronos). The extension runs start at 2010-01; ARIMA and naive B were not re-run on the design and first hold-out countries in the extension, only LightGBM and Chronos.
+Forecast origins start no earlier than 2000-01, because the 1990s hyperinflation of Brazil and Mexico made native ARIMA intervals and LightGBM unusable in a check, and each country needs 60 months of training history. A failed ETS or ARIMA fit carries the previous point forecast forward and is counted; in the exploratory run no fit fell back (0 of 7628 rows per model). The conformal methods were run on three base models in the main runs (LightGBM, ARIMA and naive B) and on four in the extension (those three and Chronos). The extension runs start at 2010-01. On the design and first hold-out countries the extension re-run covers all four base models, but calibration contrasts were analysed only for LightGBM and Chronos (Section~\ref{sec:extension}).
 
 \subsection{Nonconformity score and the interval methods}\label{sec:intervals}
 
@@ -100,9 +100,9 @@ The \emph{calibration error} (CE) of a unit and of a method, and its mean over u
 \end{equation}
 The reason for using CE and not pooled coverage is that pooled coverage lets opposite deviations cancel. In the exploratory data at $h=3$, split conformal covers 1.000 in Indonesia and 0.822 in Peru; a pooled average of these is close to nominal, although neither country is calibrated. Moreover, when a method over-covers, a lower coverage means better calibration, so a difference in pooled coverage does not tell which method is closer to 0.90. The absolute value in~\eqref{eq:ce} biases CE upward by sampling noise, particularly for small samples per unit; the bias largely cancels in contrasts because both methods have the same sample in each unit. Percentile bootstrap intervals for a contrast need not be symmetric around the estimate, because CE is a nonlinear function of coverage.
 
-The interval (Winkler) score \citep{winkler1972,gneiting2007scoring} of an interval $[l,u]$ for an outcome $y$ is
+The interval (Winkler) score \citep{winkler1972,gneiting2007scoring} of an interval $[a,b]$ for an outcome $y$ is
 \begin{equation}\label{eq:winkler}
-W_\alpha(l,u;y) \;=\; (u-l) \;+\; \frac{2}{\alpha}\,\max(l-y,0) \;+\; \frac{2}{\alpha}\,\max(y-u,0),
+W_\alpha(a,b;y) \;=\; (b-a) \;+\; \frac{2}{\alpha}\,\max(a-y,0) \;+\; \frac{2}{\alpha}\,\max(y-b,0),
 \end{equation}
 so that with $\alpha=0.10$ an outcome outside the interval is penalised by 20 times the distance by which it is missed, in addition to the width. Lower is better. Mean width is reported in percentage points of cumulative growth. Point forecasts are evaluated by mean absolute error and root mean squared error relative to the naive baselines. A low CE says that the long-run miss rate is close to nominal; it says nothing about whether the interval is narrow enough to be useful, which is why width and~\eqref{eq:winkler} are reported next to CE.
 
@@ -112,9 +112,9 @@ A contrast between methods $m_1$ and $m_2$ is
 \begin{equation}\label{eq:contrast}
 T(m_1,m_2) \;=\; \frac{1}{|\mathcal U|}\sum_{u\in\mathcal U}\Bigl[\CE(u,m_1)-\CE(u,m_2)\Bigr],
 \end{equation}
-with equal weight for each unit and only (unit, origin) cells present for both methods. A negative $T$ means that $m_1$ is better calibrated. The primary family has four tests: ACI minus rolling and DRACP minus ACI, each at $h=3$ and $h=6$, with LightGBM as base model. Holm's procedure \citep{holm1979} controls the family-wise error rate: with the $m=4$ unadjusted $p$-values sorted as $p_{(1)}\le\dots\le p_{(m)}$, the adjusted values are
+with equal weight for each unit and only (unit, origin) cells present for both methods. A negative $T$ means that $m_1$ is better calibrated. The primary family has four tests: ACI minus rolling and DRACP minus ACI, each at $h=3$ and $h=6$, with LightGBM as base model. Holm's procedure \citep{holm1979} controls the family-wise error rate: with the $M=4$ unadjusted $p$-values sorted as $p_{(1)}\le\dots\le p_{(M)}$, the adjusted values are
 \begin{equation}\label{eq:holm}
-\tilde p_{(i)} \;=\; \min\Bigl\{1,\;\max_{j\le i}\,(m-j+1)\,p_{(j)}\Bigr\}.
+\tilde p_{(i)} \;=\; \min\Bigl\{1,\;\max_{j\le i}\,(M-j+1)\,p_{(j)}\Bigr\}.
 \end{equation}
 ACI minus split is a secondary, descriptive contrast and is not part of the family; the horizons $h=1$ and $h=12$ are descriptive. The Winkler contrast is the relative difference of the equal-unit-weight mean Winkler score, reported with unadjusted $p$-values as descriptive. The standard deviation of coverage across units is reported next to CE. In the extension the Holm correction is applied within each base model (four tests) and not across base models.
 
@@ -146,8 +146,8 @@ over a grid $\mathcal G$ of improvements up to 10~pp, and it is undefined if $\p
 
 \subsection{Exchange-rate stress (secondary)}\label{sec:stress}
 
-Stress is secondary. For each country and month $t$ let $d_t=\ln(\mathrm{FX}_t/\mathrm{FX}_{t-1})$; over the 60 preceding months ($t$ excluded), $m$ is the median and $s=\max(1.4826\,\mathrm{MAD},\,0.005)$ the robust scale of $d$, and
+Stress is secondary. For each country and month $t$ let $d_t=\ln(\mathrm{FX}_t/\mathrm{FX}_{t-1})$; over the 60 preceding months ($t$ excluded), $\mu_t$ is the median and $s_t=\max(1.4826\,\mathrm{MAD},\,0.005)$ the robust scale of $d$, and
 \begin{equation}\label{eq:stress}
-z_t \;=\; \frac{d_t-m}{s}.
+z_t \;=\; \frac{d_t-\mu_t}{s_t}.
 \end{equation}
 A month is a shock event if $|z_t|>3$, and the shock window is the event month and the 3 following months. For the continuous version used in the stress analysis, stress at month $t$ is the maximum of $|z|$ over $t-3,\dots,t$, and coverage is reported by within-country decile of stress at the forecast origin. The rule document is dated 2026-11-18 and states that its parameters were frozen before any forecast was run; the rule is not tuned.

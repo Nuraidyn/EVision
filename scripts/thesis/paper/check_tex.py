@@ -113,6 +113,9 @@ hspace* vspace* texttt cdot
 `"
 """.split())
 KNOWN_COMMANDS |= {
+    # T2A Cyrillic letters used for the author name (main.tex loads fontenc T2A)
+    "fontencoding", "selectfont", "CYRN", "CYRS", "cyra", "cyrd", "cyre", "cyrery", "cyrishrt",
+    "cyrk", "cyrn", "cyrp", "cyrr", "cyrt", "cyru",
     "\\", "&", "%", "$", "#", "_", "{", "}", ",", ";", ":", "!", "'", '"', ".", "=", "~",
     "^", "`", "-", "/", "(", ")", "[", "]", "@", " ", "|",
     "^", "c", "v", "u", "H", "k", "r", "o", "O", "ae", "AE", "oe", "OE", "ss", "i", "j", "l", "L",
