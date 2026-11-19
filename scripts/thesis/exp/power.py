@@ -133,15 +133,15 @@ def _ce_power(delta, Hb, O, Uni, out_idx, in_idx, crit):
 
 
 def mde_ce_panel(arrs, h: int, alpha: float = 0.05, n_tests: int = 4, power: float = 0.80,
-                 n_outer: int = 100, B_inner: int = 199, seed: int = 7) -> dict:
-    from .calibration import t_stat
+                 n_outer: int = 100, B_inner: int = 199, seed: int = 7, block_len: int = 12) -> dict:
+    from .calibration import block_len_ce, t_stat
     if arrs is None:
         return dict(n_units=0, n_months=0, mde_pp=np.nan, realised_T_pp=np.nan)
     _, Hb, O, units = arrs
     rng = np.random.default_rng(seed)
     Uni = rng.random(Hb.shape)
     T = O.shape[1]
-    bl = block_len_for(h)
+    bl = block_len_ce(h, block_len)
     out_idx = block_indices(T, bl, n_outer, rng)
     in_idx = block_indices(T, bl, B_inner, rng)
     crit = alpha / n_tests
@@ -167,4 +167,46 @@ def mde_ce_table(iv: pd.DataFrame, model: str, sample: str | None = "exploratory
             r = mde_ce_panel(ce_arrays(iv, model, h, a, b, sample), h, **kw)
             r.update(model=model, h=h, contrast=f"{a}-{b}", sample=sample)
             rows.append(r)
+    return pd.DataFrame(rows)
+
+
+def mde_ce_windows(iv: pd.DataFrame, model: str, sample: str | None = "exploratory", window: int = 15,
+                   n_windows: int = 60, seed: int = 11, n_outer: int = 40, B_inner: int = 99,
+                   block_len: int = 12) -> pd.DataFrame:
+    """MDE of the CE contrasts on random ``window``-month stretches of the (exploratory) data, to
+    judge confirmatory-size panels.  For each contrast, ``n_windows`` windows of consecutive origin
+    months are drawn uniformly (all units kept; the months are therefore jointly resampled as in
+    the real analysis) and mde_ce_panel is run on each (block length max(h, block_len), clipped to
+    the window length).  Reported per contrast: median, quartiles of the MDE over windows, the
+    share of windows where the MDE is undefined (> 10 pp) and the share with MDE <= 7 pp."""
+    from .calibration import CE_HORIZONS, CE_PRIMARY, ce_arrays
+    rows = []
+    for h in CE_HORIZONS:
+        for a, b in CE_PRIMARY:
+            arrs = ce_arrays(iv, model, h, a, b, sample)
+            base = dict(model=model, h=h, contrast=f"{a}-{b}", sample=sample, window=window)
+            if arrs is None or arrs[2].shape[1] < window:
+                rows.append(dict(**base, n_windows=0, mde_median_pp=np.nan))
+                continue
+            Ha, Hb, O, units = arrs
+            T = O.shape[1]
+            rng = np.random.default_rng(seed + h)
+            starts = rng.integers(0, T - window + 1, size=n_windows)
+            mdes, kept = [], 0
+            for i, s0 in enumerate(starts):
+                sl = slice(int(s0), int(s0) + window)
+                if O[:, sl].sum() == 0:
+                    continue
+                kept += 1
+                r = mde_ce_panel((Ha[:, sl], Hb[:, sl], O[:, sl], units), h, n_outer=n_outer,
+                                 B_inner=B_inner, seed=seed + i, block_len=block_len)
+                mdes.append(r["mde_pp"])
+            m = np.array(mdes, float)
+            fin = m[np.isfinite(m)]
+            rows.append(dict(**base, n_windows=kept,
+                             mde_median_pp=float(np.median(fin)) if len(fin) else np.nan,
+                             mde_q25_pp=float(np.quantile(fin, 0.25)) if len(fin) else np.nan,
+                             mde_q75_pp=float(np.quantile(fin, 0.75)) if len(fin) else np.nan,
+                             share_undefined=float(np.mean(~np.isfinite(m))) if len(m) else np.nan,
+                             share_le_7pp=float(np.mean(np.isfinite(m) & (m <= 7))) if len(m) else np.nan))
     return pd.DataFrame(rows)

@@ -106,12 +106,16 @@ def _finite(res, cap):
 
 def run_method(method: str, X: np.ndarray, y: np.ndarray, h: int, n_cal: int,
                alpha: float = ALPHA, window: int = WINDOW, cap_mult: float = 10.0,
-               on_release=None):
+               on_release=None, instant_feedback: bool = False):
     """Run one interval method over a stream of origins.
 
     X : (n, d) features, column 0 = point forecast.  y : (n,) realised target of each origin
     (entry j is only READ once k >= j + h).  Returns dict(lo, hi, n_capped) with NaN for
     rows k < e = n_cal + h - 1.
+
+    instant_feedback (DIAGNOSTIC ONLY): the outcome of origin j is released at k = j + 1 as if the
+    horizon were 1, although in reality it is only observable at j + h.  Used to isolate the effect
+    of delayed feedback; never a valid forecasting setup.
     """
     n = len(y)
     e = n_cal + h - 1
@@ -131,8 +135,9 @@ def run_method(method: str, X: np.ndarray, y: np.ndarray, h: int, n_cal: int,
     results = {}
     next_release = e  # first stream row whose outcome has not yet been fed back
     n_capped = 0
+    lag = 1 if instant_feedback else h
     for k in range(e, n):
-        while next_release + h <= k:             # outcome of next_release is observable at origin k
+        while next_release + lag <= k:             # outcome of next_release is observable at origin k
             j = next_release
             with warnings.catch_warnings():
                 warnings.simplefilter("ignore")

@@ -178,5 +178,16 @@ def country_units(raw: dict, country: str, min_len: int = 60, horizons=HORIZONS,
     return units
 
 
+def load_holdout(path: Path | str | None = None, data_dir: Path | str | None = None) -> dict:
+    """Hold-out panel: CPI and FX per country from holdout.json, Brent from the main snapshot files
+    (the hold-out file's own brent, if any, is ignored).  Same structure as load_raw."""
+    path = Path(path) if path else DATA_DIR / "holdout.json"
+    raw = load_raw(data_dir)
+    d = json.loads(path.read_text(encoding="utf-8"))
+    return {"cpi": {c: _to_series(v) for c, v in d["cpi"].items()},
+            "fx": {c: _to_series(v) for c, v in d["fx"].items()},
+            "brent": raw["brent"], "files": [path.name] + raw["files"]}
+
+
 def sample_label(target_month: pd.Period) -> str:
     return "confirmatory" if target_month >= CONFIRMATORY_START else "exploratory"

@@ -266,3 +266,39 @@ secondary results.
 8. **Reading of the exploratory DRACP result.** Allowed wording: "in this configuration no
    advantage over ACI was detected"; not allowed: "DRACP does not transfer" or "ACI and DRACP
    are equal".
+
+### 2026-11-19 (fifth entry: hold-out run specification and decision rules, before the run)
+
+Exploratory results with the amended contrasts (block length 12, `results/explore_v1` and
+`explore_v2_ncal96`, tables in `results/`): no primary contrast survives Holm at either
+warm-up (ACI - rolling at h=3: -2.2 pp, Holm p 0.09; at h=6: -1.5 pp, Holm p 0.078);
+ACI - split stays clear (-4.6 / -3.4 pp at warm-up 48, -3.9 / -2.9 pp at 96); DRACP - ACI is
+equivalent within 2 pp at warm-up 48 (max one-sided p 0.0085 and 0.0135) but not at 96
+(0.128 and 0.146), so the equivalence verdict is not stable and DRACP is wider than ACI at
+warm-up 96 (Winkler +33% at h=3); at h=12 the adaptive methods cover 0.82-0.86 with delayed
+feedback and 0.91 when the outcome is revealed immediately (diagnostic).
+
+The hold-out run is specified here, before any forecast is computed for the 7 hold-out
+countries. Runs (from `scripts/thesis`, all with `--holdout --start 2000-01 --end 2026-06`):
+(A) `--out holdout_ncal48`; (B) `--n-cal 96 --out holdout_ncal96`; (C) the instant-feedback
+diagnostic `--instant-feedback --horizons 12 --models lgbm --conformal-models lgbm
+--out diag_instant_h12_holdout`. Supplementary: the original 13 countries to 2026-09
+(`--start 2000-01 --out confirm13`), reported pooled over the confirmatory months only.
+
+Decision rules (applied to base model lgbm, primary family Holm over 4 tests, pooled over the
+7 countries, block length 12):
+
+- R1 (replication of the secondary result): ACI better calibrated than split, if the CE
+  difference ACI - split is negative with Holm p < 0.05 at both h=3 and h=6.
+- R2 (does adaptivity help beyond a rolling window): "ACI improves on rolling" only if
+  ACI - rolling is negative with Holm p < 0.05 at the horizon; otherwise "not shown".
+- R3 (DRACP versus ACI): "no advantage, equivalent within 2 pp" only if equivalence holds at
+  both warm-up sizes (A and B); "DRACP better" only if DRACP - ACI is negative with Holm
+  p < 0.05 at both warm-ups; otherwise "inconclusive".
+- R4 (delayed feedback explains the h=12 shortfall): supported if the mean coverage of ACI
+  with instant feedback exceeds the delayed one by at least 3 pp on the hold-out panel.
+- R5 (power): a contrast whose minimum detectable difference is undefined or above 7 pp is
+  reported as inconclusive regardless of its p value.
+
+None of these rules is changed after the hold-out result has been seen; any later change goes
+into this section with a date and a reason and is reported as post hoc.

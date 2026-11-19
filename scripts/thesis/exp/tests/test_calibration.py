@@ -17,7 +17,7 @@ def make_iv(n_units=8, T=120, seed=0, h=3, extra_methods=False):
         good = np.zeros(T)
         good[rng.permutation(T)[: int(round(0.9 * T))]] = 1
         bad = (rng.random(T) < pb).astype(float)
-        for me, hits in (("split", bad), ("aci", good), ("dracp", good)):
+        for me, hits in (("split", bad), ("rolling", bad), ("aci", good), ("dracp", good)):
             rows.append(pd.DataFrame(dict(unit=f"U{u}", model="lgbm", h=h, sample="exploratory",
                                           method=me, origin=origins, covered=hits)))
     return pd.concat(rows, ignore_index=True)
@@ -57,12 +57,86 @@ def test_contrasts_table_and_holm():
     iv = make_iv()
     iv6 = make_iv(h=6, seed=1)
     con = ce_contrasts(pd.concat([iv, iv6], ignore_index=True), "lgbm", "exploratory", B=200)
-    assert len(con) == 4 and set(con.h) == {3, 6}
-    assert set(con.contrast) == {"aci-split", "dracp-aci"}
-    adj = holm(con["p"].tolist())
-    assert np.allclose(con["p_holm"], adj) and (con["p_holm"] >= con["p"] - 1e-12).all()
-    r = con[con.contrast == "dracp-aci"]
-    assert np.allclose(r["T"], 0)          # identical methods
+    prim = con[con.family == "primary"]
+    assert len(prim) == 4 and set(prim.h) == {3, 6}
+    assert set(prim.contrast) == {"aci-rolling", "dracp-aci"}
+    assert set(con[con.family == "secondary"].contrast) == {"aci-split"}
+    assert con[con.family == "secondary"]["p_holm"].isna().all()
+    adj = holm(prim["p"].tolist())
+    assert np.allclose(prim["p_holm"], adj) and (prim["p_holm"] >= prim["p"] - 1e-12).all()
+    assert np.allclose(prim[prim.contrast == "dracp-aci"]["T"], 0)     # identical methods
+    assert (con["block_len"] == 12).all()
+
+
+def test_block_length_is_parameter_default_12():
+    from exp.calibration import block_len_ce
+    assert block_len_ce(3) == 12 and block_len_ce(6) == 12 and block_len_ce(24) == 24
+    assert block_len_ce(3, 6) == 6
+    iv = make_iv()
+    a = ce_contrasts(iv, "lgbm", "exploratory", B=300, block_len=12)
+    b = ce_contrasts(iv, "lgbm", "exploratory", B=300, block_len=3)
+    assert (b[b.h == 3]["block_len"] == 3).all() and not np.allclose(a["ci_lo"], b["ci_lo"])
+
+
+def test_tost_identical_methods_equivalent_and_different_not():
+    from exp.calibration import tost_test
+    iv = make_iv()
+    same = tost_test(ce_arrays(iv, "lgbm", 3, "dracp", "aci"), 3, B=500)
+    assert same["T"] == 0 and same["verdict"] == "equivalent"
+    assert same["p_tost"] == max(same["p_lower"], same["p_upper"]) < 0.05
+    diff = tost_test(ce_arrays(iv, "lgbm", 3, "split", "aci"), 3, B=500)    # T ~ +0.09 > margin
+    assert diff["T"] > 0.05 and diff["verdict"] == "not shown"
+    assert diff["p_upper"] > 0.5 and diff["p_lower"] < 0.05
+    tight = tost_test(ce_arrays(iv, "lgbm", 3, "split", "aci"), 3, margin=0.20, B=500)
+    assert tight["verdict"] == "equivalent"              # a wide margin makes the same data equivalent
+
+
+def test_tost_missing_panel():
+    from exp.calibration import tost_test
+    r = tost_test(None, 3)
+    assert r["verdict"] == "not shown" and np.isnan(r["p_tost"])
+
+
+def _with_winkler(iv):
+    iv = iv.copy()
+    iv["winkler"] = np.where(iv["method"] == "aci", 2.0, 1.0) * (1 + iv["unit"].str[1:].astype(int))
+    return iv
+
+
+def test_winkler_contrast_relative_difference():
+    from exp.calibration import w_stat, winkler_contrasts, value_arrays
+    iv = _with_winkler(make_iv())
+    arrs = value_arrays(iv, "lgbm", 3, "aci", "split", "exploratory", "winkler")
+    assert abs(w_stat(*arrs[:3]) - 1.0) < 1e-12                  # aci is exactly twice split
+    idx = np.arange(arrs[2].shape[1])[None, :]
+    assert abs(w_stat(*arrs[:3], idx)[0] - 1.0) < 1e-12
+    wk = winkler_contrasts(iv, "lgbm", "exploratory", B=100)
+    r = wk[(wk.h == 3) & (wk.contrast == "aci-split")].iloc[0]
+    assert abs(r["rel_diff"] - 1.0) < 1e-12
+    assert set(wk.contrast) == {"aci-rolling", "dracp-aci", "aci-split"}
+    assert abs(wk[(wk.h == 3) & (wk.contrast == "dracp-aci")].iloc[0]["rel_diff"] + 0.5) < 1e-12
+
+
+def test_sd_coverage_across_units():
+    from exp.calibration import sd_coverage
+    iv = make_iv()
+    sd = sd_coverage(iv, (3,))
+    good = sd[sd.method == "aci"].iloc[0]
+    bad = sd[sd.method == "split"].iloc[0]
+    assert good["sd_coverage"] < 0.01 < 0.05 < bad["sd_coverage"]
+    assert good["n_units"] == 8
+
+
+def test_holdout_and_confirmatory_samples_pooled():
+    from exp.calibration import tost_table
+    for smp in ("holdout", "confirmatory"):
+        iv = make_iv(T=15, n_units=7)
+        iv["sample"] = smp
+        con = ce_contrasts(iv, "lgbm", smp, B=100)
+        assert con[con.h == 3]["n_units"].eq(7).all() and con[con.h == 3]["n_months"].eq(15).all()
+        assert con[con.h == 6]["p"].isna().all()                  # no h=6 rows: handled, not an error
+        assert tost_table(iv, "lgbm", smp, B=100)["verdict"].notna().all()
+        assert ce_contrasts(iv, "lgbm", "exploratory", B=50)["T"].isna().all()   # other sample is empty
 
 
 def test_holm_known_values():

@@ -39,6 +39,8 @@ class Config:
     boot_B: int = 1000
     seed: int = 12345
     lgbm: dict = field(default_factory=dict)
+    instant_feedback: bool = False      # DIAGNOSTIC: release outcomes as if h=1 (see intervals.run_method)
+    sample: str | None = None           # override the sample label of every row (e.g. 'holdout')
 
 
 # ----------------------------------------------------------------------------- running
@@ -85,13 +87,15 @@ def run_unit(unit: str, frame: pd.DataFrame, cfg: Config):
             base = dict(unit=unit, country=country, model=mn, h=h, origin=origin.astype(str),
                         target=target.astype(str), y=y, point=point,
                         stress=frame["stress"].values[pos],
-                        sample=[sample_label(t) for t in target], n_fallback=n_fb)
+                        sample=([cfg.sample] * len(target) if cfg.sample else [sample_label(t) for t in target]),
+                        n_fallback=n_fb,
+                        feedback="instant_DIAGNOSTIC" if cfg.instant_feedback else "delayed")
             pdf = pd.DataFrame(base).iloc[e:]
             pts.append(pdf)
             if mn in cfg.conformal_models:
                 X = np.column_stack([point] + [np.nan_to_num(frame[c].values[pos]) for c in EXTRA_FEATURES])
                 for me in cfg.methods:
-                    out = run_method(me, X, y, h, cfg.n_cal, cfg.alpha)
+                    out = run_method(me, X, y, h, cfg.n_cal, cfg.alpha, instant_feedback=cfg.instant_feedback)
                     d = pdf.copy()
                     d["method"] = me
                     d["lo"], d["hi"] = out["lo"][e:], out["hi"][e:]
