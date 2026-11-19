@@ -183,3 +183,33 @@ confirmatory run, with a numeric threshold for the conditional claim.
 Second snapshot taken and checked (see the Data section); confirmatory analysis restricted
 to the pooled panel because no country reaches 20 non-overlapping target months; Nigeria's
 2025-01 methodology break recorded; topic fixed in `topic.md`.
+
+### 2026-11-19 (third entry, engine built, still before any full run)
+
+Decisions taken while implementing `scripts/thesis/exp/`, fixed here before results exist:
+
+- Forecast origins start no earlier than 2000-01 for every country (the 1990s hyperinflation
+  of Brazil and Mexico made native ARIMA intervals and LightGBM unusable in a check); each
+  country also needs 60 months of training history, so series that start later (KZ, AZ, NG
+  2005; MN 2006; UZ, PE 2010) enter once they have it. Russia is split into stretches of
+  consecutive months and only stretches of at least 60 months are used.
+- Fitting: each origin month is one row and models use data up to that month only. ETS and
+  ARIMA are fitted to monthly inflation and the h forecasts are summed (ARMA(p,q), p,q <= 2,
+  plus two annual harmonics, chosen by AICc every 12 origins; ETS with additive seasonality).
+  Failed fits carry the previous point forecast forward and are counted in `n_fallback`.
+- Calibration: warm-up of 48 residuals, rolling window 120, ACI step 0.02, nominal 0.90;
+  all six interval methods run through the `dracp` classes with a pass-through base model so
+  that the point forecast is ours; infinite radii are capped at 10 times the largest residual.
+  The primary model for the contrasts and for the power simulation is LightGBM. The
+  minimum detectable difference uses the first Holm step (0.05/4) for every contrast, which
+  is conservative.
+- Inference: pooled statistics weight every (unit, origin month) cell equally; the bootstrap
+  resamples origin months in blocks of max(h, 6) jointly across units.
+- Data: the two snapshots are chained on the CPI level at their last common month because
+  their index bases differ (an early version merged them without rescaling, which created a
+  false 74% fall for Kazakhstan; the loader now chains and a regression test checks that no
+  country has a monthly log jump above 0.15). Nigeria's series ends at 2024-12 because of the
+  methodology break.
+- First full run: exploratory only, `--start 2000-01 --end 2025-06`, so no confirmatory
+  target month can enter. The confirmatory run waits for the power result and for a committee
+  review of the exploratory output.
