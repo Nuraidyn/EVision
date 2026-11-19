@@ -1,0 +1,5 @@
+n_cells,n_months,observed_diff_pp,mde_pp,model,h,contrast,sample,status
+1972,193,-3.0425963488843815,2.2265625,lgbm,3,aci-split,exploratory,ok (<=7pp)
+1972,193,0.2535496957403651,1.7578125,lgbm,3,dracp-aci,exploratory,ok (<=7pp)
+1894,187,-1.7951425554382259,2.578125,lgbm,6,aci-split,exploratory,ok (<=7pp)
+1894,187,-0.7391763463569165,2.34375,lgbm,6,dracp-aci,exploratory,ok (<=7pp)
