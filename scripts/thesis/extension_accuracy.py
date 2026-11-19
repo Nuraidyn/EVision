@@ -3,7 +3,7 @@ ARIMA, LightGBM and naive B on the target months that cannot have been seen in p
 (2025-01 onwards), pooled over the 30 countries of the three runs, with a paired moving-block
 bootstrap over calendar months (months resampled jointly across countries).
 
-Block length: 3 months (the clean sample has only 18 calendar months; the 12-month rule of the
+Block length: 3 months (the clean sample has only 22 calendar months; the 12-month rule of the
 calibration contrasts would leave at most one block). Reads existing outputs only.
 Usage (from scripts/thesis): .venv/Scripts/python.exe -I extension_accuracy.py
 """

@@ -12,7 +12,11 @@ months of IMF CPI from 2010-01; 89 pooled months at h=3 and 83 at h=6 at warm-up
 warm-up 96); four base models (naive B, ARIMA, LightGBM, and Chronos zero-shot with the model
 `amazon/chronos-bolt-tiny`); nominal level 0.90; block bootstrap with blocks of at least 12
 months. The earlier 20 countries were re-run with the same four models from 2010-01 as a
-secondary analysis, so their numbers differ from the earlier runs that started in 2000.
+secondary analysis, so their numbers differ from the earlier runs that started in 2000. For
+these re-runs the calibration contrasts were computed only for LightGBM and Chronos as base
+models (the intervals of all four exist), which narrows the E-B analysis of the protocol. For
+point accuracy (E3) the report gives relative MAE and bootstrap intervals for Chronos against
+LightGBM, ARIMA and naive B only, without ETS, which the extension runs did not include.
 
 Implementation note recorded for transparency: the first attempt to analyse the new panel failed
 because the country code NA (Namibia) was read as a missing value by the CSV reader; the reader
@@ -51,12 +55,17 @@ not promoted):
   At warm-up 96 it is not met: LightGBM (0.048) and Naive B (0.032) at h=3 have unadjusted p below
   0.05, every other cell is above 0.05, and with Holm over the two horizons none is below 0.05
   (0.096 and 0.064).
-- R2 (ACI improves on rolling, Holm p below 0.05): met at h=3 for all four base models and at h=6
-  for ARIMA (0.030) and Naive B (0.039); not met at h=6 for LightGBM (0.159) and Chronos (0.088).
+- R2 (ACI improves on rolling, Holm p below 0.05, with a defined minimum detectable difference
+  under E5): met at h=3 for LightGBM (0.008), ARIMA (0.004) and Naive B (0.004), and at h=6 for
+  ARIMA (0.030) and Naive B (0.039). For Chronos at h=3 the Holm p is 0.036 but the minimum
+  detectable difference is undefined, so under E5 that cell is inconclusive and R2 is not
+  counted as met for it; at h=6 it is not met for LightGBM (0.159) and Chronos (0.088).
   At warm-up 96 it is not shown for any base model (Holm p 0.15 to 1.0; 41 and 35 pooled months).
   **This differs from the first hold-out panel and from the design panel, where R2 was "not shown"
-  (results-holdout-v1.md); the earlier 20 countries re-run from 2010-01 again show it as not met
-  (ACI - rolling, Holm p 0.22 to 1.0, tables in `results/ext_design13/` and `results/ext_holdout1/`).**
+  (results-holdout-v1.md). The earlier 20 countries re-run from 2010-01 show ACI - rolling as not
+  significant (Holm p 0.22 to 1.0, tables in `results/ext_design13/` and `results/ext_holdout1/`)
+  and their minimum detectable difference is undefined in every cell, so those results are
+  inconclusive under E5, not evidence of no effect.**
   The conclusion about ACI against a rolling window therefore depends on the panel; the data do not
   say why. Panel differences (shorter series, lower-income and more volatile economies, a warm-up
   that takes a larger share of 198 months) are candidate explanations that were not tested.
