@@ -131,6 +131,49 @@ def run_ce(inp: Path, out: Path, model: str = "lgbm", B: int = 2000, n_outer: in
     return res
 
 
+def run_robust(inp: Path, out: Path, sample: str, instant: Path | None, delayed: Path | None, n_cal: int,
+               B: int, B_loo: int, model: str, only: set):
+    """Robustness analyses S1-S4 from existing intervals_all.csv files (see exp/robust.py)."""
+    from exp import robust as R
+    iv = pd.read_csv(inp / "intervals_all.csv")
+    iv = iv[iv["sample"] != "confirmatory"]
+    out.mkdir(parents=True, exist_ok=True)
+    role = "primary" if n_cal == 48 else "sensitivity"
+    pd.set_option("display.width", 220)
+    pd.set_option("display.max_columns", 40)
+    res = {}
+
+    def save(name, df):
+        df.insert(0, "n_cal", n_cal)
+        df.insert(1, "role", role)
+        df.to_csv(out / name, index=False)
+        res[name] = df
+
+    if "s1" in only:
+        save("s1_leave_one_out.csv", R.s1_leave_one_out(iv, model, sample, B=B_loo))
+    if "s2" in only:
+        save("s2_other_models.csv", R.s2_other_models(iv, sample=sample, B=B))
+    if "s3" in only and instant is not None:
+        dl = pd.read_csv((delayed or inp) / "intervals_all.csv")
+        ins = pd.read_csv(instant / "intervals_all.csv")
+        save("s3_feedback_diff.csv", R.s3_feedback(ins, dl, model, sample, B=B))
+    if "s4" in only:
+        s4 = R.s4_width_efficiency(iv, model, sample)
+        save("s4_width_efficiency.csv", s4)
+        save("s4_compact.csv", R.s4_compact(s4))
+    for k, v in res.items():
+        print(f"\n== {k} (sample={sample}, n_cal={n_cal}, {role}) ==")
+        if k.startswith("s1"):
+            print(v[v.removed_unit.isin(["NONE(full)", "SUMMARY"])].dropna(axis=1, how="all").round(4).to_string(index=False))
+        elif k.startswith("s3"):
+            print(v[v.unit == "ALL"].round(4).to_string(index=False))
+        elif k.startswith("s4_w"):
+            print(v[v.unit == "POOLED"].round(3).to_string(index=False))
+        else:
+            print(v.round(4).to_string(index=False))
+    return res
+
+
 def show(res: dict):
     pd.set_option("display.width", 200)
     pd.set_option("display.max_columns", 30)
@@ -183,8 +226,28 @@ def main(argv=None):
     c.add_argument("--window-mde", action="store_true", help="MDE on random short windows")
     c.add_argument("--window", type=int, default=15)
     c.add_argument("--n-windows", type=int, default=60)
+    r = sub.add_parser("robust", help="robustness analyses S1-S4 from existing intervals_all.csv (secondary)")
+    r.add_argument("--in", dest="inp", required=True)
+    r.add_argument("--instant", default=None, help="diagnostic instant-feedback h=12 run (S3)")
+    r.add_argument("--delayed", default=None, help="delayed side of S3 (default: --in)")
+    r.add_argument("--out", default=None, help="default: <in>/robust")
+    r.add_argument("--sample", required=True, choices=["exploratory", "holdout"])
+    r.add_argument("--n-cal", type=int, default=48)
+    r.add_argument("--boot", type=int, default=2000)
+    r.add_argument("--boot-loo", type=int, default=500)
+    r.add_argument("--model", default="lgbm")
+    r.add_argument("--only", default="s1,s2,s3,s4")
     a = ap.parse_args(argv)
     t0 = time.time()
+    if a.cmd == "robust":
+        def _q(x):
+            x = Path(x)
+            return x if x.is_absolute() else (THESIS / x)
+        run_robust(_q(a.inp), _q(a.out) if a.out else _q(a.inp) / "robust", a.sample,
+                   _q(a.instant) if a.instant else None, _q(a.delayed) if a.delayed else None, a.n_cal,
+                   a.boot, a.boot_loo, a.model, set(a.only.split(",")))
+        print(f"\ndone in {time.time() - t0:.1f}s")
+        return
     if a.cmd == "ce":
         def _p(x):
             x = Path(x)
