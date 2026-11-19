@@ -1,0 +1,12 @@
+\begin{tabular}{lrrrrrrrr}
+\toprule
+& \multicolumn{2}{c}{Rel. MAE} & \multicolumn{2}{c}{CE, ACI} & \multicolumn{2}{c}{CE, rolling} & \multicolumn{2}{c}{ACI $-$ rolling, pp (Holm $p$)} \\
+\cmidrule(lr){2-3}\cmidrule(lr){4-5}\cmidrule(lr){6-7}\cmidrule(lr){8-9}
+Base model & $h{=}3$ & $h{=}6$ & $h{=}3$ & $h{=}6$ & $h{=}3$ & $h{=}6$ & $h{=}3$ & $h{=}6$ \\
+\midrule
+Naive B & 1.000 & 1.000 & 0.049 & 0.052 & 0.090 & 0.087 & $-$4.1 (0.004) & $-$3.4 (0.039) \\
+ARIMA & 0.602 & 0.570 & 0.034 & 0.052 & 0.066 & 0.084 & $-$3.2 (0.004) & $-$3.1 (0.030) \\
+LightGBM & 0.619 & 0.593 & 0.033 & 0.045 & 0.070 & 0.080 & $-$3.7 (0.008) & $-$3.5 (0.159) \\
+Chronos & 0.586 & 0.581 & 0.034 & 0.050 & 0.067 & 0.075 & $-$3.3 (0.036) & $-$2.5 (0.088) \\
+\bottomrule
+\end{tabular}

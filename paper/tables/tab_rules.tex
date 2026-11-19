@@ -1,0 +1,19 @@
+\begin{tabular}{p{0.05\linewidth}p{0.36\linewidth}p{0.11\linewidth}p{0.38\linewidth}}
+\toprule
+Rule & Statement & Status & Outcome as recorded \\
+\midrule
+\multicolumn{4}{l}{\emph{First hold-out panel (7 countries, LightGBM, Holm over four tests)}} \\
+R1 & ACI better calibrated than split: ACI $-$ split negative with Holm $p<0.05$ at $h=3$ and $h=6$ & Not met & Not met in the primary run (warm-up 48); met at warm-up 96 (sensitivity run, not promoted) \\
+R2 & ACI improves on rolling: ACI $-$ rolling negative with Holm $p<0.05$ & Not shown & Not shown (MDE undefined, inconclusive); Holm $p$ 0.35 and 1.0 at warm-up 48 \\
+R3 & DRACP versus ACI: equivalence within 2 pp at both warm-ups, or DRACP better with Holm $p<0.05$ at both & Inconclusive & Equivalent at warm-up 48, not shown at 96; the verdict is not stable \\
+R4 & Delayed feedback explains the $h=12$ shortfall: ACI coverage with instant feedback higher by at least 3 pp & Not met & Not met: +2.4 pp against the 3 pp threshold (coverage 0.884 delayed, 0.908 instant) \\
+R5 & Power: MDE undefined or above 7 pp is inconclusive regardless of $p$ & Inconclusive & All four primary contrasts inconclusive (MDE undefined on the full hold-out sample) \\
+\midrule
+\multicolumn{4}{l}{\emph{Extension, second hold-out panel (10 countries, four base models, warm-up 48 primary)}} \\
+E1 & Replication of R1, R2, R3 on new countries, same rule and direction & Partly & R1 met for all four base models at both horizons (not met at warm-up 96); R2 met at $h=3$ for LightGBM, ARIMA and naive B and at $h=6$ for ARIMA and naive B (Chronos at $h=3$ inconclusive under E5); R3 inconclusive \\
+E2 & Dependence on the base model: contrasts side by side, no threshold & Descriptive & R1 and R3 do not depend on the base model; R2 at $h=6$ does (ARIMA, naive B met; LightGBM, Chronos not met) \\
+E3 & Point accuracy of Chronos: relative MAE with bootstrap interval, descriptive & Descriptive & Relative MAE of Chronos on clean months 0.774, 0.699, 0.654, 0.895 at $h=1,3,6,12$; no interval favours LightGBM or ARIMA \\
+E4 & Leakage: accuracy claims only from target months from 2025-01 & Applied & 22 months, 567 country-month cells per horizon, 30 countries; the 2025-01 cutoff is an assumption, not verified \\
+E5 & Power: MDE undefined or above 7 pp is inconclusive & Applied & MDE of ACI $-$ rolling 1.2 to 6.6 pp at warm-up 48, undefined for Chronos at $h=3$; undefined for every DRACP $-$ ACI contrast and for all contrasts at warm-up 96 \\
+\bottomrule
+\end{tabular}

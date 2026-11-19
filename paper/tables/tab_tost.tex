@@ -1,0 +1,45 @@
+\begin{tabular}{lcclrrll}
+\toprule
+Panel & Warm-up & Base & $h$ & $T$ (pp) & TOST $p$ & TOST verdict & Under E5 \\
+\midrule
+Design (13) & 48 & LightGBM & 3 & +0.2 & 0.008 & Equivalent & Inconclusive \\
+ &  &  & 6 & $-$0.2 & 0.013 & Equivalent & Inconclusive \\
+\midrule
+Design (13) & 96 & LightGBM & 3 & +0.1 & 0.128 & Not shown & Not assessed \\
+ &  &  & 6 & +0.2 & 0.146 & Not shown & Not assessed \\
+\midrule
+Hold-out 1 (7) & 48 & LightGBM & 3 & $-$0.1 & $<$0.001 & Equivalent & Inconclusive \\
+ &  &  & 6 & $-$0.3 & 0.047 & Equivalent & Inconclusive \\
+\midrule
+Hold-out 1 (7) & 96 & LightGBM & 3 & $-$0.4 & 0.062 & Not shown & Inconclusive \\
+ &  &  & 6 & $-$1.1 & 0.355 & Not shown & Inconclusive \\
+\midrule
+Design (13), from 2010 & 48 & LightGBM & 3 & $-$0.5 & 0.070 & Not shown & Inconclusive \\
+ &  &  & 6 & +1.9 & 0.452 & Not shown & Inconclusive \\
+ & 48 & Chronos & 3 & +0.0 & 0.004 & Equivalent & Inconclusive \\
+ &  &  & 6 & +2.4 & 0.520 & Not shown & Inconclusive \\
+\midrule
+Hold-out 1 (7), from 2010 & 48 & LightGBM & 3 & $-$0.8 & 0.124 & Not shown & Inconclusive \\
+ &  &  & 6 & +0.2 & 0.080 & Not shown & Inconclusive \\
+ & 48 & Chronos & 3 & $-$0.2 & 0.016 & Equivalent & Inconclusive \\
+ &  &  & 6 & +0.2 & 0.134 & Not shown & Inconclusive \\
+\midrule
+Hold-out 2 (10) & 48 & LightGBM & 3 & $-$1.0 & 0.153 & Not shown & Inconclusive \\
+ &  &  & 6 & $-$1.3 & 0.472 & Not shown & Inconclusive \\
+ & 48 & ARIMA & 3 & $-$1.5 & 0.379 & Not shown & Inconclusive \\
+ &  &  & 6 & $-$1.8 & 0.553 & Not shown & Inconclusive \\
+ & 48 & Naive B & 3 & $-$1.2 & 0.352 & Not shown & Inconclusive \\
+ &  &  & 6 & $-$1.8 & 0.760 & Not shown & Inconclusive \\
+ & 48 & Chronos & 3 & $-$0.5 & 0.038 & Equivalent & Inconclusive \\
+ &  &  & 6 & $-$1.2 & 0.372 & Not shown & Inconclusive \\
+\midrule
+Hold-out 2 (10) & 96 & LightGBM & 3 & $-$0.5 & 0.037 & Equivalent & Inconclusive \\
+ &  &  & 6 & $-$3.0 & 0.982 & Not shown & Inconclusive \\
+ & 96 & ARIMA & 3 & +0.3 & 0.300 & Not shown & Inconclusive \\
+ &  &  & 6 & $-$2.3 & 0.787 & Not shown & Inconclusive \\
+ & 96 & Naive B & 3 & $-$0.2 & 0.013 & Equivalent & Inconclusive \\
+ &  &  & 6 & $-$2.3 & 0.868 & Not shown & Inconclusive \\
+ & 96 & Chronos & 3 & $-$1.2 & 0.189 & Not shown & Inconclusive \\
+ &  &  & 6 & $-$3.0 & 0.971 & Not shown & Inconclusive \\
+\bottomrule
+\end{tabular}

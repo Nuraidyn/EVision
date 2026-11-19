@@ -1,0 +1,55 @@
+\begin{tabular}{llcllrrrl}
+\toprule
+Panel & Base & $h$ & Contrast & $T$ (pp) & 95\% CI & Holm $p$ & MDE (pp) & Verdict \\
+\midrule
+Design (13) & LightGBM & 3 & ACI $-$ rolling & $-$2.2 & [$-$2.7, +0.1] & 0.090 & -- & Inconclusive \\
+ &  & 6 & ACI $-$ rolling & $-$1.5 & [$-$2.1, $-$0.1] & 0.078 & -- & Inconclusive \\
+ &  & 3 & DRACP $-$ ACI & +0.2 & [$-$1.2, +1.0] & 1.000 & -- & Inconclusive \\
+ &  & 6 & DRACP $-$ ACI & $-$0.2 & [$-$2.0, +1.3] & 1.000 & -- & Inconclusive \\
+\midrule
+Hold-out 1 (7) & LightGBM & 3 & ACI $-$ rolling & $-$1.6 & [$-$3.0, +0.5] & 0.350 & -- & Inconclusive \\
+ &  & 6 & ACI $-$ rolling & $-$0.7 & [$-$2.8, +1.3] & 1.000 & -- & Inconclusive \\
+ &  & 3 & DRACP $-$ ACI & $-$0.1 & [$-$1.2, +0.9] & 1.000 & -- & Inconclusive \\
+ &  & 6 & DRACP $-$ ACI & $-$0.3 & [$-$1.4, +1.7] & 1.000 & -- & Inconclusive \\
+\midrule
+Design (13), from 2010 & LightGBM & 3 & ACI $-$ rolling & $-$2.1 & [$-$2.9, +0.5] & 0.216 & -- & Inconclusive \\
+ &  & 6 & ACI $-$ rolling & $-$2.0 & [$-$3.1, +0.5] & 0.216 & -- & Inconclusive \\
+ &  & 3 & DRACP $-$ ACI & $-$0.5 & [$-$1.6, +1.3] & 0.654 & -- & Inconclusive \\
+ &  & 6 & DRACP $-$ ACI & +1.9 & [$-$1.0, +5.5] & 0.654 & -- & Inconclusive \\
+\midrule
+Design (13), from 2010 & Chronos & 3 & ACI $-$ rolling & $-$1.9 & [$-$2.3, +0.9] & 0.363 & -- & Inconclusive \\
+ &  & 6 & ACI $-$ rolling & $-$2.0 & [$-$2.5, +0.8] & 0.358 & -- & Inconclusive \\
+ &  & 3 & DRACP $-$ ACI & +0.0 & [$-$1.4, +1.3] & 0.982 & -- & Inconclusive \\
+ &  & 6 & DRACP $-$ ACI & +2.4 & [$-$0.6, +5.9] & 0.363 & -- & Inconclusive \\
+\midrule
+Hold-out 1 (7), from 2010 & LightGBM & 3 & ACI $-$ rolling & $-$2.4 & [$-$5.5, +0.7] & 0.496 & -- & Inconclusive \\
+ &  & 6 & ACI $-$ rolling & $-$4.7 & [$-$9.6, +0.5] & 0.390 & -- & Inconclusive \\
+ &  & 3 & DRACP $-$ ACI & $-$0.8 & [$-$2.2, +1.2] & 0.656 & -- & Inconclusive \\
+ &  & 6 & DRACP $-$ ACI & +0.2 & [$-$2.2, +1.4] & 0.904 & -- & Inconclusive \\
+\midrule
+Hold-out 1 (7), from 2010 & Chronos & 3 & ACI $-$ rolling & $-$1.3 & [$-$4.9, +0.7] & 1.000 & -- & Inconclusive \\
+ &  & 6 & ACI $-$ rolling & $-$2.0 & [$-$4.5, +1.4] & 0.962 & -- & Inconclusive \\
+ &  & 3 & DRACP $-$ ACI & $-$0.2 & [$-$2.0, +1.2] & 1.000 & -- & Inconclusive \\
+ &  & 6 & DRACP $-$ ACI & +0.2 & [$-$2.5, +4.3] & 1.000 & -- & Inconclusive \\
+\midrule
+Hold-out 2 (10) & LightGBM & 3 & ACI $-$ rolling & $-$3.7 & [$-$5.1, $-$0.7] & 0.008 & 3.2 & Met \\
+ &  & 6 & ACI $-$ rolling & $-$3.5 & [$-$4.9, +0.5] & 0.159 & 6.1 & Not met \\
+ &  & 3 & DRACP $-$ ACI & $-$1.0 & [$-$2.0, +0.9] & 0.321 & -- & Inconclusive \\
+ &  & 6 & DRACP $-$ ACI & $-$1.3 & [$-$2.7, +2.0] & 0.337 & -- & Inconclusive \\
+\midrule
+Hold-out 2 (10) & ARIMA & 3 & ACI $-$ rolling & $-$3.2 & [$-$3.6, $-$1.1] & 0.004 & 3.2 & Met \\
+ &  & 6 & ACI $-$ rolling & $-$3.1 & [$-$3.9, $-$0.5] & 0.030 & 3.5 & Met \\
+ &  & 3 & DRACP $-$ ACI & $-$1.5 & [$-$2.4, +0.8] & 0.199 & -- & Inconclusive \\
+ &  & 6 & DRACP $-$ ACI & $-$1.8 & [$-$3.4, +0.7] & 0.199 & -- & Inconclusive \\
+\midrule
+Hold-out 2 (10) & Naive B & 3 & ACI $-$ rolling & $-$4.1 & [$-$4.9, $-$1.5] & 0.004 & 1.2 & Met \\
+ &  & 6 & ACI $-$ rolling & $-$3.4 & [$-$4.7, $-$0.4] & 0.039 & 3.5 & Met \\
+ &  & 3 & DRACP $-$ ACI & $-$1.2 & [$-$2.3, +0.9] & 0.422 & -- & Inconclusive \\
+ &  & 6 & DRACP $-$ ACI & $-$1.8 & [$-$3.3, +2.5] & 0.422 & -- & Inconclusive \\
+\midrule
+Hold-out 2 (10) & Chronos & 3 & ACI $-$ rolling & $-$3.3 & [$-$4.0, $-$0.3] & 0.036 & -- & Inconclusive \\
+ &  & 6 & ACI $-$ rolling & $-$2.5 & [$-$3.6, +0.1] & 0.088 & 6.6 & Not met \\
+ &  & 3 & DRACP $-$ ACI & $-$0.5 & [$-$1.8, +1.3] & 0.454 & -- & Inconclusive \\
+ &  & 6 & DRACP $-$ ACI & $-$1.2 & [$-$2.2, +1.3] & 0.443 & -- & Inconclusive \\
+\bottomrule
+\end{tabular}

@@ -1,0 +1,28 @@
+\begin{tabular}{p{0.15\linewidth}p{0.45\linewidth}p{0.32\linewidth}}
+\toprule
+Item & Description & Key settings \\
+\midrule
+\multicolumn{3}{l}{\emph{Interval methods (nominal level 0.90, $\alpha=0.10$)}} \\
+Split & Quantile of absolute residuals on the warm-up window; fixed, never updated & Warm-up $n_{\mathrm{cal}}=48$ (primary) or 96 \\
+Rolling & Quantile of the most recent absolute residuals & Window 120 residuals \\
+ACI & Rolling window; quantile level moved online after each released outcome & Step 0.02, window 120 \\
+FACI & Aggregation of ACI experts with several step sizes & Package defaults (\texttt{dracp}) \\
+Conformal PID & Error-integrator and scorecaster control of the quantile & Package defaults (\texttt{dracp}) \\
+DRACP & Regime-aware calibration with FACI control of the level & Calibration window 120, target window 24, decay 0.985, adaptive bandwidth (grid), 3 regimes \\
+Native & Parametric intervals of the base model (ARIMA: Gaussian from $\psi$-weights; ETS: simulation) & ETS: 400 simulated paths \\
+\midrule
+\multicolumn{3}{l}{\emph{Base point forecasters (cumulative $h$-month log growth)}} \\
+Naive B & Last observed cumulative $h$-month growth & No parameters \\
+ARIMA & ARMA$(p,q)$ with constant and two annual harmonics on monthly inflation; $h$ forecasts summed & $p,q\in\{0,1,2\}$ by AICc every 12 origins \\
+LightGBM & Direct forecast, one model per horizon & 200 trees, learning rate 0.05, 8 leaves, subsample 0.8, column sample 0.8, refit every 3 origins \\
+Chronos & Pretrained model used zero-shot on monthly inflation; $h$ median forecasts summed & \texttt{chronos-bolt-tiny}, context 2048, no covariates \\
+\midrule
+\multicolumn{3}{l}{\emph{Evaluation}} \\
+Rolling origin & One origin per month, expanding training window; outcome released $h$ months after the origin & Minimum 60 months of history; horizons 1, 3, 6, 12 \\
+Calibration error & Mean over countries of $|\mathrm{coverage}-0.90|$ & Equal weight per country \\
+Bootstrap & Moving blocks of calendar months, resampled jointly across countries & Block length $\max(h,12)$, 2000 replicates, 95\% percentile interval \\
+Multiplicity & Holm over the primary family of four contrasts per base model & ACI $-$ rolling and DRACP $-$ ACI at $h=3,6$ \\
+TOST & Equivalence of DRACP and ACI & Margin 2 pp of CE \\
+MDE (R5, E5) & Simulated minimum detectable difference at power 0.80 & Undefined or above 7 pp: inconclusive \\
+\bottomrule
+\end{tabular}

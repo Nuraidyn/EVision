@@ -1,0 +1,113 @@
+\section{Datasets and experimental design}\label{sec:data}
+
+\subsection{Sources}
+
+All series are monthly. Consumer price indices (all items) come from the IMF (series \texttt{M.<country>.PCPI\_IX}), obtained through DBnomics for the first snapshot and through the IMF SDMX API for the second. The exchange rate is the monthly average of domestic currency per US dollar (IMF IFS). The Brent crude price is from the IMF primary commodity price series; in the direct API it requires the area code \texttt{G001}. The exchange rate and Brent enter the feature set of the LightGBM forecaster, and the exchange rate defines the stress measure of the secondary analysis.
+
+\subsection{Panels and selection rules}\label{sec:panels}
+
+Table~\ref{tab:panels} summarises the three panels; the selection rules follow.
+
+\begin{table}[t]
+\centering
+\caption{The three country panels (design, first hold-out, second hold-out): CPI coverage, number of months and number of origins at $h=3$ per country.}
+\label{tab:panels}
+\small
+\fittable{\input{tables/tab_panels.tex}}
+\end{table}
+
+\paragraph{Design countries (13).} Core long-history group: Brazil, Mexico, Chile, Colombia, Peru, South Africa, Indonesia. Regional group: Kazakhstan, Russia, Azerbaijan, Uzbekistan. Control group: Nigeria, Mongolia. These countries were used to shape the design (the stress rule, the start date, the contrasts and the horizons). No measurable criterion, for example an export-share rule, was applied to call them commodity-dependent (Section~\ref{sec:scope}).
+
+\paragraph{First hold-out panel (7).} Bolivia, Paraguay, Uruguay, Ghana, Georgia, Kyrgyzstan, Angola. The candidate list (14 names in a fixed order) and the eligibility rule were written in the fetching script before any forecast was computed for these countries. The rule required at least 220 months of IMF monthly CPI and of exchange rate per US dollar within 2000-01 to 2026-06, with at most 3 missing CPI months, and the first 10 eligible candidates were to be kept. Only 7 candidates met the rule (six candidates start in 2009 or 2010 and one has no CPI series), so the panel has 7 countries and the rule was not relaxed. Target months run from 2009-02 to 2026-06, and all months of these countries are labelled \texttt{holdout}.
+
+\paragraph{Second hold-out panel (10), extension.} Zambia, Armenia, Tanzania, Uganda, Kenya, Iraq, Botswana, Namibia, Mozambique, C\^ote d'Ivoire. The candidate list and the eligibility rule were written before any forecast of any kind was computed for these countries (eighth protocol entry, Section~\ref{sec:extension}). The rule required at least 170 months of IMF monthly CPI and of exchange rate per US dollar within 2010-01 to 2026-06, with at most 3 missing CPI months; the first 10 eligible candidates were kept, and six more candidates were eligible but came after the first 10 and were not used. Each series has 198 months from 2010-01. Six of these countries were candidates of the first hold-out rule and did not qualify under its 220-month requirement; no country is in two panels. All target months are labelled \texttt{holdout2}. After the 60-month training minimum and a warm-up of 48 there are 89 pooled calendar months at $h=3$ and 83 at $h=6$, and after a warm-up of 96 there are 41 and 35.
+
+\subsection{Snapshots}\label{sec:snapshots}
+
+Dated snapshots with SHA-256 hashes were taken from the IMF: two for the design countries and one file for each hold-out panel (Appendix~\ref{app:data}). The first snapshot (CPI, exchange rate and Brent for the 13 design countries from DBnomics, indexed 2025-08-31) and the second (data from 2024-01 onwards fetched directly from the IMF SDMX API after the protocol was committed) overlap from 2024-01 to 2025-05. The overlap is identical for the exchange rate, Brent and CPI except for three differences recorded in the protocol: a constant rebasing of the index level for Kazakhstan (ratio 0.477) and Nigeria (ratio 0.131), small revisions for Russia (up to 0.07 percent) and Mongolia (up to 0.05 percent), and a methodology break in the Nigerian series at 2025-01.
+
+\subsection{Rebasing and the Nigerian methodology break}
+
+Because the two snapshots use different index bases, the loader chains them on the CPI level at the last month they have in common. The earlier snapshot wins on overlap, and later months are rescaled by a constant factor, so growth rates are unaffected. An early version of the loader merged the snapshots without rescaling and produced a false 74 percent fall in the Kazakhstani index; this was found and fixed before the run, and a regression test now checks that no country has a monthly log jump above 0.15 at the junction. For Nigeria, the CPI index falls from 113.9 to 110.7 in rebased terms between 2024-12 and 2025-01, which reflects a change in methodology and not a price movement. Months from 2025-01 are therefore not appended and the Nigerian series ends at 2024-12. Russia has 30 missing CPI months; its series is cut into stretches of consecutive months and only stretches of at least 60 months are used. Series that start later than 2000 (Kazakhstan, Azerbaijan and Nigeria from 2005, Mongolia from 2006, Uzbekistan and Peru from 2010) enter once they have 60 months of history.
+
+\subsection{Exploratory and confirmatory samples}\label{sec:samples}
+
+The label of each evaluated row depends on its target month. Target months before 2025-07 are labelled exploratory. Target months from 2025-07 on the 13 design countries are labelled confirmatory in the code, but with at most about 16 months per country there are two or three independent blocks, so these months cannot carry a claim. The main confirmatory pool became the 7 hold-out countries, and the extension adds the 10 countries of the second hold-out panel. The run on the post-2025-06 months of the 13 countries is degenerate and is not used (Section~\ref{sec:confirm13}). Exploratory results (target months up to 2025-05 or 2025-06 for the design countries) and the hold-out results are kept separate throughout, and no threshold or window was tuned on the hold-out data or to raise a result.
+
+\subsection{Interval methods and base models}
+
+Table~\ref{tab:methods} lists the interval methods, the base forecasters and the evaluation settings. The nominal level is 0.90; the primary warm-up is $n_{\mathrm{cal}}=48$ residuals and a sensitivity run uses $n_{\mathrm{cal}}=96$, applied to all methods and not promoted to the primary configuration.
+
+\begin{table}[t]
+\centering
+\caption{Interval methods, base forecasters and evaluation settings (nominal level 0.90; rolling window 120; ACI step 0.02).}
+\label{tab:methods}
+\small
+\fittable{\input{tables/tab_methods.tex}}
+\end{table}
+
+\subsection{What ``pre-specified'' means and the sequence of events}\label{sec:prespec}
+
+The protocol and the shock definition are committed documents in the project repository. Changes are logged in their ``Changes'' sections with a date and a reason. ``Pre-specified'' in this paper means that a rule was committed to the repository before the run it governs. It does not mean registration in an external registry, and the order of events is not independently timestamped: the author is a single person, all entries are dated 2026-11-18 or 2026-11-19, and the order is attested only by a commit history kept by the same person. The decision rules R1--R5 were written after the exploratory results at both warm-ups were known, so they were set by an author who knew how the design countries behaved. The sequence was as follows.
+\begin{enumerate}
+\item \textbf{Shock rule frozen} (document dated 2026-11-18), before any forecast was computed. Validity checks were run afterwards (Section~\ref{sec:shockvalid} and Appendix~\ref{app:extra}).
+\item \textbf{Protocol draft 1}, written before any forecast or interval had been computed. A committee review scored it 5.5 out of 10, and the claim hierarchy, FACI and conformal PID, a reproduction tolerance, a block length of at least $h$, reduced primary tests and a threshold for the minimum detectable difference were added before any forecast. A second entry added the second snapshot and the Nigerian break and restricted confirmatory analysis to the pooled panel. A partial reproduction of DRACP was recorded and the topic was fixed.
+\item \textbf{Third entry and the exploratory run.} Implementation decisions of the engine (start 2000-01, warm-up 48, window 120, ACI step 0.02, snapshot chaining) were fixed before results existed. The first run was exploratory only (target months up to 2025-06), so that no target month from 2025-07 could enter.
+\item \textbf{Fourth entry: amendments after the exploratory result and before any hold-out forecast.} Pooled-coverage contrasts were replaced by calibration error as the primary outcome; the reference changed from split to rolling conformal; DRACP against ACI became an equivalence question with a 2~pp margin; a fair DRACP sensitivity with warm-up 96 was added; the 7 hold-out countries became the main confirmatory pool; block length became at least 12; and the stress analysis was kept exploratory. The text of the entry states that the changes are motivated by logical defects of the design and not by significance. These amendments were made after the exploratory results were known.
+\item \textbf{Fifth entry: hold-out run specification and decision rules R1--R5}, before any forecast was computed for the 7 hold-out countries. The runs were (A) warm-up 48 (primary), (B) warm-up 96 (sensitivity) and (C) an instant-feedback diagnostic at $h=12$. The entry states that none of the rules is changed after the result is seen.
+\item \textbf{Hold-out run}, the first and only look at the 7 countries.
+\item \textbf{Sixth entry: robustness analyses S1--S5}, written after the hold-out result and before they were computed. They are secondary, do not replace R1--R5, and no threshold was changed.
+\item \textbf{Seventh entry (post hoc): additions S6 (Kazakhstan alone) and S7 (native intervals)}, requested by a review of the manuscript draft, recorded before they were computed and computed from existing outputs only. They are post hoc, descriptive or secondary, and not part of the pre-specified family.
+\item \textbf{Eighth entry: the extension} (Section~\ref{sec:extension}), specifying the second hold-out panel, the Chronos forecaster, the rules E1--E5 and the evaluation of the explanation layer. The specification was written after R1--R5 had been applied and after the R2 outcome on the first hold-out panel and the robustness results were known; it does not change R1--R5 or any earlier result.
+\end{enumerate}
+Commit hashes for each step are listed in Appendix~\ref{app:changes}.
+
+\subsection{Procedural boundary}\label{sec:boundary}
+
+The hold-out countries are untouched with respect to countries only. They are independent of the design sample by country, but they share calendar months with it (the global shocks of 2020 to 2022 fall in both samples). The set of methods, the form of the contrasts, the horizons, the 2~pp margin and the 3~pp and 7~pp thresholds were chosen on the 13 design countries. The author had also seen the post-2025-06 months of the 13 design countries before the amendments. The hold-out evaluation is therefore a test on new countries and not a fully blind test of the design. The second hold-out panel is independent of both earlier samples by country, but it too shares calendar months with them (2010 to 2026), and its rules E1--E5 were written by an author who knew every earlier result, including the R2 outcome on the first hold-out panel. It is a replication on new countries and not a blind test.
+
+\subsection{The decision rules R1--R5}\label{sec:rules}
+
+The rules apply to the base model LightGBM, the primary family with Holm correction over four tests, pooled over the 7 hold-out countries, with a block length of 12. They are reproduced in Table~\ref{tab:rules} together with the extension rules E1--E5, and their recorded outcomes are discussed in Section~\ref{sec:results}. In words:
+\begin{itemize}
+\item \textbf{R1 (replication of the secondary result):} ACI is better calibrated than split if the CE difference ACI minus split is negative with Holm $p<0.05$ at both $h=3$ and $h=6$.
+\item \textbf{R2 (does adaptivity help beyond a rolling window):} ``ACI improves on rolling'' only if ACI minus rolling is negative with Holm $p<0.05$ at the horizon; otherwise ``not shown''.
+\item \textbf{R3 (DRACP against ACI):} ``no advantage, equivalent within 2~pp'' only if equivalence holds at both warm-up sizes; ``DRACP better'' only if DRACP minus ACI is negative with Holm $p<0.05$ at both warm-ups; otherwise ``inconclusive''.
+\item \textbf{R4 (delayed feedback explains the $h=12$ shortfall):} supported if the mean coverage of ACI with instant feedback exceeds the delayed one by at least 3~pp on the hold-out panel.
+\item \textbf{R5 (power):} a contrast whose minimum detectable difference is undefined or above 7~pp is reported as inconclusive regardless of its $p$-value.
+\end{itemize}
+
+\begin{table}[t]
+\centering
+\caption{Decision rules R1--R5 and extension rules E1--E5 as pre-specified, with their recorded outcomes.}
+\label{tab:rules}
+\small
+\fittable{\input{tables/tab_rules.tex}}
+\end{table}
+
+\subsection{The extension: second hold-out panel, Chronos and the rules E1--E5}\label{sec:extension}
+
+The eighth protocol entry (2026-11-19) specifies the extension before any forecast, request or evaluation of it was computed, and before any forecast of any kind was computed for the 10 countries of the second hold-out panel. It does not change R1--R5.
+
+\paragraph{Runs.} All extension runs start at 2010-01. (E-A) Base models LightGBM, ARIMA, naive B and Chronos on the second hold-out panel at warm-up 48 (primary) and warm-up 96 (sensitivity, not promoted). (E-B) The four base models were run on the 13 design countries and the 7 first hold-out countries as a secondary analysis; calibration contrasts were analysed only for LightGBM and Chronos, which narrows the E-B analysis of the protocol (a deviation). Because these runs start in 2010 and not in 2000, their numbers differ from those of the earlier sections and are not comparable with them cell by cell.
+
+\paragraph{Rules.} The rules are applied separately for each base model, with the CE family of the protocol (ACI minus rolling and DRACP minus ACI at $h=3$ and $h=6$, Holm over four tests; ACI minus split and ACI minus native secondary).
+\begin{itemize}
+\item \textbf{E1, replication on new countries.} A statement of R1, R2 or R3 is ``replicated'' for a base model only if the same rule is met in the same direction; otherwise it is reported as not replicated or inconclusive. Results at warm-up 96 are a sensitivity analysis and are not promoted.
+\item \textbf{E2, dependence on the base model.} The contrasts for the four base models are reported side by side, without a threshold.
+\item \textbf{E3, point accuracy of Chronos.} Mean absolute error relative to naive B per horizon, next to ARIMA, ETS and LightGBM, with a block-bootstrap 95\% interval; descriptive.
+\item \textbf{E4, leakage.} Claims about the accuracy of Chronos are drawn only from the target months from 2025-01, pooled over all 30 countries, and the thinness of that sample is stated. Calibration contrasts for Chronos are reported on all months with the flag.
+\item \textbf{E5, power.} A contrast whose minimum detectable difference is undefined or above 7~pp is inconclusive.
+\end{itemize}
+
+\paragraph{Multiplicity.} The Holm correction is applied within each base model (four tests). It is not applied across the four base models, and the four base models are evaluated on the same countries and months, so their results are not independent replications. No statement in this paper rests on pooling the four.
+
+\paragraph{Implementation note and deviations.} The first attempt to analyse the new panel failed because the country code NA (Namibia) was read as a missing value by the CSV reader; the reader was fixed with a regression test, the forecasts were not affected and were not recomputed, and only the analysis step was repeated. Two deviations from the protocol are stated. (1) Calibration contrasts for the earlier 20 countries were analysed only for LightGBM and Chronos although four base models were run. (2) The protocol asks for relative mean absolute error (E3) with bootstrap intervals next to ARIMA, ETS and LightGBM; the all-months accuracy table has no intervals and no ETS, because ETS was not part of the extension runs, while the clean-month analysis has intervals against LightGBM, ARIMA and naive B.
+
+\subsection{Validity of the shock rule and why stress is secondary}\label{sec:shockvalid}
+
+A committee review scored the frozen exchange-rate-based shock rule 5.5 out of 10, objecting that an exchange-rate flag measures currency turbulence and not an inflation shock. Two checks were run on the 13 design countries; they are exploratory because the same countries shaped the design. With the discrete label, the share of the top-decile one-step errors of a naive forecast that falls inside shock windows exceeded the share of shock months by a lift of 1.49 to 1.87, below the committee's bar of 2 (Appendix~\ref{app:extra}). With the continuous stress variable, the pooled within-country rank correlation with the naive one-step error was 0.075 (permutation $p=0.001$) for origin stress over all months and 0.050 ($p=0.0495$) since 2015-09, and the relation is not monotone. Because the association is weak and concentrated in the upper tail, the main contribution does not depend on shocks. Parameters of the rule were not tuned to raise the lift, and the upper decile was not promoted to a primary threshold after the fact. Kazakhstan has fewer than 10 independent episodes after 2015-09 and is therefore a descriptive case inside a pooled panel, not a stand-alone inferential unit.
+
+\subsection{Scope of the term ``commodity-dependent''}\label{sec:scope}
+
+No export-share rule was applied to select the countries, and Georgia and Uruguay are borderline cases. The hold-out sets were determined by IMF data availability under fixed rules: 7 of 14 candidates qualified for the first panel, and the first 10 eligible candidates formed the second panel. The phrase ``commodity-dependent economies'' in the title describes the intended setting and not a tested property of the panel, and the study does not compare commodity-dependent with other economies.

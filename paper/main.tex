@@ -1,0 +1,67 @@
+\documentclass[11pt,a4paper]{article}
+
+\usepackage[T1]{fontenc}
+\usepackage[utf8]{inputenc}
+\usepackage[margin=2.5cm]{geometry}
+\usepackage{microtype}
+\usepackage{amsmath}
+\usepackage{amssymb}
+\usepackage{amsthm}
+\usepackage{booktabs}
+\usepackage{array}
+\usepackage{multirow}
+\usepackage{graphicx}
+\usepackage{xcolor}
+\usepackage{float}
+\usepackage[font=small,labelfont=bf]{caption}
+\usepackage[round,authoryear]{natbib}
+\usepackage[colorlinks=true,linkcolor=blue!50!black,citecolor=blue!50!black,urlcolor=blue!50!black]{hyperref}
+
+% Number macros produced by build_paper_assets.py (optional).
+\IfFileExists{numbers.tex}{\input{numbers.tex}}{}
+
+\newtheorem{definition}{Definition}
+
+% Typesetting helpers defined for this paper.
+\newsavebox{\tabbox}
+% Scale a table body down to the line width only when it is wider than the line.
+\newcommand{\fittable}[1]{\sbox{\tabbox}{#1}%
+  \ifdim\wd\tabbox>\linewidth\resizebox{\linewidth}{!}{\usebox{\tabbox}}\else\usebox{\tabbox}\fi}
+\newcommand{\ci}[2]{$[#1,\,#2]$}
+\newcommand{\num}[1]{$#1$}
+\newcommand{\pp}{\,pp}
+\newcommand{\ACI}{ACI}
+\newcommand{\FACI}{FACI}
+\newcommand{\DRACP}{DRACP}
+\newcommand{\CE}{\mathrm{CE}}
+\newcommand{\Cov}{\mathrm{cov}}
+\newcommand{\MDE}{\mathrm{MDE}}
+\newcommand{\Ind}{\mathbf{1}}
+
+\title{Comparing Methods for Building Reliable Prediction Intervals for Machine-Learning Inflation Forecasts in Commodity-Dependent Economies}
+\author{Nuraidyn Seitkapar}
+\date{Draft of 19 November 2026}
+
+\begin{document}
+\maketitle
+
+\input{sections/abstract}
+
+\input{sections/introduction}
+\input{sections/related}
+\input{sections/methods}
+\input{sections/architecture}
+\input{sections/data}
+\input{sections/results}
+\input{sections/discussion}
+\input{sections/limitations}
+\input{sections/conclusion}
+\input{sections/reproducibility}
+
+\bibliographystyle{plainnat}
+\bibliography{references}
+
+\appendix
+\input{sections/appendix}
+
+\end{document}

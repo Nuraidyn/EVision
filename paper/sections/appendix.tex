@@ -1,0 +1,164 @@
+\section{Data snapshots and hashes}\label{app:data}
+
+Dated snapshots with SHA-256 hashes (all under \texttt{scripts/thesis/data/}).
+\begin{description}
+\item[\texttt{snapshot.json}] IMF CPI, exchange rate per US dollar and Brent for the 13 design countries, via DBnomics (indexed 2025-08-31).\\
+{\footnotesize\texttt{d01b8360c4167f0b3d829f3d7af0438c36fe858c9f2e2745e9b258039cc2d739}}
+\item[\texttt{confirmatory.json}] CPI, exchange rate and Brent from 2024-01, IMF SDMX API, fetched after the protocol was committed. CPI runs to 2026-08 (Peru, Nigeria), 2026-09 (Kazakhstan, Russia, Azerbaijan, Uzbekistan, Colombia, Brazil, Mexico, South Africa) or 2026-10 (Chile, Mongolia, Indonesia).\\
+{\footnotesize\texttt{e2001e5aad677567a7d572a6cf1d22929b18bfe1d3c1ad94bff47b75a3981a74}}
+\item[\texttt{holdout.json}] CPI and exchange rate of the 7 first hold-out countries (Bolivia, Paraguay, Uruguay, Ghana, Georgia, Kyrgyzstan, Angola). Brent for the hold-out run is taken from the main snapshot files.\\
+{\footnotesize\texttt{0245eab6c75d6bd7fe800fe5978a7ca5670550dff4b3f23e817177f9c6fae9ac}}
+\item[\texttt{holdout2.json}] CPI and exchange rate of the 10 countries of the second hold-out panel (198 months from 2010-01); the candidate list and the rule were fixed in the fetching script before any forecast.\\
+{\footnotesize\texttt{72bcfee645ef3c5f89a67763278a3ee8ee2a74523e38a26739b16726c8947c75}}
+\end{description}
+Brent in the direct IMF API needs the area code \texttt{G001}. The overlap of the first two snapshots (2024-01 to 2025-05) is identical for the exchange rate, Brent and CPI except for the rebasing of the index level of Kazakhstan (0.477) and Nigeria (0.131), small revisions for Russia (up to 0.07 percent) and Mongolia (up to 0.05 percent), and the Nigerian methodology break at 2025-01 (the index falls from 113.9 to 110.7 in rebased terms; growth between 2024-12 and 2025-01 is excluded). The IMF also publishes dated CPI vintages, which were not used.
+
+\section{Change log of the protocol}\label{app:changes}
+
+Table~\ref{tab:changelog} lists the dated changes to the frozen documents and the code, with the result before which each change was made. All entries are dated 2026-11-18 or 2026-11-19 and are attested only by the commit history of a single author.
+
+\begin{table}[H]
+\centering
+\caption{Change log summary. ``Before'' states the result before which the change was committed.}
+\label{tab:changelog}
+\small
+\begin{tabular}{@{}p{0.17\linewidth}p{0.56\linewidth}p{0.20\linewidth}@{}}
+\toprule
+Document (commit) & Change & Before \\
+\midrule
+Shock definition (\texttt{58871dc}) & Rule frozen: threshold 3, window 3, 60-month lookback, floor 0.005 & Any forecast \\
+Shock definition & Validity checks logged; label timing defined; stress made secondary & Any forecast \\
+Protocol entry 1 (\texttt{810a60c}) & After committee review (5.5/10): claim hierarchy, horizons, second snapshot, FACI and conformal PID, block length at least $h$, primary tests at $h=3,6$, MDE threshold & Any forecast \\
+Protocol entry 2 & Second snapshot checked; confirmatory restricted to the pooled panel; Nigerian break; topic fixed & Any forecast \\
+Protocol entry 3 (\texttt{2229076}) & Engine decisions (start 2000-01, 60 months of history, warm-up 48, window 120, step 0.02, LightGBM primary, chaining fix); first run exploratory only & Any full run \\
+Protocol entry 4 (\texttt{0ff08d8}) & CE replaces pooled coverage; reference becomes rolling; TOST with a 2~pp margin; warm-up 96 sensitivity; 7 hold-out countries; block length at least 12; stress stays exploratory & Hold-out forecasts \\
+Protocol entry 5 (\texttt{1480604}) & Hold-out runs A, B, C specified; R1--R5 fixed & Hold-out run \\
+Protocol entry 6 (\texttt{552fa67}) & Robustness analyses S1--S5 written down & Their computation \\
+Protocol entry 7 (\texttt{30d488c}, post hoc) & S6 (Kazakhstan alone) and S7 (native intervals) written down after the manuscript review & Their computation \\
+Protocol entry 8 (\texttt{dfe0b2c}) & Extension: second hold-out panel, Chronos with leakage flag, rules E1--E5, explainer evaluation (468 prompts, two conditions) & Any forecast for the second panel; any explainer request \\
+Code (\texttt{29532e7}, \texttt{ca43ddc}) & Explainer and harness with fake client; Chronos forecaster, leakage flag, second-panel loading & Extension results \\
+Results (\texttt{accd674}) & Extension results; CSV reader fixed for the country code NA (forecasts not affected) & --- \\
+\bottomrule
+\end{tabular}
+\end{table}
+
+Other commits referred to in the text: exploratory results (\texttt{bf78f53}), first hold-out results (\texttt{46a2474}), robustness results (\texttt{de93501}).
+
+\section{Additional tables}\label{app:extra}
+
+\begin{table}[H]
+\centering
+\caption{Pooled coverage, design panel (13 units, warm-up 48, exploratory; every unit-month weighted equally). Unit-months: 2024, 1972, 1894 and 1738 at $h=1,3,6,12$.}
+\label{tab:pooled_expl}
+\small
+\begin{tabular}{@{}lcccc@{}}
+\toprule
+Method & $h=1$ & $h=3$ & $h=6$ & $h=12$ \\
+\midrule
+Split conformal & 0.946 & 0.937 & 0.917 & 0.864 \\
+Rolling conformal & 0.917 & 0.916 & 0.900 & 0.869 \\
+ACI & 0.908 & 0.906 & 0.899 & 0.864 \\
+FACI & 0.913 & 0.904 & 0.878 & 0.825 \\
+Conformal PID & 0.917 & 0.907 & 0.883 & 0.837 \\
+DRACP & 0.915 & 0.909 & 0.892 & 0.863 \\
+\bottomrule
+\end{tabular}
+\end{table}
+
+\begin{table}[H]
+\centering
+\caption{Pooled coverage, first hold-out panel (7 countries, warm-up 48). Unit-months: 1163, 1135, 1093 and 1009 at $h=1,3,6,12$.}
+\label{tab:pooled_ho}
+\small
+\begin{tabular}{@{}lcccc@{}}
+\toprule
+Method & $h=1$ & $h=3$ & $h=6$ & $h=12$ \\
+\midrule
+Split & 0.954 & 0.932 & 0.936 & 0.861 \\
+Rolling & 0.924 & 0.918 & 0.921 & 0.872 \\
+ACI & 0.914 & 0.907 & 0.908 & 0.884 \\
+FACI & 0.919 & 0.910 & 0.897 & 0.835 \\
+Conformal PID & 0.912 & 0.910 & 0.909 & 0.833 \\
+DRACP & 0.917 & 0.904 & 0.894 & 0.865 \\
+\bottomrule
+\end{tabular}
+\end{table}
+
+\begin{table}[H]
+\centering
+\caption{Validity check 1 of the shock rule (discrete label, 13 design countries). Lift is the recall of the top-decile one-step errors of a naive forecast inside shock windows divided by the share of shock months.}
+\label{tab:validity}
+\small
+\begin{tabular}{@{}llcccc@{}}
+\toprule
+Sample & Label & Shock share & Recall & Lift & Permutation $p$ \\
+\midrule
+All evaluable months & target & 0.204 & 0.382 & 1.87 & 0.0005 \\
+All evaluable months & origin & 0.204 & 0.364 & 1.79 & 0.0005 \\
+Since 2015-09 & target & 0.172 & 0.288 & 1.68 & 0.0015 \\
+Since 2015-09 & origin & 0.171 & 0.255 & 1.49 & 0.0125 \\
+\bottomrule
+\end{tabular}
+\end{table}
+
+With the continuous stress variable the pooled within-country rank correlation with the naive one-step error was 0.075 (permutation $p=0.001$) for origin stress over all months, 0.091 for target stress, and 0.050 ($p=0.0495$) for origin stress since 2015-09. The relation is not monotone: deciles 2 to 8 are flat, and the share of top-decile errors is 0.134 in decile 9 and 0.235 in decile 10 (base rate 0.10), while decile 1 is also raised (0.142) and is not explained. Disclosures recorded with the rule: the threshold of 3 was chosen after looking at episode counts for 2.5, 3 and 3.5; the 60-month lookback for Kazakhstan before mid-2020 includes years of a managed exchange rate, which lowers the scale and produces more flags; and of the six Kazakhstani episodes after 2015-09, only three are linked to a known event.
+
+\begin{table}[H]
+\centering
+\caption{S6 (post hoc, descriptive): coverage for Kazakhstan alone (exploratory sample, LightGBM base, warm-up 48; calibration error in brackets).}
+\label{tab:kz}
+\small
+\begin{tabular}{@{}lcccc@{}}
+\toprule
+Method & $h=1$ & $h=3$ & $h=6$ & $h=12$ \\
+\midrule
+ACI & 0.898 (0.002) & 0.902 (0.002) & 0.906 (0.006) & 0.826 (0.074) \\
+DRACP & 0.905 (0.005) & 0.902 (0.002) & 0.906 (0.006) & 0.826 (0.074) \\
+FACI & 0.912 (0.012) & 0.910 (0.010) & 0.874 (0.026) & 0.800 (0.100) \\
+Conformal PID & 0.810 (0.090) & 0.850 (0.050) & 0.882 (0.018) & 0.835 (0.065) \\
+Rolling & 0.825 (0.075) & 0.865 (0.035) & 0.882 (0.018) & 0.826 (0.074) \\
+Split & 0.730 (0.170) & 0.827 (0.073) & 0.803 (0.097) & 0.713 (0.187) \\
+\bottomrule
+\end{tabular}
+\end{table}
+
+\begin{table}[H]
+\centering
+\caption{S2 (other base models): ACI minus rolling and DRACP minus ACI by base model (pp of CE; unadjusted bootstrap $p$ in parentheses).}
+\label{tab:s2full}
+\small
+\begin{tabular}{@{}llccc@{}}
+\toprule
+Sample & Contrast, horizon & LightGBM & ARIMA & Naive B \\
+\midrule
+Exploratory & ACI $-$ rolling, 3 & $-2.2$ (0.030) & $-1.7$ (0.059) & $-1.9$ (0.053) \\
+Exploratory & ACI $-$ rolling, 6 & $-1.5$ (0.020) & $-3.3$ (0.016) & $-1.9$ (0.067) \\
+Exploratory & DRACP $-$ ACI, 3 & $+0.2$ (0.70) & $+0.0$ (0.98) & $+0.1$ (0.82) \\
+Exploratory & DRACP $-$ ACI, 6 & $-0.2$ (0.78) & $-0.4$ (0.54) & $+0.4$ (0.54) \\
+Hold-out & ACI $-$ rolling, 3 & $-1.6$ (0.087) & $-3.0$ (0.030) & $-0.9$ (0.22) \\
+Hold-out & ACI $-$ rolling, 6 & $-0.7$ (0.48) & $-1.6$ (0.21) & $-3.2$ (0.053) \\
+Hold-out & DRACP $-$ ACI, 3 & $-0.1$ (0.76) & $-0.2$ (0.80) & $+0.2$ (0.71) \\
+Hold-out & DRACP $-$ ACI, 6 & $-0.3$ (0.66) & $+0.2$ (0.79) & $+0.3$ (0.75) \\
+\bottomrule
+\end{tabular}
+\end{table}
+
+\begin{table}[H]
+\centering
+\caption{S4 (first hold-out panel, LightGBM, warm-up 48): calibration error / Winkler ratio / median width ratio, relative to rolling conformal.}
+\label{tab:s4}
+\footnotesize
+\resizebox{\linewidth}{!}{%
+\begin{tabular}{@{}lcccc@{}}
+\toprule
+Method & $h=1$ & $h=3$ & $h=6$ & $h=12$ \\
+\midrule
+ACI & 0.020 / 0.95 / 0.84 & 0.020 / 0.99 / 0.90 & 0.025 / 1.05 / 0.88 & 0.048 / 1.12 / 1.09 \\
+DRACP & 0.021 / 0.97 / 0.89 & 0.019 / 0.96 / 0.91 & 0.022 / 1.04 / 0.91 & 0.047 / 1.25 / 0.97 \\
+FACI & 0.024 / 0.95 / 0.85 & 0.023 / 0.94 / 0.90 & 0.013 / 1.00 / 0.90 & 0.070 / 1.07 / 0.92 \\
+Conformal PID & 0.024 / 0.98 / 0.95 & 0.028 / 0.97 / 0.95 & 0.021 / 1.00 / 0.94 & 0.079 / 1.05 / 0.99 \\
+Rolling & 0.029 / 1 / 1 & 0.036 / 1 / 1 & 0.032 / 1 / 1 & 0.086 / 1 / 1 \\
+Split & 0.056 / 1.11 / 1.35 & 0.050 / 1.07 / 1.23 & 0.053 / 1.06 / 1.27 & 0.119 / 1.02 / 1.09 \\
+\bottomrule
+\end{tabular}}
+\end{table}
