@@ -85,7 +85,10 @@ Numbers in the new sections 6.11 to 6.13 of `main.md` come from `results-extensi
 - Table 14 (CE at h=3 and h=6 for the four base models and the ARIMA native intervals) was computed from `interval_summary.csv` (mean over the 10 countries of |coverage - 0.90|); only the h=3 values are in `results-extension-v1.md` and they agree. The h=6 values are new and should be checked.
 - Table 17 puts the R2 outcomes of all panels side by side. The Holm p-values of the re-runs from 2010-01 come from `ext_design13` and `ext_holdout1` (`calibration_contrasts.csv`); the source document states only the range 0.22 to 1.0.
 - The pooled-month counts (89 and 83 at warm-up 48; 41 and 35 at 96) and the minimum detectable differences are as in the source document and `power_mde_ce.csv`.
-- ARIMA and naive B were not re-run on the earlier 20 countries, so Table 17 has LightGBM and Chronos only for those panels.
+- On the earlier 20 countries the four base models were run; calibration contrasts were analysed only for LightGBM and Chronos, which narrows the E-B analysis of the protocol (stated as a deviation in Section 5.6), so Table 17 has LightGBM and Chronos only for those panels. The MDE is undefined in every cell of those panels (`power_mde_ce.csv` of `ext_design13` and `ext_holdout1`), so their R2 results are inconclusive under E5 and not evidence of no effect.
+- R2 on the second hold-out panel: met at h=3 for LightGBM, ARIMA and naive B (Holm 0.008, 0.004, 0.004) and at h=6 for ARIMA and naive B (0.030, 0.039); Chronos at h=3 (Holm 0.036) has an undefined MDE and is inconclusive under E5; Chronos and LightGBM at h=6 are not met (0.088, 0.159).
+- R1 in Section 6.11: the direction replicates and the registered threshold is met on the second panel at warm-up 48; on the first hold-out panel it was met only at warm-up 96.
+- E3 deviation: Table 18 (all months) has no bootstrap intervals and no ETS (ETS was not in the extension runs); the clean-month analysis in Table 19 has intervals against LightGBM, ARIMA and naive B. Stated in Section 5.6 and in the Table 18 note.
 
 Remaining [VERIFY] and [CITATION NEEDED] items added by the extension:
 
@@ -93,7 +96,7 @@ Remaining [VERIFY] and [CITATION NEEDED] items added by the extension:
 - [VERIFY] the exact command lines of the extension runs (Section 9); they are reconstructed from the options of `exp.run` and the run names.
 - [VERIFY] the version of the `chronos` package and the pretraining cutoff of `amazon/chronos-bolt-tiny` (not looked up; 2025-01 is a conservative assumption).
 - [CITATION NEEDED] studies of foundation-model forecasts for inflation and of their interval calibration (Section 2.5).
-- The test counts (81 in `scripts/thesis/exp`, 31 in the LLM layer) are as given by the author and were not re-run here.
+- The test counts (81 in `scripts/thesis/exp`, 18 in the LLM layer: 4 in `test_inflation_explainer.py` and 14 in `llm_eval/tests`; 31 together with the 13 platform-service tests of `test_inflation_calibration.py`) are as given by the author and were not re-run here.
 
 Wording rules for the extension, kept in all three files: "R2 met" is a statement about one panel at the primary warm-up; the conclusion about ACI against a rolling window is "depends on the panel"; the panels are not averaged and the favourable panel is not selected; warm-up 96 on the second panel "shows nothing"; Holm is applied within each base model and not across the four base models, which share countries and months; the language-model explainer has no result because its evaluation (936 calls, needs an API key) has not been run.
 
