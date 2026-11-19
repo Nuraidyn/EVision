@@ -346,6 +346,72 @@ from existing outputs only:
 
 These results do not change R1-R5 and are not part of the pre-specified family.
 
+### 2026-11-19 (eighth entry: AI extension, specified before any computation)
+
+The thesis adds two components that were not in the original design. Both are specified here
+before any forecast, request or evaluation is computed. They do not change R1-R5 or any earlier
+result.
+
+**E. Foundation-model forecaster (Chronos) and a second hold-out panel.**
+
+- Forecaster `chronos`: a pretrained Chronos model used zero-shot (no fine-tuning, no
+  covariates), the smallest Chronos-Bolt model that can be installed (fallback: chronos-t5-small);
+  the exact model identifier is written into the code and the results before the run. It forecasts
+  the monthly inflation series (100 times the log change of the CPI) h steps ahead from all history
+  up to the origin (truncated to the model's maximum context) and the h median forecasts are
+  summed, as for ETS and ARIMA. No native interval is produced (the cumulative sum of quantiles is
+  not a quantile); the conformal methods are applied on top of its point forecast, like for the
+  other base models.
+- Second hold-out panel (`data/holdout2.json`, SHA-256
+  `72bcfee645ef3c5f89a67763278a3ee8ee2a74523e38a26739b16726c8947c75`): ZM, AM, TZ, UG, KE, IQ,
+  BW, NA, MZ, CI, the first 10 of a candidate list fixed in `fetch_holdout2.mjs` before any
+  forecast (rule: at least 170 months of IMF monthly CPI and FX within 2010-01..2026-06, at most 3
+  missing CPI months; CM, DZ, EG, MW, RW, ET were also eligible but beyond the first 10). No
+  forecast of any kind has been computed for these countries before this entry. All their target
+  months are labelled `holdout2`. The panel is shorter than the first hold-out (198 months from
+  2010-01), so the first evaluated origins fall after the 60-month training minimum and the warm-up.
+- Runs, all with `--start 2010-01`: (E-A) base models lgbm, arima, naive_b and chronos on the second
+  hold-out panel at warm-up 48 (primary) and 96 (sensitivity); (E-B) the same four base models on
+  the 20 earlier countries, as a secondary analysis, with the Chronos rows flagged as described
+  below.
+- Decision rules, applied separately for each base model, with the CE contrast family of the
+  protocol (ACI - rolling and DRACP - ACI at h=3 and h=6, Holm over 4; ACI - split and ACI - native
+  secondary):
+  - E1, replication of the main conclusions on new countries: a statement of R1, R2 or R3 is
+    "replicated" for a base model only if it is met by the same rule as in the fifth entry and in
+    the same direction; otherwise it is reported as not replicated or inconclusive. Results at
+    warm-up 96 are a sensitivity analysis and are not promoted.
+  - E2, whether the conclusions depend on the base model: reported as the table of the contrasts
+    for lgbm, arima, naive_b and chronos side by side, without a threshold.
+  - E3, point accuracy of Chronos: mean absolute error relative to naive B per horizon with a
+    block-bootstrap 95% interval, next to arima, ets and lgbm; descriptive.
+  - E4, leakage: Chronos may have seen public CPI series during pretraining. Target months before
+    2025-01 are flagged `possibly_seen`; only target months from 2025-01 are treated as clean.
+    Claims about the accuracy of Chronos are drawn from the clean months pooled over all 30
+    countries, and the thinness of that sample is stated. Calibration contrasts for Chronos are
+    reported on all months with the flag.
+  - E5, power: a contrast whose minimum detectable difference is undefined or above 7 pp is
+    reported as inconclusive.
+
+**L. LLM explanation layer (engineering chapter with its own evaluation).**
+
+- Component: an explainer that receives a user question about a country and a horizon, calls the
+  platform endpoint `GET /api/v1/inflation/calibrated-forecast` as a tool and answers in English,
+  Russian or Kazakh. The language model is accessed through the project's existing OpenRouter
+  client; the model identifier is written into the code and the results before the run.
+- Evaluation set, fixed here: 13 countries x 4 horizons x 3 question types (what is the forecast
+  and its interval; how reliable is the interval; what should the user not conclude from it) x 3
+  languages = 468 prompts, each answered in two conditions: (a) with the tool result in the
+  context, (b) without it (an ungrounded baseline).
+- Metrics, computed by program and not by a judge model: numerical faithfulness (share of answers
+  in which every number that refers to the forecast, the lower and upper limit, the nominal level,
+  the empirical coverage or the number of evaluated points equals the API value within rounding);
+  omission rate (share of answers that do not state the interval and the level); coverage
+  overstatement (share of answers that present the interval as guaranteed, or omit the empirical
+  coverage when it is more than 5 pp below nominal); a manual review of 30 answers per language for
+  fluency and terminology. Rates are reported with Wilson 95% intervals; there is no pass
+  threshold, and no result of this component enters the main claims of the thesis.
+
 Boundary note, to be repeated in the write-up: the hold-out countries are untouched with
 respect to countries only; the set of methods, the form of the contrasts and the horizons were
 chosen on the exploratory countries, and the author had seen the post-2025-06 months of the
