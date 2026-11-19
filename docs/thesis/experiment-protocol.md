@@ -302,3 +302,32 @@ Decision rules (applied to base model lgbm, primary family Holm over 4 tests, po
 
 None of these rules is changed after the hold-out result has been seen; any later change goes
 into this section with a date and a reason and is reported as post hoc.
+
+### 2026-11-19 (sixth entry: robustness analyses written down after the hold-out result, before they are computed)
+
+The hold-out result (`results-holdout-v1.md`) was mostly null and a committee review asked
+for analyses that explain it. They are listed here before they are computed. They are
+secondary: they do not replace R1-R5, no threshold is changed, warm-up 48 stays the primary
+configuration and warm-up 96 stays a sensitivity run (it is not promoted because R1 holds
+there). They use outputs that already exist, so no new data is read and no new method is
+added. Every result is reported on both the exploratory data and the hold-out panel.
+
+- S1, leave-one-country-out: the CE contrasts ACI - split, ACI - rolling and DRACP - ACI at
+  h=3 and h=6 (warm-ups 48 and 96) recomputed with each unit removed in turn; the report gives
+  the range of the point estimate and how many removals change the sign.
+- S2, other base models: the same contrasts for ARIMA and naive B as base models of the
+  conformal methods (LightGBM was the base model of the primary family).
+- S3, delayed feedback: the difference between the coverage with instant feedback and with
+  delayed feedback at h=12 for ACI, DRACP and FACI, with a paired block-bootstrap interval,
+  on both samples. R4 keeps its pre-registered threshold and verdict; the interval only
+  qualifies the wording.
+- S4, width and efficiency: per method and horizon, the ratio of the mean Winkler score and
+  of the median interval width to rolling conformal, per unit and pooled, next to the CE.
+- S5, wording: effects are reported as the range of differences compatible with the data
+  (the confidence interval), not as present or absent; the 2 pp equivalence margin and the
+  3 pp threshold of R4 are unchanged and are not justified beyond being fixed beforehand.
+
+Boundary note, to be repeated in the write-up: the hold-out countries are untouched with
+respect to countries only; the set of methods, the form of the contrasts and the horizons were
+chosen on the exploratory countries, and the author had seen the post-2025-06 months of the
+original 13 countries before the amendments.
