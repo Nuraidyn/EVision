@@ -45,6 +45,27 @@ Embedded in the analysis workspace — ask a question about any chart and receiv
 | **AI Mentor** | Full conversational AI with session memory, follow-up suggestions, and report export |
 | **Chart Insight** | Per-chart AI explanations inline with the analysis |
 | **Saved presets** | Save and reload your analysis configurations |
+| **Calibrated inflation intervals** | Monthly inflation forecasts for 13 commodity-dependent economies with conformally calibrated intervals (ACI) and the measured backtest coverage next to the nominal level (`/inflation-intervals`) |
+
+---
+
+## Research Component (Master's Thesis)
+
+EVision is the practical part of a master's thesis in Data Science:
+**Calibrating Prediction Intervals for Inflation Forecasts in Commodity-Dependent Economies: A Multi-Horizon Panel Benchmark of Conformal Methods, with Kazakhstan as a Case Study.**
+The title in Russian and Kazakh, the research question and the contribution are in
+[`docs/thesis/topic.md`](docs/thesis/topic.md).
+
+- Design and rules: [`docs/thesis/README.md`](docs/thesis/README.md),
+  [`experiment-protocol.md`](docs/thesis/experiment-protocol.md),
+  [`shock-definition.md`](docs/thesis/shock-definition.md).
+- Data and experiments: [`scripts/thesis/`](scripts/thesis/) (dated, hashed IMF snapshots;
+  exploratory and confirmatory samples are kept apart).
+- Platform module: `GET /api/v1/inflation/calibrated-forecast`, served by
+  `backend/fastapi_service/app/services/inflation_calibration.py`.
+
+The platform page shows the same intervals that the benchmark evaluates, so what a user sees
+can be checked against the reported coverage.
 
 ---
 
