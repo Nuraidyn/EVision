@@ -1,4 +1,4 @@
-# Calibrating Prediction Intervals for Inflation Forecasts in Commodity-Dependent Economies: A Multi-Horizon Panel Benchmark of Conformal Methods, with Kazakhstan as a Case Study
+# Assessing the Calibration of Prediction Intervals for Machine-Learning Inflation Forecasts in Commodity-Dependent Economies: A Multi-Horizon Panel Benchmark of Conformal Methods
 
 Short version for a workshop on conformal prediction and forecasting, or for arXiv. Draft 2026-11-19. Full text: `main.md`. Notes for the reviewer: `REVIEW_NOTES.md`.
 

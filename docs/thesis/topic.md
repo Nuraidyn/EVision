@@ -1,14 +1,17 @@
 # Thesis topic (fixed 2026-11-19, contributions revised after the hold-out run)
 
-Status: the title, the research question and the setting are fixed. The contribution text
-below was revised on 2026-11-19 after the hold-out result (`results-holdout-v1.md`) so that it
-claims no more than the evidence shows. Robustness analyses S1-S4 are still being computed;
-the text will be updated once, with their numbers.
+Status: the title, the research question and the setting are fixed. The title was changed on
+2026-11-19 to name the machine-learning forecasts explicitly and to say that the study assesses
+the calibration of existing methods (it does not propose a new calibration method); the
+"Kazakhstan as a case study" subtitle was dropped because the main results contain no separate
+Kazakhstan analysis (a post hoc descriptive section exists in `results-addenda-v1.md`). The
+contribution text was revised after the hold-out result (`results-holdout-v1.md`) and the
+robustness analyses so that it claims no more than the evidence shows.
 
 ## English
 
-**Calibrating Prediction Intervals for Inflation Forecasts in Commodity-Dependent Economies:
-A Multi-Horizon Panel Benchmark of Conformal Methods, with Kazakhstan as a Case Study**
+**Assessing the Calibration of Prediction Intervals for Machine-Learning Inflation Forecasts in
+Commodity-Dependent Economies: A Multi-Horizon Panel Benchmark of Conformal Methods**
 
 Research question. Do prediction intervals for monthly inflation in commodity-dependent
 economies keep their nominal coverage across forecast horizons (1, 3, 6, 12 months), and do
@@ -29,8 +32,8 @@ platform module that serves calibrated inflation intervals.
 
 ## Русский
 
-**Калибровка интервалов прогноза инфляции в сырьевых экономиках: многогоризонтный панельный
-бенчмарк conformal-методов (на примере Казахстана)**
+**Оценка калибровки интервалов прогноза инфляции ML-моделей в сырьевых экономиках:
+многогоризонтный панельный бенчмарк конформных методов**
 
 Исследовательский вопрос. Сохраняют ли интервалы прогноза месячной инфляции в сырьевых
 экономиках заявленное покрытие на горизонтах 1, 3, 6 и 12 месяцев и переносятся ли на эту
@@ -51,8 +54,9 @@ PID и режимно-адаптивного DRACP на 20 экономиках 
 
 ## Қазақша
 
-**Шикізатқа тәуелді экономикалардағы инфляция болжамының интервалдарын калибрлеу:
-конформды әдістердің көпгоризонтты панельдік бенчмаркі (Қазақстан мысалында)**
+**Шикізатқа тәуелді экономикалардағы инфляцияның машиналық оқыту болжамдары
+интервалдарының калибрленуін бағалау: конформды әдістердің көпгоризонтты панельдік
+салыстырмалы талдауы**
 
 Зерттеу сұрағы. Шикізатқа тәуелді экономикалардағы айлық инфляция болжамының интервалдары
 1, 3, 6 және 12 айлық горизонттарда мәлімделген қамтуды сақтай ма және еуроаймақ пен АҚШ

@@ -1,4 +1,4 @@
-# Calibrating Prediction Intervals for Inflation Forecasts in Commodity-Dependent Economies: A Multi-Horizon Panel Benchmark of Conformal Methods, with Kazakhstan as a Case Study
+# Assessing the Calibration of Prediction Intervals for Machine-Learning Inflation Forecasts in Commodity-Dependent Economies: A Multi-Horizon Panel Benchmark of Conformal Methods
 
 Draft manuscript, 2026-11-19. Source documents: `docs/thesis/` and `scripts/thesis/exp/` on branch `thesis/inflation-calibration`. Notes for the reviewer are in `REVIEW_NOTES.md`.
 
@@ -435,7 +435,7 @@ Run `confirm13` evaluates the 13 design countries on target months from 2025-07.
 
 ### 6.8 Kazakhstan (post hoc, descriptive)
 
-The title of the paper names Kazakhstan, and this subsection reports it alone. The analysis S6 is post hoc (seventh protocol entry, Section 5.2), descriptive, and carries no test. Kazakhstan is one of the 13 design countries, so the numbers are from the exploratory sample and are not independent of the design. There are 137 monthly origins at h=1 (133, 127 and 115 at h=3, 6 and 12), with target months 2014-02 to 2025-06, so the period after the August 2015 float is mixed with the preceding managed regime. The standard error of a coverage figure from about 137 correlated origins is roughly 3 pp, so only the larger gaps are clearly outside noise.
+The title of the paper does not name Kazakhstan because the main results contain no separate Kazakhstan analysis, but Kazakhstan was the original focus of the study, so this subsection reports it alone. The analysis S6 is post hoc (seventh protocol entry, Section 5.2), descriptive, and carries no test. Kazakhstan is one of the 13 design countries, so the numbers are from the exploratory sample and are not independent of the design. There are 137 monthly origins at h=1 (133, 127 and 115 at h=3, 6 and 12), with target months 2014-02 to 2025-06, so the period after the August 2015 float is mixed with the preceding managed regime. The standard error of a coverage figure from about 137 correlated origins is roughly 3 pp, so only the larger gaps are clearly outside noise.
 
 **Table 11. S6: coverage for Kazakhstan alone (exploratory sample, LightGBM base, warm-up 48; calibration error in brackets)**
 
