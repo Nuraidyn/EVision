@@ -20,7 +20,7 @@ import numpy as np
 import pandas as pd
 
 from .data import HORIZONS, sample_label
-from .forecasters import make_forecasters
+from .forecasters import CHRONOS_SEEN_BEFORE, make_forecasters
 from .intervals import ALPHA, METHODS, run_method
 
 EXTRA_FEATURES = ["m0", "m2", "roll3", "roll12", "fx0", "br0", "msin", "mcos"]
@@ -57,6 +57,9 @@ def run_unit(unit: str, frame: pd.DataFrame, cfg: Config):
         return pd.DataFrame(), pd.DataFrame()
     fcs = make_forecasters(cfg.models, lgbm=cfg.lgbm)
     store = {(mn, h): [] for mn in fcs for h in hs}
+    for fc in fcs.values():
+        if hasattr(fc, "prepare"):     # batched model (chronos): same no-lookahead contexts, one pass
+            fc.prepare(frame, list(range(pos_start, pos_end + 1)), hs)
     for pos in range(pos_start, pos_end + 1):
         for mn, fc in fcs.items():
             res = fc.forecast(frame, pos, hs)
@@ -89,6 +92,9 @@ def run_unit(unit: str, frame: pd.DataFrame, cfg: Config):
                         stress=frame["stress"].values[pos],
                         sample=([cfg.sample] * len(target) if cfg.sample else [sample_label(t) for t in target]),
                         n_fallback=n_fb,
+                        model_id=getattr(fcs[mn], "model_id", ""),
+                        possibly_seen=(np.asarray(target < CHRONOS_SEEN_BEFORE) if mn == "chronos"
+                                       else np.zeros(len(target), bool)),
                         feedback="instant_DIAGNOSTIC" if cfg.instant_feedback else "delayed")
             pdf = pd.DataFrame(base).iloc[e:]
             pts.append(pdf)

@@ -203,7 +203,84 @@ class LGBM(Forecaster):
         return out
 
 
+CHRONOS_MODEL_ID = "amazon/chronos-bolt-tiny"   # smallest of the Bolt family that installs (tiny, mini, small tried in this order)
+CHRONOS_FALLBACK_ID = "amazon/chronos-t5-small"
+CHRONOS_MAX_CONTEXT = 2048                      # context_length of the Bolt models
+CHRONOS_SEEN_BEFORE = pd.Period("2025-01", "M")  # target months before this are flagged possibly_seen
+
+
+class Chronos(Forecaster):
+    """Zero-shot Chronos(-Bolt) on the monthly inflation series 100*ln(CPI_t/CPI_{t-1}).
+
+    Point forecast of the cumulative h-month growth = sum of the h median (0.5-quantile) forecasts.
+    No native interval.  Chronos-Bolt is a direct quantile model: no sampling, so it is deterministic
+    (seeds are set anyway).  Only m0 of rows 1..pos is read.  ``prepare`` batches many origins at once;
+    each origin's context is still its own history, left-padded with NaN (masked by the model).
+    """
+    name = "chronos"
+    model_id = CHRONOS_MODEL_ID
+
+    def __init__(self, pipeline=None, model_id: str | None = None, batch_size: int = 64,
+                 max_context: int = CHRONOS_MAX_CONTEXT, seed: int = 0):
+        self._pipe = pipeline
+        if model_id:
+            self.model_id = model_id
+        self.batch_size = batch_size
+        self.max_context = max_context
+        self.seed = seed
+        self._cache = {}     # (id(frame), pos) -> median path (np.ndarray, len >= H prepared)
+        self.seconds = 0.0
+        self.n_forecasts = 0
+
+    def _pipeline(self):
+        if self._pipe is None:
+            import torch
+            from chronos import BaseChronosPipeline
+            torch.manual_seed(self.seed)
+            self._pipe = BaseChronosPipeline.from_pretrained(self.model_id, device_map="cpu",
+                                                             torch_dtype=torch.float32)
+        return self._pipe
+
+    def _medians(self, contexts, H):
+        import time
+        import torch
+        torch.manual_seed(self.seed)
+        t0 = time.time()
+        out = []
+        pipe = self._pipeline()
+        for i in range(0, len(contexts), self.batch_size):
+            ctx = [torch.as_tensor(np.asarray(c, dtype=np.float32)) for c in contexts[i: i + self.batch_size]]
+            q, _ = pipe.predict_quantiles(ctx, prediction_length=H, quantile_levels=[0.5])
+            out.append(np.asarray(q)[:, :H, 0])
+        self.seconds += time.time() - t0
+        self.n_forecasts += len(contexts)
+        return np.vstack(out)
+
+    def _context(self, frame, pos):
+        y, _ = _monthly(frame, pos)
+        return y[-self.max_context:]
+
+    def prepare(self, frame, positions, horizons):
+        """Batch-forecast all ``positions`` (origins) for max(horizons) steps; reads rows <= each pos only."""
+        H = max(horizons)
+        todo = [p for p in positions if (id(frame), p) not in self._cache or len(self._cache[(id(frame), p)]) < H]
+        if not todo:
+            return
+        med = self._medians([self._context(frame, p) for p in todo], H)
+        for p, m in zip(todo, med):
+            self._cache[(id(frame), p)] = m
+
+    def forecast(self, frame, pos, horizons):
+        H = max(horizons)
+        key = (id(frame), pos)
+        if key not in self._cache or len(self._cache[key]) < H:
+            self.prepare(frame, [pos], horizons)
+        m = self._cache[key]
+        return {h: (float(np.sum(m[:h])), None, None) for h in horizons}
+
+
 def make_forecasters(names, **kw) -> dict:
     reg = {"naive_a": lambda: NaiveA(), "naive_b": lambda: NaiveB(), "ets": lambda: ETS(),
-           "arima": lambda: ARIMA(), "lgbm": lambda: LGBM(**kw.get("lgbm", {}))}
+           "arima": lambda: ARIMA(), "lgbm": lambda: LGBM(**kw.get("lgbm", {})),
+           "chronos": lambda: Chronos(**kw.get("chronos", {}))}
     return {n: reg[n]() for n in names}

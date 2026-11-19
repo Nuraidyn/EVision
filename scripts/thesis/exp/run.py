@@ -18,7 +18,7 @@ if str(THESIS) not in sys.path:
 
 import pandas as pd  # noqa: E402
 
-from exp.data import COUNTRIES, country_units, load_holdout, load_raw  # noqa: E402
+from exp.data import COUNTRIES, DATA_DIR, country_units, load_holdout, load_raw  # noqa: E402
 from exp.evaluate import (Config, coverage_by_stress_decile, interval_summary,  # noqa: E402
                           point_metrics, primary_contrasts, run_unit)
 from exp.calibration import (ce_contrasts, null_ce_bias, per_unit_coverage, sd_coverage,  # noqa: E402
@@ -213,6 +213,10 @@ def main(argv=None):
     f.add_argument("--n-cal", type=int, default=48, help="warm-up (calibration) months")
     f.add_argument("--instant-feedback", action="store_true",
                    help="DIAGNOSTIC: release every outcome at origin+1 as if h=1; requires a separate --out")
+    f.add_argument("--holdout2", action="store_true",
+                   help="use data/holdout2.json (all rows labelled sample=holdout2; default --start 2010-01)")
+    f.add_argument("--max-origins", type=int, default=None,
+                   help="SMOKE: evaluate only the last N origins per unit (after the warm-up)")
     f.add_argument("--holdout", action="store_true",
                    help="use data/holdout.json (all rows labelled sample=holdout) instead of the 13 countries")
     c = sub.add_parser("ce", help="calibration-error contrasts from intervals_all.csv")
@@ -221,7 +225,7 @@ def main(argv=None):
     c.add_argument("--model", default="lgbm")
     c.add_argument("--boot", type=int, default=2000)
     c.add_argument("--n-outer", type=int, default=100)
-    c.add_argument("--sample", default="exploratory", choices=["exploratory", "confirmatory", "holdout"])
+    c.add_argument("--sample", default="exploratory", choices=["exploratory", "confirmatory", "holdout", "holdout2"])
     c.add_argument("--block-len", type=int, default=12)
     c.add_argument("--window-mde", action="store_true", help="MDE on random short windows")
     c.add_argument("--window", type=int, default=15)
@@ -231,7 +235,7 @@ def main(argv=None):
     r.add_argument("--instant", default=None, help="diagnostic instant-feedback h=12 run (S3)")
     r.add_argument("--delayed", default=None, help="delayed side of S3 (default: --in)")
     r.add_argument("--out", default=None, help="default: <in>/robust")
-    r.add_argument("--sample", required=True, choices=["exploratory", "holdout"])
+    r.add_argument("--sample", required=True, choices=["exploratory", "holdout", "holdout2"])
     r.add_argument("--n-cal", type=int, default=48)
     r.add_argument("--boot", type=int, default=2000)
     r.add_argument("--boot-loo", type=int, default=500)
@@ -268,7 +272,15 @@ def main(argv=None):
     else:
         if a.instant_feedback and a.out in ("full", "explore_v1", "smoke"):
             raise SystemExit("--instant-feedback is a diagnostic: choose a separate --out directory")
-        raw = load_holdout(data_dir=a.data_dir) if a.holdout else load_raw(a.data_dir)
+        if a.holdout and a.holdout2:
+            raise SystemExit("--holdout and --holdout2 are mutually exclusive")
+        if a.holdout2:
+            raw = load_holdout(path=(Path(a.data_dir) / "holdout2.json") if a.data_dir else DATA_DIR / "holdout2.json",
+                               data_dir=a.data_dir)
+        elif a.holdout:
+            raw = load_holdout(data_dir=a.data_dir)
+        else:
+            raw = load_raw(a.data_dir)
         print("data files:", raw["files"])
         if a.end:
             end = pd.Period(a.end, "M")
@@ -280,9 +292,11 @@ def main(argv=None):
         cfg = Config(models=tuple(a.models.split(",")), conformal_models=tuple(a.conformal_models.split(",")),
                      horizons=tuple(int(x) for x in a.horizons.split(",")), boot_B=a.boot,
                      n_cal=a.n_cal, instant_feedback=a.instant_feedback,
-                     sample="holdout" if a.holdout else None)
+                     n_eval_last=a.max_origins,
+                     sample="holdout2" if a.holdout2 else ("holdout" if a.holdout else None))
+        a.holdout = a.holdout or a.holdout2
         countries = list(raw["cpi"]) if a.holdout and a.countries == ",".join(COUNTRIES) else a.countries.split(",")
-        start = a.start or ("2000-01" if a.holdout else None)
+        start = a.start or ("2010-01" if a.holdout2 else "2000-01" if a.holdout else None)
         units = {}
         for c in countries:
             units.update(country_units(raw, c, horizons=cfg.horizons, start=start))
