@@ -38,10 +38,25 @@ Claim hierarchy (set after a committee review of draft 1):
     taken from the IMF directly; this is not yet verified. A second snapshot is stored with its
     SHA-256, and a jump test on the index flags base-year breaks automatically. At most about
     16 months are available and fewer for countries with a publication lag.
+    Status 2026-11-19: the IMF SDMX API (`api.imf.org`) serves the new months directly;
+    `scripts/thesis/fetch_confirmatory.mjs` wrote `data/confirmatory.json` (SHA-256
+    `e2001e5aad677567a7d572a6cf1d22929b18bfe1d3c1ad94bff47b75a3981a74`) with CPI, FX per USD
+    and Brent from 2024-01. CPI runs to 2026-08 (PE, NG), 2026-09 (KZ, RU, AZ, UZ, CO, BR,
+    MX, ZA) or 2026-10 (CL, MN, ID), so 14-16 months after 2025-06 per country. Overlap with
+    the first snapshot (2024-01..2025-05) is identical for FX, Brent and CPI except: (a) a
+    constant rebasing of the index level for KZ (ratio 0.477) and NG (ratio 0.131), which does
+    not affect growth rates and is handled by working in log differences and chaining at the
+    overlap; (b) small revisions for RU (up to 0.07%) and MN (up to 0.05%); (c) a
+    methodology break in the Nigerian series at 2025-01 (the index falls from 113.9 to 110.7
+    in rebased terms), so the growth between 2024-12 and 2025-01 is excluded for NG. The IMF
+    also publishes dated CPI vintages (`CPI_2026_JAN/FEB/APR/MAY_VINTAGE`), which allow a
+    revision check in real time. Brent needs the area code `G001` in the direct API.
   - Only h = 1, 3, 6 are confirmatory. h = 12 stays exploratory: its targets would give about
     4-5 non-overlapping windows per country. The protocol will list, per country and horizon,
     the number of non-overlapping target months, and a pair is treated as confirmatory only
-    with at least 20.
+    with at least 20. With 14-16 months per country this threshold is not met for any single
+    country, so the confirmatory analysis is pooled over the panel only, and no confirmatory
+    claim is made for an individual country.
   - Pretraining leakage: Chronos may have seen IMF CPI series up to its training cutoff, so
     its exploratory results carry a leakage flag and only the confirmatory set is treated as
     a clean test for it.
@@ -162,3 +177,9 @@ FACI and conformal PID added; reproduction tolerance and a fallback for DRACP; t
 naive baselines, a seasonality rule and the central-bank target as an exploratory baseline;
 block length at least h; primary tests reduced to h = 3 and 6; MDE simulation before the
 confirmatory run, with a numeric threshold for the conditional claim.
+
+### 2026-11-19 (second entry, still before any forecast)
+
+Second snapshot taken and checked (see the Data section); confirmatory analysis restricted
+to the pooled panel because no country reaches 20 non-overlapping target months; Nigeria's
+2025-01 methodology break recorded; topic fixed in `topic.md`.
