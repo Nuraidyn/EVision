@@ -21,16 +21,20 @@ from sampler import sample_for_review, write_review_csv
 KEY_VARS = ("OPENROUTER_API_KEY", "GROQ_API_KEY")  # names read by app.core.config
 
 
-def build_client(kind: str, mode: str):
+def build_client(kind: str, mode: str, model: str | None = None):
     if kind == "fake":
         return FakeLLMClient(mode)
+    if kind == "litellm":
+        from app.services.inflation_explainer import LiteLLMClient
+        return LiteLLMClient(model)
     from app.services.inflation_explainer import OpenRouterClient
     return OpenRouterClient()
 
 
 def main(argv=None) -> int:
     ap = argparse.ArgumentParser()
-    ap.add_argument("--client", choices=("fake", "openrouter"), default="fake")
+    ap.add_argument("--client", choices=("fake", "openrouter", "litellm"), default="fake")
+    ap.add_argument("--model", default=None, help="LiteLLM model id (default: env LITELLM_MODEL)")
     ap.add_argument("--fake-mode", choices=MODES, default="faithful")
     ap.add_argument("--yes-spend", action="store_true")
     ap.add_argument("--out", default="out")
@@ -42,9 +46,9 @@ def main(argv=None) -> int:
         prompts = prompts[: a.limit]
     n_calls = len(prompts) * 2
     print(f"{len(prompts)} prompts x 2 conditions = {n_calls} LLM calls (client={a.client})")
-    if a.client == "openrouter":
+    if a.client in ("openrouter", "litellm"):
         if not a.yes_spend:
-            print("Refusing: the openrouter client spends API credit; pass --yes-spend.")
+            print(f"Refusing: the {a.client} client spends API credit; pass --yes-spend.")
             return 2
         if not any(os.environ.get(v) for v in KEY_VARS):
             print(f"Refusing: set one of {KEY_VARS} in the environment.")
@@ -59,7 +63,7 @@ def main(argv=None) -> int:
             r = json.loads(line)
             done[(r["id"], r["condition"])] = r["answer"]
 
-    client = build_client(a.client, a.fake_mode)
+    client = build_client(a.client, a.fake_mode, a.model)
     truths: dict[tuple, dict] = {}
     rows = []
     with raw.open("a", encoding="utf-8") as fh:

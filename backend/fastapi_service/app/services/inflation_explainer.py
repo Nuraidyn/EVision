@@ -76,6 +76,39 @@ class OpenRouterClient:
         return _call_openrouter([{"role": "user", "content": user_prompt}], system_prompt)
 
 
+class LiteLLMClient:
+    """LiteLLM adapter (any provider). The model is a LiteLLM id such as ``openrouter/<vendor>/<model>``,
+    taken from the argument or LITELLM_MODEL; the provider key comes from the provider's own
+    variable (e.g. OPENROUTER_API_KEY). Sampling is deterministic. Not used by any test."""
+
+    def __init__(self, model: str | None = None, max_tokens: int = 2000, timeout: float = 120.0) -> None:
+        import os
+
+        self.model = model or os.getenv("LITELLM_MODEL", "")
+        if not self.model:
+            raise RuntimeError("LITELLM_MODEL is not set")
+        self.max_tokens = max_tokens
+        self.timeout = timeout
+
+    def complete(self, system_prompt: str, user_prompt: str) -> str:
+        import re
+
+        import litellm
+
+        r = litellm.completion(
+            model=self.model,
+            messages=[{"role": "system", "content": system_prompt}, {"role": "user", "content": user_prompt}],
+            temperature=0,
+            max_tokens=self.max_tokens,
+            timeout=self.timeout,
+        )
+        text = (r.choices[0].message.content or "").strip()
+        text = re.sub(r"<think>.*?</think>", "", text, flags=re.S).strip()  # reasoning models
+        if not text:
+            raise RuntimeError("LLM returned empty content")
+        return text
+
+
 def tool_payload(country: str, horizon: int, level: float = LEVEL) -> dict:
     """The API result reduced to what the model is allowed to see (no history series)."""
     r = calibrated_forecast(country, horizon, level)
