@@ -45,7 +45,7 @@ Embedded in the analysis workspace — ask a question about any chart and receiv
 | **AI Mentor** | Full conversational AI with session memory, follow-up suggestions, and report export |
 | **Chart Insight** | Per-chart AI explanations inline with the analysis |
 | **Saved presets** | Save and reload your analysis configurations |
-| **Calibrated inflation intervals** | Monthly inflation forecasts for 13 commodity-dependent economies with conformally calibrated intervals (ACI) and the measured backtest coverage next to the nominal level (`/inflation-intervals`) |
+| **Calibrated inflation intervals** | Monthly inflation forecasts for 13 commodity-dependent economies with conformally calibrated intervals (ACI) and the measured backtest coverage next to the nominal level (`/inflation-intervals`). ACI is used because adaptive calibration was better calibrated than a calibration done once; the thesis benchmark did not establish that it beats a rolling window (see `docs/thesis/results-holdout-v1.md`) |
 
 ---
 
