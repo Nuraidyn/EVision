@@ -135,3 +135,15 @@ def test_window_mde_runs_and_reports():
     assert 0 <= h3["share_undefined"] <= 1
     short = mde_ce_windows(make_iv(n_units=3, T=10), "lgbm", window=15, n_windows=2)
     assert (short["n_windows"] == 0).all()
+
+
+def test_read_results_keeps_country_code_NA(tmp_path):
+    """Namibia's code NA must stay a string; the default CSV parser would turn it into NaN."""
+    import pandas as pd
+    from exp.run import read_results
+    f = tmp_path / "x.csv"
+    pd.DataFrame({"unit": ["NA", "ZM", "NA"], "covered": [1.0, None, 0.0]}).to_csv(f, index=False)
+    out = read_results(f)
+    assert list(out["unit"]) == ["NA", "ZM", "NA"]
+    assert out["covered"].isna().sum() == 1
+    assert sorted(out["unit"].unique()) == ["NA", "ZM"]

@@ -22,7 +22,7 @@ USE = ["unit", "country", "model", "h", "method", "covered", "width", "winkler",
 
 
 def kazakhstan():
-    iv = pd.read_csv(RES / "explore_v1" / "intervals_all.csv", usecols=USE)
+    iv = pd.read_csv(RES / "explore_v1" / "intervals_all.csv", usecols=USE, keep_default_na=False, na_values=[""])
     k = iv[(iv.country == "KZ") & (iv.model == "lgbm")]
     g = k.groupby(["method", "h"]).agg(n_origins=("covered", "size"), coverage=("covered", "mean"),
                                         median_width=("width", "median"), mean_winkler=("winkler", "mean")).reset_index()
@@ -34,7 +34,7 @@ def kazakhstan():
 def native():
     rows, contrasts = [], []
     for run, sample in (("explore_v1", "exploratory"), ("holdout_ncal48", "holdout")):
-        iv = pd.read_csv(RES / run / "intervals_all.csv", usecols=USE)
+        iv = pd.read_csv(RES / run / "intervals_all.csv", usecols=USE, keep_default_na=False, na_values=[""])
         pu = iv.groupby(["model", "method", "h", "unit"]).covered.mean().reset_index()
         pu["ce"] = (pu.covered - 0.90).abs()
         s = pu.groupby(["model", "method", "h"]).agg(mean_coverage=("covered", "mean"), mean_ce=("ce", "mean")).reset_index()

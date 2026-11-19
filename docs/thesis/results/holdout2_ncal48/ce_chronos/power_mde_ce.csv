@@ -1,0 +1,5 @@
+n_units,n_months,mde_pp,realised_T_pp,model,h,contrast,sample
+10,89,,,chronos,3,aci-rolling,holdout2
+10,89,,,chronos,3,dracp-aci,holdout2
+10,83,6.640625,-4.512408713444567,chronos,6,aci-rolling,holdout2
+10,83,,,chronos,6,dracp-aci,holdout2

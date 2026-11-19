@@ -28,6 +28,12 @@ from exp.power import mde_ce_table, mde_ce_windows, mde_table  # noqa: E402
 RESULTS = THESIS / "results"
 
 
+def read_results(path, **kw):
+    """Read a results CSV. Only empty fields are missing values: the default parser would turn the
+    country code NA (Namibia) into NaN and mix floats with strings in the unit column."""
+    return pd.read_csv(path, keep_default_na=False, na_values=[""], **kw)
+
+
 def execute(units: dict, cfg: Config, out: Path, resume: bool = False, primary_model: str = "lgbm",
             power_kw: dict | None = None):
     out.mkdir(parents=True, exist_ok=True)
@@ -37,7 +43,7 @@ def execute(units: dict, cfg: Config, out: Path, resume: bool = False, primary_m
         fp, fi = out / "units" / f"{name}_points.csv", out / "units" / f"{name}_intervals.csv"
         t0 = time.time()
         if resume and fp.exists() and fi.exists():
-            p, i = pd.read_csv(fp), pd.read_csv(fi)
+            p, i = read_results(fp), read_results(fi)
         else:
             p, i = run_unit(name, frame, cfg)
             p.to_csv(fp, index=False)
@@ -88,7 +94,7 @@ def run_ce(inp: Path, out: Path, model: str = "lgbm", B: int = 2000, n_outer: in
            window: int = 15, n_windows: int = 60):
     """Calibration-error analysis from an existing intervals_all.csv, rows of one sample only
     ('exploratory' by default; 'holdout' / 'confirmatory' pool the units the same way)."""
-    iv = pd.read_csv(inp / "intervals_all.csv")
+    iv = read_results(inp / "intervals_all.csv")
     iv = iv[iv["sample"] == sample]
     if iv.empty:
         raise SystemExit(f"no rows with sample={sample!r} in {inp}")
@@ -135,7 +141,7 @@ def run_robust(inp: Path, out: Path, sample: str, instant: Path | None, delayed:
                B: int, B_loo: int, model: str, only: set):
     """Robustness analyses S1-S4 from existing intervals_all.csv files (see exp/robust.py)."""
     from exp import robust as R
-    iv = pd.read_csv(inp / "intervals_all.csv")
+    iv = read_results(inp / "intervals_all.csv")
     iv = iv[iv["sample"] != "confirmatory"]
     out.mkdir(parents=True, exist_ok=True)
     role = "primary" if n_cal == 48 else "sensitivity"
@@ -154,8 +160,8 @@ def run_robust(inp: Path, out: Path, sample: str, instant: Path | None, delayed:
     if "s2" in only:
         save("s2_other_models.csv", R.s2_other_models(iv, sample=sample, B=B))
     if "s3" in only and instant is not None:
-        dl = pd.read_csv((delayed or inp) / "intervals_all.csv")
-        ins = pd.read_csv(instant / "intervals_all.csv")
+        dl = read_results((delayed or inp) / "intervals_all.csv")
+        ins = read_results(instant / "intervals_all.csv")
         save("s3_feedback_diff.csv", R.s3_feedback(ins, dl, model, sample, B=B))
     if "s4" in only:
         s4 = R.s4_width_efficiency(iv, model, sample)

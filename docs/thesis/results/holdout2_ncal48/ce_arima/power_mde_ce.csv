@@ -1,0 +1,5 @@
+n_units,n_months,mde_pp,realised_T_pp,model,h,contrast,sample
+10,89,3.2031249999999996,-2.2165995802250915,arima,3,aci-rolling,holdout2
+10,89,,,arima,3,dracp-aci,holdout2
+10,83,3.4765625,-2.8430751007643953,arima,6,aci-rolling,holdout2
+10,83,,,arima,6,dracp-aci,holdout2
