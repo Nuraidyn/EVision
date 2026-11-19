@@ -5,7 +5,7 @@ the calibrated-forecast service is called in-process as the tool and its JSON is
 system prompt; in the ungrounded condition the same question is asked without it.
 
 The language model is injected: any object with ``complete(system_prompt, user_prompt) -> str``.
-``OpenRouterClient`` adapts the project's existing OpenRouter/Groq helper (ai_mentor).
+``OpenAIClient`` calls an OpenAI-compatible endpoint (the LiteLLM proxy).
 """
 from __future__ import annotations
 
@@ -66,43 +66,37 @@ class LLMClient(Protocol):
     def complete(self, system_prompt: str, user_prompt: str) -> str: ...
 
 
-class OpenRouterClient:
-    """Adapter over the project's existing OpenRouter/Groq call (needs OPENROUTER_API_KEY or
-    GROQ_API_KEY in the environment, read by app.core.config). Not used by any test."""
+class OpenAIClient:
+    """OpenAI-compatible chat endpoint (here the LiteLLM proxy): OPENAI_BASE_URL, OPENAI_API_KEY and
+    OPENAI_MODEL from app.core.config. Deterministic sampling. Not used by any test."""
 
-    def complete(self, system_prompt: str, user_prompt: str) -> str:
-        from app.services.ai_mentor import _call_openrouter
-
-        return _call_openrouter([{"role": "user", "content": user_prompt}], system_prompt)
-
-
-class LiteLLMClient:
-    """LiteLLM adapter (any provider). The model is a LiteLLM id such as ``openrouter/<vendor>/<model>``,
-    taken from the argument or LITELLM_MODEL; the provider key comes from the provider's own
-    variable (e.g. OPENROUTER_API_KEY). Sampling is deterministic. Not used by any test."""
-
-    def __init__(self, model: str | None = None, max_tokens: int = 2000, timeout: float = 120.0) -> None:
-        import os
-
-        self.model = model or os.getenv("LITELLM_MODEL", "")
-        if not self.model:
-            raise RuntimeError("LITELLM_MODEL is not set")
+    def __init__(self, max_tokens: int = 2000, timeout: float = 120.0) -> None:
         self.max_tokens = max_tokens
         self.timeout = timeout
 
     def complete(self, system_prompt: str, user_prompt: str) -> str:
         import re
 
-        import litellm
+        import httpx
 
-        r = litellm.completion(
-            model=self.model,
-            messages=[{"role": "system", "content": system_prompt}, {"role": "user", "content": user_prompt}],
-            temperature=0,
-            max_tokens=self.max_tokens,
+        from app.core.config import OPENAI_API_KEY, OPENAI_BASE_URL, OPENAI_MODEL
+
+        if not OPENAI_API_KEY:
+            raise RuntimeError("OPENAI_API_KEY is not configured")
+        r = httpx.post(
+            f"{OPENAI_BASE_URL.rstrip('/')}/chat/completions",
+            headers={"Authorization": f"Bearer {OPENAI_API_KEY}"},
+            json={
+                "model": OPENAI_MODEL,
+                "messages": [{"role": "system", "content": system_prompt},
+                             {"role": "user", "content": user_prompt}],
+                "temperature": 0,
+                "max_tokens": self.max_tokens,
+            },
             timeout=self.timeout,
         )
-        text = (r.choices[0].message.content or "").strip()
+        r.raise_for_status()
+        text = (r.json()["choices"][0]["message"].get("content") or "").strip()
         text = re.sub(r"<think>.*?</think>", "", text, flags=re.S).strip()  # reasoning models
         if not text:
             raise RuntimeError("LLM returned empty content")

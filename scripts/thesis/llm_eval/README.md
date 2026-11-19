@@ -6,7 +6,7 @@ Implements the evaluation fixed in the eighth Changes entry of `docs/thesis/expe
 
 Service code: `backend/fastapi_service/app/services/inflation_explainer.py`
 (`explain(country, horizon, question_type, language, grounded, llm_client)`; the client is injected,
-`OpenRouterClient` adapts the project's `ai_mentor._call_openrouter`).
+`OpenAIClient` calls an OpenAI-compatible endpoint, here the LiteLLM proxy).
 
 ## Run
 
@@ -14,17 +14,17 @@ From `backend/fastapi_service` with `.venv-thesis-check/Scripts/python.exe`:
 
     python ../../scripts/thesis/llm_eval/generate_prompts.py --out prompts.csv
     python ../../scripts/thesis/llm_eval/run_eval.py --client fake --fake-mode faithful --out OUT
-    python ../../scripts/thesis/llm_eval/run_eval.py --client openrouter --yes-spend --out OUT_REAL
+    python ../../scripts/thesis/llm_eval/run_eval.py --client openai --yes-spend --out OUT_REAL
     python -m pytest tests/test_inflation_explainer.py ../../scripts/thesis/llm_eval/tests
 
 Outputs in OUT: `answers.jsonl` (raw, appended per call, a rerun resumes), `per_answer.csv`,
 `summary_*.csv`, `summary.md`, `manual_review_sample.csv` (30 grounded answers per language,
 seed 20261119, columns for fluency and terminology scores).
 
-The openrouter path prints the number of calls (936), refuses without `--yes-spend`, and refuses
-unless `OPENROUTER_API_KEY` (or `GROQ_API_KEY`, the fallback in `app/core/config.py`) is set.
-Model: `OPENROUTER_MODEL` (default in config). The model id must be written into results before
-the run, as the protocol requires. Estimated size: about 0.3M input and 0.2M output tokens.
+The openai path prints the number of calls (936), refuses without `--yes-spend`, and refuses
+unless `OPENAI_API_KEY` is set. Endpoint and model come from `OPENAI_BASE_URL` and `OPENAI_MODEL`
+(read from `.env` by `app/core/config.py`); temperature 0. The model id must be written into results
+before the run, as the protocol requires. Estimated size: about 0.3M input and 0.2M output tokens.
 
 ## Implementation choices (not specified by the protocol)
 

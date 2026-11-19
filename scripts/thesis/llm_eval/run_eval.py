@@ -1,7 +1,7 @@
 """Run the 468-prompt x 2-condition evaluation and compute the metrics.
 
   python run_eval.py --client fake --fake-mode faithful --out out_fake_faithful
-  python run_eval.py --client openrouter --yes-spend --out out_real      (spends API credit)
+  python run_eval.py --client openai --yes-spend --out out_real      (spends API credit)
 """
 from __future__ import annotations
 
@@ -18,23 +18,16 @@ from generate_prompts import generate_prompts
 from metrics import evaluate_answer, summarize, summary_markdown, write_csv
 from sampler import sample_for_review, write_review_csv
 
-KEY_VARS = ("OPENROUTER_API_KEY", "GROQ_API_KEY")  # names read by app.core.config
-
-
-def build_client(kind: str, mode: str, model: str | None = None):
+def build_client(kind: str, mode: str):
     if kind == "fake":
         return FakeLLMClient(mode)
-    if kind == "litellm":
-        from app.services.inflation_explainer import LiteLLMClient
-        return LiteLLMClient(model)
-    from app.services.inflation_explainer import OpenRouterClient
-    return OpenRouterClient()
+    from app.services.inflation_explainer import OpenAIClient
+    return OpenAIClient()
 
 
 def main(argv=None) -> int:
     ap = argparse.ArgumentParser()
-    ap.add_argument("--client", choices=("fake", "openrouter", "litellm"), default="fake")
-    ap.add_argument("--model", default=None, help="LiteLLM model id (default: env LITELLM_MODEL)")
+    ap.add_argument("--client", choices=("fake", "openai"), default="fake")
     ap.add_argument("--fake-mode", choices=MODES, default="faithful")
     ap.add_argument("--yes-spend", action="store_true")
     ap.add_argument("--out", default="out")
@@ -46,12 +39,12 @@ def main(argv=None) -> int:
         prompts = prompts[: a.limit]
     n_calls = len(prompts) * 2
     print(f"{len(prompts)} prompts x 2 conditions = {n_calls} LLM calls (client={a.client})")
-    if a.client in ("openrouter", "litellm"):
+    if a.client == "openai":
         if not a.yes_spend:
             print(f"Refusing: the {a.client} client spends API credit; pass --yes-spend.")
             return 2
-        if not any(os.environ.get(v) for v in KEY_VARS):
-            print(f"Refusing: set one of {KEY_VARS} in the environment.")
+        if not os.environ.get("OPENAI_API_KEY"):
+            print("Refusing: set OPENAI_API_KEY (with OPENAI_BASE_URL and OPENAI_MODEL) in the environment.")
             return 2
 
     out = Path(a.out)
@@ -63,7 +56,7 @@ def main(argv=None) -> int:
             r = json.loads(line)
             done[(r["id"], r["condition"])] = r["answer"]
 
-    client = build_client(a.client, a.fake_mode, a.model)
+    client = build_client(a.client, a.fake_mode)
     truths: dict[tuple, dict] = {}
     rows = []
     with raw.open("a", encoding="utf-8") as fh:
