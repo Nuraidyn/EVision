@@ -28,7 +28,7 @@ Calibration error (CE, mean over countries of |coverage - 0.90|) at h=3, warm-up
 | LightGBM | 0.033 | 0.023 | 0.070 | 0.104 | |
 | ARIMA | 0.034 | 0.019 | 0.066 | 0.098 | 0.058 |
 | Naive B | 0.049 | 0.037 | 0.090 | 0.122 | |
-| Chronos | 0.737| 0.034 | 0.030 | 0.067 | 0.109 | |
+| Chronos | 0.034 | 0.030 | 0.067 | 0.109 | |
 
 Primary contrasts at warm-up 48 (difference of CE in pp, Holm p over the family of four):
 
@@ -36,8 +36,8 @@ Primary contrasts at warm-up 48 (difference of CE in pp, Holm p over the family 
 |---|---|---|---|---|
 | LightGBM | -3.7 (0.008) | -3.5 (0.159) | -1.0 (0.321) | -1.3 (0.337) |
 | ARIMA | -3.2 (0.004) | -3.1 (0.030) | -1.5 (0.199) | -1.8 (0.199) |
-| Naive B | -4.1 (0.004) | -3.5 (0.039) | -1.2 (0.422) | -1.8 (0.422) |
-| Chronos | 0.737| -3.3 (0.036) | -2.5 (0.089) | -0.5 (0.454) | -1.2 (0.443) |
+| Naive B | -4.1 (0.004) | -3.4 (0.039) | -1.2 (0.422) | -1.8 (0.422) |
+| Chronos | -3.3 (0.036) | -2.5 (0.088) | -0.5 (0.454) | -1.2 (0.443) |
 
 Secondary contrast ACI - split at warm-up 48 (unadjusted p): LightGBM -7.0 and -8.0 pp (0.0005
 and 0.0005), ARIMA -6.4 and -5.8 (0.0005, 0.001), Naive B -7.3 and -5.3 (0.001, 0.0045), Chronos
@@ -52,7 +52,7 @@ not promoted):
   0.05, every other cell is above 0.05, and with Holm over the two horizons none is below 0.05
   (0.096 and 0.064).
 - R2 (ACI improves on rolling, Holm p below 0.05): met at h=3 for all four base models and at h=6
-  for ARIMA (0.030) and Naive B (0.039); not met at h=6 for LightGBM (0.159) and Chronos (0.089).
+  for ARIMA (0.030) and Naive B (0.039); not met at h=6 for LightGBM (0.159) and Chronos (0.088).
   At warm-up 96 it is not shown for any base model (Holm p 0.15 to 1.0; 41 and 35 pooled months).
   **This differs from the first hold-out panel and from the design panel, where R2 was "not shown"
   (results-holdout-v1.md); the earlier 20 countries re-run from 2010-01 again show it as not met
@@ -87,7 +87,7 @@ warm-up 48:
 
 | Model | h=1 | h=3 | h=6 | h=12 |
 |---|---|---|---|---|
-| Chronos | 0.737| 0.737 | 0.586 | 0.581 | 0.934 |
+| Chronos | 0.737 | 0.586 | 0.581 | 0.934 |
 | ARIMA | 0.779 | 0.602 | 0.570 | 0.880 |
 | LightGBM | 0.817 | 0.619 | 0.593 | 0.943 |
 

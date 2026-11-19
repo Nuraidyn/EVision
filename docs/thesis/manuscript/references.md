@@ -2,6 +2,8 @@
 
 Only the works below are cited in `main.md` and `workshop.md`. Details marked [VERIFY] were given from memory and must be checked against the publisher or arXiv record before submission. No other work is cited; statements for which no listed source exists are marked [CITATION NEEDED] in the text.
 
+Ansari, A. F. et al. (2024). Chronos: Learning the language of time series. *Transactions on Machine Learning Research*. [VERIFY authors, venue and year; the model used is `amazon/chronos-bolt-tiny`, whose model card and pretraining cutoff were not checked]
+
 Angelopoulos, A. N., Candes, E. J. and Tibshirani, R. J. (2023). Conformal PID control for time series prediction. *Advances in Neural Information Processing Systems (NeurIPS) 36*. [VERIFY volume and pages]
 
 Barber, R. F., Candes, E. J., Ramdas, A. and Tibshirani, R. J. (2023). Conformal prediction beyond exchangeability. *The Annals of Statistics*, 51(2), 816-845. [VERIFY issue and pages]

@@ -63,3 +63,38 @@ Hold-out countries are untouched with respect to countries only; they share cale
 - The Dallas Fed reference and the other [CITATION NEEDED] items need sources or removal.
 - `results-robustness-v1.md` should be corrected for the S2 p-value range (0.016 to 0.48) and for the roundings listed above, so that the documents agree.
 - The `workshop.md` version omits the commit history, the stress validity analysis and the platform; keep it consistent with `main.md` if numbers change.
+
+## Title proposals
+
+The title in `main.md`, `workshop.md` and `abstracts.md` is unchanged:
+
+- Current (EN): Comparing Methods for Building Reliable Prediction Intervals for Machine-Learning Inflation Forecasts in Commodity-Dependent Economies.
+- Proposal, to be adopted only once the extension is accepted by the supervisor or committee, adding the pretrained models:
+  - RU: «Сравнение методов построения надёжных интервалов прогноза инфляции с помощью моделей машинного обучения и предобученных моделей временных рядов в странах, зависящих от сырья»
+  - EN: Comparing Methods for Building Reliable Prediction Intervals for Machine-Learning and Foundation-Model Inflation Forecasts in Commodity-Dependent Economies
+
+The author decides. The current titles in the three languages are kept in the files until then.
+
+## Extension (eighth entry; results `accd674`): what to check
+
+Numbers in the new sections 6.11 to 6.13 of `main.md` come from `results-extension-v1.md` and from the CSV tables in `docs/thesis/results/holdout2_ncal48`, `holdout2_ncal96`, `ext_design13`, `ext_holdout1` and `extension_accuracy`. Where the two differ, the text follows the CSV:
+
+- `results-extension-v1.md` contains stray fragments ("0.737|") in the Chronos rows of the E1 CE table and of the Chronos accuracy table, which shift the columns. They were resolved against the CSVs: Chronos CE at h=3 is ACI 0.034, DRACP 0.030, rolling 0.067, split 0.109; relative MAE over all months is 0.737, 0.586, 0.581, 0.934 (recomputed as the n-weighted pooled ratio from `point_metrics.csv`, which matches the other models' figures in the document). Fix the source document.
+- Naive B, ACI minus rolling at h=6: the source document gives -3.5 pp; the CSV is -3.4465 pp, written -3.4.
+- Chronos, ACI minus rolling at h=6: Holm p 0.0885 in the CSV, written 0.088 (the source document writes 0.089).
+- Table 14 (CE at h=3 and h=6 for the four base models and the ARIMA native intervals) was computed from `interval_summary.csv` (mean over the 10 countries of |coverage - 0.90|); only the h=3 values are in `results-extension-v1.md` and they agree. The h=6 values are new and should be checked.
+- Table 17 puts the R2 outcomes of all panels side by side. The Holm p-values of the re-runs from 2010-01 come from `ext_design13` and `ext_holdout1` (`calibration_contrasts.csv`); the source document states only the range 0.22 to 1.0.
+- The pooled-month counts (89 and 83 at warm-up 48; 41 and 35 at 96) and the minimum detectable differences are as in the source document and `power_mde_ce.csv`.
+- ARIMA and naive B were not re-run on the earlier 20 countries, so Table 17 has LightGBM and Chronos only for those panels.
+
+Remaining [VERIFY] and [CITATION NEEDED] items added by the extension:
+
+- [VERIFY] the Chronos reference (authors, venue, year) in `references.md`.
+- [VERIFY] the exact command lines of the extension runs (Section 9); they are reconstructed from the options of `exp.run` and the run names.
+- [VERIFY] the version of the `chronos` package and the pretraining cutoff of `amazon/chronos-bolt-tiny` (not looked up; 2025-01 is a conservative assumption).
+- [CITATION NEEDED] studies of foundation-model forecasts for inflation and of their interval calibration (Section 2.5).
+- The test counts (81 in `scripts/thesis/exp`, 31 in the LLM layer) are as given by the author and were not re-run here.
+
+Wording rules for the extension, kept in all three files: "R2 met" is a statement about one panel at the primary warm-up; the conclusion about ACI against a rolling window is "depends on the panel"; the panels are not averaged and the favourable panel is not selected; warm-up 96 on the second panel "shows nothing"; Holm is applied within each base model and not across the four base models, which share countries and months; the language-model explainer has no result because its evaluation (936 calls, needs an API key) has not been run.
+
+Keep the Kazakh and Russian sentences about the extension for the native-speaker check (see `abstracts.md`).
