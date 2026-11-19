@@ -64,8 +64,10 @@ The title in Russian and Kazakh, the research question and the contribution are 
 - Platform module: `GET /api/v1/inflation/calibrated-forecast`, served by
   `backend/fastapi_service/app/services/inflation_calibration.py`.
 
-The platform page shows the same intervals that the benchmark evaluates, so what a user sees
-can be checked against the reported coverage.
+The platform applies the same ACI procedure as the benchmark but with a simpler point forecast
+(an exponentially weighted average of monthly growth, minimum calibration size 30) than the
+benchmark's models, so the coverage it reports is its own backtest coverage and not the
+benchmark's numbers.
 
 ---
 

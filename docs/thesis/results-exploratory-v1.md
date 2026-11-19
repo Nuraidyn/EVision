@@ -75,6 +75,8 @@ threshold of the protocol.
   tails and the cap on infinite radii (10 times the largest residual) can affect it, so
   widths are indicative.
 - The minimum detectable difference comes from a simulation that has not been reviewed
-  independently.
+  independently, and it refers to the pooled-coverage contrast; for the calibration-error
+  contrasts that replaced it as primary (see the protocol, fourth entry) the minimum
+  detectable difference is undefined on the full exploratory sample (`results/explore_v1/power_mde_ce.csv`).
 - One point forecaster (LightGBM) carries the contrasts; ARIMA and naive B give similar
   coverage at h=6 (ACI 0.895 and 0.908).

@@ -79,12 +79,29 @@ conformal (below 1 is better than rolling).
 | Rolling | 0.029 / 1 / 1 | 0.036 / 1 / 1 | 0.032 / 1 / 1 | 0.086 / 1 / 1 |
 | Split | 0.056 / 1.11 / 1.35 | 0.050 / 1.07 / 1.23 | 0.053 / 1.06 / 1.27 | 0.119 / 1.02 / 1.09 |
 
-At horizons 1 and 3 ACI, DRACP and FACI are better calibrated than rolling with intervals
-about 9-16% narrower, and the Winkler ratio is 0.94-0.99, so the narrower intervals do not cost
-interval score. At h=6 and h=12 the Winkler ratio of ACI and DRACP is above 1 (up to 1.25), so
-the advantage in calibration is paid for with width. These ratios are descriptive; the earlier
-Winkler contrast with a confidence interval (`results/holdout_ncal48/winkler_contrasts.csv`)
-shows ACI against rolling at h=3 as -1.0% [-7.1, +4.1] and at h=6 as +5.3% (p 0.005).
+The same table for the exploratory data (13 countries, warm-up 48) reads:
+
+| Method | h=1 | h=3 | h=6 | h=12 |
+|---|---|---|---|---|
+| ACI | 0.013 / 0.99 / 0.91 | 0.014 / 1.06 / 0.93 | 0.035 / 1.21 / 1.11 | 0.069 / 1.00 / 1.03 |
+| DRACP | 0.016 / 1.07 / 0.95 | 0.016 / 1.16 / 0.95 | 0.033 / 1.21 / 1.09 | 0.074 / 1.38 / 1.69 |
+| FACI | 0.014 / 1.00 / 0.95 | 0.018 / 1.05 / 0.94 | 0.041 / 1.06 / 0.88 | 0.101 / 0.96 / 0.91 |
+| Conformal PID | 0.030 / 1.00 / 0.96 | 0.033 / 1.02 / 0.98 | 0.059 / 1.02 / 0.94 | 0.105 / 1.01 / 1.01 |
+| Rolling | 0.038 / 1 / 1 | 0.036 / 1 / 1 | 0.050 / 1 / 1 | 0.091 / 1 / 1 |
+| Split | 0.071 / 1.08 / 1.24 | 0.060 / 1.11 / 1.29 | 0.069 / 1.02 / 1.13 | 0.139 / 0.93 / 0.94 |
+
+What the two samples support together: at horizons 1 and 3 the adaptive methods have a lower
+calibration error than rolling and a median interval width 5-16% smaller. Whether this comes at
+no cost in interval quality differs between the samples: on the hold-out panel the Winkler ratio
+is 0.94-0.99 (no cost), on the exploratory panel it is 0.99-1.16 (ACI 1.06 and DRACP 1.16 at
+h=3, so no gain). The ratio of median widths is not the ratio of mean widths: the pooled mean
+width of ACI at h=3 on the exploratory data is larger than that of rolling (4.28 against 3.95,
+`results/explore_v1/interval_summary.csv`), which shows heavy tails in the width of the adaptive
+intervals. So the efficiency gain at short horizons is not established. At h=6 and h=12 the
+Winkler ratio of ACI and DRACP is above 1 in both samples for most cells (up to 1.38), so the
+better calibration is paid for with width or interval score. The earlier Winkler contrast with
+a confidence interval (`results/holdout_ncal48/winkler_contrasts.csv`) shows ACI against rolling
+at h=3 as -1.0% [-7.1, +4.1] and at h=6 as +5.3% (p 0.005).
 
 ## Reading
 
@@ -94,7 +111,9 @@ shows ACI against rolling at h=3 as -1.0% [-7.1, +4.1] and at h=6 as +5.3% (p 0.
    most settings, but this is not established at the registered significance level.
 3. No evidence of an advantage of DRACP over ACI; equivalence within 2 pp holds for most base
    models at warm-up 48 and not at 96.
-4. At short horizons adaptive methods reach similar or better calibration with narrower
-   intervals than a rolling window; at long horizons they do not.
+4. At short horizons adaptive methods have a lower calibration error than a rolling window
+   and a smaller median width, but the interval score is not consistently better (hold-out
+   0.94-0.99, exploratory 0.99-1.16 of rolling), so no efficiency advantage is established; at
+   long horizons the interval score is worse than rolling's in most cells.
 5. Feedback delay accounts for part of the h=12 under-coverage; the amount is method- and
    sample-dependent.

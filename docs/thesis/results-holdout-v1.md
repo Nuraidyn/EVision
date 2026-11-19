@@ -2,8 +2,9 @@
 
 Status: first and only look at the 7 hold-out countries (BO, PY, UY, GH, GE, KG, AO; full IMF
 monthly history, target months 2009-02 to 2026-06). The run, the amendments and the decision
-rules R1-R5 were fixed in `experiment-protocol.md` (fourth and fifth entries, commit
-`1480604`) before any forecast was computed for these countries. Rules are applied as
+rules R1-R5 were fixed in `experiment-protocol.md` (fourth entry, commit `0ff08d8`; fifth
+entry with the rules and the run specification, commit `1480604`) before any forecast was
+computed for these countries. Rules are applied as
 written; none was changed after seeing the result. Tables: `results/holdout_ncal48/`,
 `results/holdout_ncal96/`, `results/diag_instant_h12_holdout/`, `results/confirm13/`.
 
@@ -26,7 +27,7 @@ jointly across the 7 units (205 months at h=3, 199 at h=6 for run A).
 
 | Rule | Outcome | Evidence |
 |---|---|---|
-| R1 ACI better calibrated than split (Holm p < 0.05 at h=3 and h=6) | **Not met in the primary run (warm-up 48); met at warm-up 96** | CE difference at 48: -3.0 pp (p 0.054) and -2.8 pp (p 0.093); at 96: -4.2 pp (p 0.018) and -5.9 pp (p 0.0025). The direction replicates in both runs |
+| R1 ACI better calibrated than split (Holm p < 0.05 at h=3 and h=6) | **Not met in the primary run (warm-up 48); met at warm-up 96** | CE difference at 48: -3.0 pp (p 0.054) and -2.8 pp (p 0.092); at 96: -4.1 pp (p 0.018) and -5.9 pp (p 0.0025). The direction replicates in both runs. The secondary contrast has no Holm column in the output; the p-values are unadjusted (Holm over the two horizons would give 0.108 for both horizons at 48, and 0.018 at h=3 and 0.005 at h=6 at 96) |
 | R2 ACI improves on rolling | **Not shown** | Holm p 0.35 (h=3) and 1.0 (h=6) at 48; 0.59 and 0.99 at 96. At h=6 ACI is 5.3% worse than rolling on the Winkler score (p 0.005) |
 | R3 DRACP versus ACI | **Inconclusive** | Equivalent within 2 pp at warm-up 48 (TOST p 0.0005 and 0.047) but not shown at warm-up 96 (0.062 and 0.355); the verdict is not stable |
 | R4 delayed feedback explains the h=12 shortfall (ACI +3 pp or more) | **Not met** | ACI 0.884 delayed, 0.908 instant: +2.4 pp. FACI +6.5 pp, DRACP +3.9 pp, rolling +1.3 pp, split 0.0 |
