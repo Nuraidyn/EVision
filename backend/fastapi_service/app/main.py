@@ -15,6 +15,7 @@ from app.api.v1.inequality import router as inequality_router
 from app.api.v1.ingestion import router as ingestion_router
 from app.api.v1.ingestion_runs import router as ingestion_runs_router
 from app.api.v1.income import router as income_router
+from app.api.v1.inflation import router as inflation_router
 from app.api.v1.observations import router as observations_router
 from app.core.config import (
     APP_ENV, CORS_ALLOW_ORIGINS, JWT_SECRET,
@@ -62,6 +63,7 @@ app.include_router(observations_router, prefix="/api/v1")
 app.include_router(analytics_router, prefix="/api/v1")
 app.include_router(inequality_router, prefix="/api/v1")
 app.include_router(forecast_router, prefix="/api/v1")
+app.include_router(inflation_router, prefix="/api/v1")
 app.include_router(ai_router, prefix="/api/v1")
 app.include_router(news_router, prefix="/api/v1")
 

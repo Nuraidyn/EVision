@@ -10,6 +10,8 @@
   "navbar.productIncomeAnalysisDesc": "Personal income, savings & career insights",
   "navbar.productForecast": "Forecasting",
   "navbar.productForecastDesc": "Scenario & baseline projections",
+  "navbar.productInflation": "Calibrated inflation",
+  "navbar.productInflationDesc": "Prediction intervals with checked coverage",
   "navbar.productAIMentor": "AI Mentor",
   "navbar.productAIMentorDesc": "Chat with an AI economic advisor",
   "navbar.productNews": "News",

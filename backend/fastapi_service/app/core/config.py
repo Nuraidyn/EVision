@@ -93,3 +93,15 @@ KNOWLEDGE_BASE_DIR = os.getenv(
     "KNOWLEDGE_BASE_DIR",
     str((_PROJECT_ROOT / "knowledge_base").resolve()),
 )
+
+# Inflation calibration (thesis module): offline monthly CPI snapshot.
+# Default: <repo root>/scripts/thesis/data/snapshot.json
+INFLATION_SNAPSHOT_PATH = os.getenv(
+    "INFLATION_SNAPSHOT_PATH",
+    str((_PROJECT_ROOT / "scripts" / "thesis" / "data" / "snapshot.json").resolve()),
+)
+# Second, later snapshot (IMF SDMX API) chained onto the first one at their overlap.
+INFLATION_CONFIRMATORY_PATH = os.getenv(
+    "INFLATION_CONFIRMATORY_PATH",
+    str((_PROJECT_ROOT / "scripts" / "thesis" / "data" / "confirmatory.json").resolve()),
+)

@@ -126,6 +126,17 @@ const PRODUCTS = [
     ),
   },
   {
+    labelKey: "navbar.productInflation",
+    descKey:  "navbar.productInflationDesc",
+    to: "/inflation-intervals",
+    icon: (
+      <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+        strokeWidth="1.7" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
+        <path d="M3 17l6-6 4 4 8-8" /><path d="M3 21h18" />
+      </svg>
+    ),
+  },
+  {
     labelKey: "navbar.productAIMentor",
     descKey:  "navbar.productAIMentorDesc",
     to: "/ai-mentor",

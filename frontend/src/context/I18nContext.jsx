@@ -5,6 +5,7 @@ import en_navbar from "../locales/en/navbar.json";
 import en_auth from "../locales/en/auth.json";
 import en_home from "../locales/en/home.json";
 import en_forecast from "../locales/en/forecast.json";
+import en_inflation from "../locales/en/inflation.json";
 import en_inequality from "../locales/en/inequality.json";
 import en_news from "../locales/en/news.json";
 import en_saved from "../locales/en/saved.json";
@@ -15,6 +16,7 @@ import ru_navbar from "../locales/ru/navbar.json";
 import ru_auth from "../locales/ru/auth.json";
 import ru_home from "../locales/ru/home.json";
 import ru_forecast from "../locales/ru/forecast.json";
+import ru_inflation from "../locales/ru/inflation.json";
 import ru_inequality from "../locales/ru/inequality.json";
 import ru_news from "../locales/ru/news.json";
 import ru_saved from "../locales/ru/saved.json";
@@ -25,6 +27,7 @@ import kz_navbar from "../locales/kz/navbar.json";
 import kz_auth from "../locales/kz/auth.json";
 import kz_home from "../locales/kz/home.json";
 import kz_forecast from "../locales/kz/forecast.json";
+import kz_inflation from "../locales/kz/inflation.json";
 import kz_inequality from "../locales/kz/inequality.json";
 import kz_news from "../locales/kz/news.json";
 import kz_saved from "../locales/kz/saved.json";
@@ -35,9 +38,9 @@ const LANGUAGE_KEY = "ewp_language";
 const SUPPORTED_LANGUAGES = ["en", "ru", "kz"];
 
 const DICTIONARY = {
-  en: { ...en_common, ...en_navbar, ...en_auth, ...en_home, ...en_forecast, ...en_inequality, ...en_news, ...en_saved, ...en_chart },
-  ru: { ...ru_common, ...ru_navbar, ...ru_auth, ...ru_home, ...ru_forecast, ...ru_inequality, ...ru_news, ...ru_saved, ...ru_chart },
-  kz: { ...kz_common, ...kz_navbar, ...kz_auth, ...kz_home, ...kz_forecast, ...kz_inequality, ...kz_news, ...kz_saved, ...kz_chart },
+  en: { ...en_common, ...en_navbar, ...en_auth, ...en_home, ...en_forecast, ...en_inflation, ...en_inequality, ...en_news, ...en_saved, ...en_chart },
+  ru: { ...ru_common, ...ru_navbar, ...ru_auth, ...ru_home, ...ru_forecast, ...ru_inflation, ...ru_inequality, ...ru_news, ...ru_saved, ...ru_chart },
+  kz: { ...kz_common, ...kz_navbar, ...kz_auth, ...kz_home, ...kz_forecast, ...kz_inflation, ...kz_inequality, ...kz_news, ...kz_saved, ...kz_chart },
 };
 
 function getInitialLanguage() {

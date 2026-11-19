@@ -10,6 +10,8 @@
   "navbar.productIncomeAnalysisDesc": "Жеке табыс, жинақ және мансаптық инсайттар",
   "navbar.productForecast": "Болжамдау",
   "navbar.productForecastDesc": "Сценарийлік және базалық болжамдар",
+  "navbar.productInflation": "Инфляция интервалдары",
+  "navbar.productInflationDesc": "Қамтуы тексерілген болжау интервалдары",
   "navbar.productAIMentor": "AI Ментор",
   "navbar.productAIMentorDesc": "Экономика бойынша AI кеңесшісімен сөйлесіңіз",
   "navbar.productNews": "Жаңалықтар",
