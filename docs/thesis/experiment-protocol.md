@@ -213,3 +213,56 @@ Decisions taken while implementing `scripts/thesis/exp/`, fixed here before resu
 - First full run: exploratory only, `--start 2000-01 --end 2025-06`, so no confirmatory
   target month can enter. The confirmatory run waits for the power result and for a committee
   review of the exploratory output.
+
+### 2026-11-19 (fourth entry: amendments after the exploratory run v1, before any confirmatory run)
+
+Source: `results-exploratory-v1.md`, the calibration-error analysis (`exp.run ce`), and a
+committee review (5.5/10, about 6.5 with these fixes). All changes below are motivated by
+logical defects found in the design, not by significance, and are fixed before the data they
+will be applied to is analysed. The original pooled-coverage contrasts stay in the report as
+secondary results.
+
+1. **Calibration error replaces pooled coverage as the primary outcome.** For each unit
+   CE = |coverage - 0.90| and a contrast is the equal-weight mean over units of the difference
+   of CE. Reason: pooled coverage lets opposite country deviations cancel (split conformal
+   covers 1.000 in Indonesia and 0.822 in Peru at h=3). Exploratory v1: ACI - split,
+   h=3: -4.6 pp (95% CI [-5.0, -1.4], Holm p 0.002); h=6: -3.4 pp (Holm p 0.0045);
+   DRACP - ACI: +0.2 and -0.2 pp, not distinguishable from zero.
+2. **Reference method.** Split conformal calibrated once on the first 48 months and never
+   updated is a weak reference. The primary contrasts become ACI - rolling conformal and
+   DRACP - ACI, at h=3 and h=6. ACI - split is kept as a secondary, descriptive result.
+3. **DRACP versus ACI is an equivalence question.** The minimum detectable improvement over
+   ACI cannot be reached (ACI's mean CE is already about 1.5 pp; MDE undefined), so a null
+   result is not evidence of equality. The test is two one-sided tests with an equivalence
+   margin of 2 pp in CE; "no advantage" is claimed only if equivalence is shown, otherwise the
+   result is reported as inconclusive. Winkler score and the standard deviation of coverage
+   across units are reported next to CE.
+4. **Fair DRACP sensitivity.** In v1 DRACP trains its regime and scale models on half of a
+   48-month warm-up (24 rows). It is re-run with a warm-up of 96 months for all methods
+   (`n_cal=96`) on the exploratory data; the conclusion about DRACP is drawn only if it is
+   stable across the two warm-up sizes.
+5. **Hold-out countries are the main confirmatory pool.** Fifteen months per country after
+   2025-06 give two or three independent blocks, so the confirmatory months of the original
+   13 countries cannot carry a claim. Seven further commodity-dependent economies that were
+   not used for any design decision form a hold-out panel with their full history: BO, PY,
+   UY, GH, GE, KG, AO (`scripts/thesis/data/holdout.json`, SHA-256
+   `0245eab6c75d6bd7fe800fe5978a7ca5670550dff4b3f23e817177f9c6fae9ac`). The candidate list
+   (14 names, fixed order) and the eligibility rule (at least 220 months of IMF monthly CPI
+   and FX per USD within 2000-01..2026-06, at most 3 missing CPI months) were written in
+   `fetch_holdout.mjs` before any forecast was computed; the first 10 eligible were to be
+   kept, and only 7 candidates met the rule (ZM, AM, TZ, UG, KE, IQ start in 2009-2010, PG has
+   no CPI), so the panel has 7 countries and the rule was not relaxed. No forecast has been
+   computed for these countries before this entry. All their months count as hold-out
+   (`sample = holdout`). The confirmatory months of the original 13 countries are reported
+   as a supplementary check, pooled only.
+6. **Dependence and horizon.** Contrasts use a moving-block bootstrap with block length at
+   least 12 months (ACI has a memory of roughly 50 months at step 0.02). The failure at h=12
+   is examined with a diagnostic run in which feedback arrives immediately; it is labelled a
+   diagnostic and not a primary result. The MDE for confirmatory claims is computed on random
+   15-month windows of the exploratory data and on the hold-out panel, and a contrast with an
+   MDE above 7 pp is reported as inconclusive.
+7. **Stress analysis stays exploratory.** It is presented with clustering by episode and
+   with the number of deciles, methods and horizons that were looked at.
+8. **Reading of the exploratory DRACP result.** Allowed wording: "in this configuration no
+   advantage over ACI was detected"; not allowed: "DRACP does not transfer" or "ACI and DRACP
+   are equal".

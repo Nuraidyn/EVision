@@ -21,7 +21,8 @@ import pandas as pd  # noqa: E402
 from exp.data import COUNTRIES, country_units, load_raw  # noqa: E402
 from exp.evaluate import (Config, coverage_by_stress_decile, interval_summary,  # noqa: E402
                           point_metrics, primary_contrasts, run_unit)
-from exp.power import mde_table  # noqa: E402
+from exp.calibration import ce_contrasts, null_ce_bias, per_unit_coverage  # noqa: E402
+from exp.power import mde_ce_table, mde_table  # noqa: E402
 
 RESULTS = THESIS / "results"
 
@@ -66,6 +67,32 @@ def execute(units: dict, cfg: Config, out: Path, resume: bool = False, primary_m
     return res
 
 
+def run_ce(inp: Path, out: Path, model: str = "lgbm", B: int = 2000, n_outer: int = 100):
+    """Calibration-error contrasts from an existing intervals_all.csv (exploratory rows only)."""
+    iv = pd.read_csv(inp / "intervals_all.csv")
+    iv = iv[iv["sample"] == "exploratory"]          # never touch confirmatory rows
+    out.mkdir(parents=True, exist_ok=True)
+    con = ce_contrasts(iv, model, "exploratory", B=B)
+    pu = per_unit_coverage(iv, (1, 3, 6, 12), "exploratory")
+    mde = mde_ce_table(iv, model, "exploratory", n_outer=n_outer)
+    con.to_csv(out / "calibration_contrasts.csv", index=False)
+    pu.to_csv(out / "per_unit_coverage.csv", index=False)
+    mde.to_csv(out / "power_mde_ce.csv", index=False)
+    nb = pd.DataFrame([null_ce_bias(n) for n in (15, 190)])
+    pd.set_option("display.width", 200)
+    pd.set_option("display.max_columns", 30)
+    print("\nCalibration-error contrasts (T = mean_u CE_m1 - CE_m2; negative = m1 better calibrated):")
+    print(con.round(4).to_string(index=False))
+    print("\nMDE for CE contrast (pp of mean |cov-0.90|, power 0.80, alpha 0.05/4):")
+    print(mde.round(2).to_string(index=False))
+    print("\nNull small-sample bias (true coverage 0.90, independent hits):")
+    print(nb.round(4).to_string(index=False))
+    print("\nPer-unit coverage / CE, model", model, "(h=3, 6):")
+    w = pu[(pu.model == model) & pu.h.isin((3, 6)) & pu.method.isin(["split", "aci", "dracp"])]
+    print(w.pivot_table(index=["h", "unit"], columns="method", values=["coverage", "ce"]).round(3).to_string())
+    return dict(contrasts=con, per_unit=pu, mde=mde, null_bias=nb)
+
+
 def show(res: dict):
     pd.set_option("display.width", 200)
     pd.set_option("display.max_columns", 30)
@@ -102,8 +129,21 @@ def main(argv=None):
                    help="last month of data, e.g. 2025-06; cuts every series so that no confirmatory "
                         "target month (>= 2025-07) can enter the run")
     f.add_argument("--out", default="full", help="results sub-directory under results/")
+    c = sub.add_parser("ce", help="calibration-error contrasts from intervals_all.csv")
+    c.add_argument("--in", dest="inp", default="results/explore_v1")
+    c.add_argument("--out", default="results/explore_v1")
+    c.add_argument("--model", default="lgbm")
+    c.add_argument("--boot", type=int, default=2000)
+    c.add_argument("--n-outer", type=int, default=100)
     a = ap.parse_args(argv)
     t0 = time.time()
+    if a.cmd == "ce":
+        def _p(x):
+            x = Path(x)
+            return x if x.is_absolute() else (THESIS / x)
+        run_ce(_p(a.inp), _p(a.out), a.model, a.boot, a.n_outer)
+        print(f"\ndone in {time.time() - t0:.1f}s")
+        return
     if a.cmd == "smoke":
         raw = load_raw()
         cfg = Config(models=("naive_a", "naive_b", "ets", "arima", "lgbm"), conformal_models=("lgbm", "arima"),

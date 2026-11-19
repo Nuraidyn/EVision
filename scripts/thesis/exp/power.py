@@ -79,3 +79,92 @@ def mde_table(iv: pd.DataFrame, model: str, sample: str | None = "exploratory", 
                            "inconclusive (>10pp)" if (r["mde_pp"] > 10 or np.isnan(r["mde_pp"])) else "between 7 and 10pp")
             rows.append(r)
     return pd.DataFrame(rows)
+
+
+# ----------------------------------------------------------------------------- CE contrast MDE
+# MDE for the calibration-error (CE) contrast  T = mean_u (CE_u,a - CE_u,b)  (see calibration.py).
+#
+# What is simulated (an analogue of the coverage MDE, because T is nonlinear in the hits and the
+# "shift every cell by delta" device of mde_panel cannot be used):
+# 1. Baseline method b keeps its OBSERVED hit pattern (unit x origin month), so cross-country common
+#    shocks and h-step overlap stay in the data.
+# 2. Method a is constructed from b: per unit with observed coverage cb_u a target coverage pa_u is
+#    set so that CE_a = max(CE_b - delta, 0) on the same side of 0.90
+#    (pa = 0.90 + sign(cb-0.90) * max(|cb-0.90| - delta, 0)).  If pa < cb each hit of b becomes a
+#    miss with prob (cb-pa)/cb; if pa > cb each miss becomes a hit with prob (pa-cb)/(1-cb).
+#    Fixed uniform draws are reused across delta (common random numbers), so a's hits are nested in
+#    delta and power is monotone.  At delta = 0, a == b and T = 0.  Units with CE_b < delta can only
+#    be improved to 0, so the realised mean improvement is a bit below delta (reported as
+#    realised_T_pp).
+# 3. Each outer replicate resamples origin months in moving blocks of max(h, 6) jointly over units
+#    (dependence taken from the data, zero beyond a block), recomputes T and applies the same
+#    centred block-bootstrap test as the real analysis (B_inner draws), two-sided.
+# 4. alpha = 0.05 with Holm over 4 tests -> each contrast tested at alpha/4 (Bonferroni, an upper
+#    bound on the MDE under Holm).  MDE = smallest delta with power >= 0.80, by bisection, in
+#    percentage points of mean |coverage - 0.90|.
+# Assumptions: observed hits of b describe the true dependence and calibration heterogeneity; the
+# alternative is a pure reduction of calibration error (a = b thinned/thickened); the exploratory
+# sample is used, so confirmatory MDEs (about 15 months per unit) will be larger.
+
+
+def _ce_alt_hits(Hb, O, delta, Uni, nominal=0.90):
+    n = O.sum(1)
+    cb = np.where(n > 0, Hb.sum(1) / np.maximum(n, 1), nominal)
+    pa = nominal + np.sign(cb - nominal) * np.maximum(np.abs(cb - nominal) - delta, 0.0)
+    down = (pa < cb)[:, None]
+    p_down = (np.maximum(cb - pa, 0) / np.maximum(cb, 1e-12))[:, None]
+    p_up = (np.maximum(pa - cb, 0) / np.maximum(1 - cb, 1e-12))[:, None]
+    Ha = np.where(down & (Hb == 1) & (Uni < p_down), 0.0, Hb)
+    Ha = np.where((~down) & (Hb == 0) & (O == 1) & (Uni < p_up), 1.0, Ha)
+    return Ha * O
+
+
+def _ce_power(delta, Hb, O, Uni, out_idx, in_idx, crit):
+    from .calibration import t_stat
+    Ha = _ce_alt_hits(Hb, O, delta, Uni)
+    rej = 0
+    for idx in out_idx:
+        Ha_, Hb_, O_ = Ha[:, idx], Hb[:, idx], O[:, idx]
+        est = t_stat(Ha_, Hb_, O_)
+        bs = t_stat(Ha_, Hb_, O_, in_idx)
+        p = (1 + np.sum(np.abs(bs - est) >= abs(est))) / (len(bs) + 1)
+        rej += p <= crit
+    return rej / len(out_idx)
+
+
+def mde_ce_panel(arrs, h: int, alpha: float = 0.05, n_tests: int = 4, power: float = 0.80,
+                 n_outer: int = 100, B_inner: int = 199, seed: int = 7) -> dict:
+    from .calibration import t_stat
+    if arrs is None:
+        return dict(n_units=0, n_months=0, mde_pp=np.nan, realised_T_pp=np.nan)
+    _, Hb, O, units = arrs
+    rng = np.random.default_rng(seed)
+    Uni = rng.random(Hb.shape)
+    T = O.shape[1]
+    bl = block_len_for(h)
+    out_idx = block_indices(T, bl, n_outer, rng)
+    in_idx = block_indices(T, bl, B_inner, rng)
+    crit = alpha / n_tests
+    info = dict(n_units=len(units), n_months=int((O.sum(0) > 0).sum()))
+    lo, hi = 0.0, 0.10
+    if _ce_power(hi, Hb, O, Uni, out_idx, in_idx, crit) < power:
+        return dict(**info, mde_pp=np.nan, realised_T_pp=np.nan)
+    for _ in range(8):
+        mid = (lo + hi) / 2
+        if _ce_power(mid, Hb, O, Uni, out_idx, in_idx, crit) >= power:
+            hi = mid
+        else:
+            lo = mid
+    Ha = _ce_alt_hits(Hb, O, hi, Uni)
+    return dict(**info, mde_pp=100 * hi, realised_T_pp=100 * t_stat(Ha, Hb, O))
+
+
+def mde_ce_table(iv: pd.DataFrame, model: str, sample: str | None = "exploratory", **kw) -> pd.DataFrame:
+    from .calibration import CE_HORIZONS, CE_PRIMARY, ce_arrays
+    rows = []
+    for h in CE_HORIZONS:
+        for a, b in CE_PRIMARY:
+            r = mde_ce_panel(ce_arrays(iv, model, h, a, b, sample), h, **kw)
+            r.update(model=model, h=h, contrast=f"{a}-{b}", sample=sample)
+            rows.append(r)
+    return pd.DataFrame(rows)
