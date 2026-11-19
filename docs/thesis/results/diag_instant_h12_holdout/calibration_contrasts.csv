@@ -1,0 +1,7 @@
+model,h,contrast,family,sample,block_len,n_units,n_months,T,ci_lo,ci_hi,p,p_holm
+lgbm,3,aci-rolling,primary,holdout,12,0,0,,,,,
+lgbm,3,dracp-aci,primary,holdout,12,0,0,,,,,
+lgbm,6,aci-rolling,primary,holdout,12,0,0,,,,,
+lgbm,6,dracp-aci,primary,holdout,12,0,0,,,,,
+lgbm,3,aci-split,secondary,holdout,12,0,0,,,,,
+lgbm,6,aci-split,secondary,holdout,12,0,0,,,,,

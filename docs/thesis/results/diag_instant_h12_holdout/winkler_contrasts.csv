@@ -1,0 +1,7 @@
+model,h,contrast,sample,rel_diff,ci_lo,ci_hi,p
+lgbm,3,aci-rolling,holdout,,,,
+lgbm,3,dracp-aci,holdout,,,,
+lgbm,3,aci-split,holdout,,,,
+lgbm,6,aci-rolling,holdout,,,,
+lgbm,6,dracp-aci,holdout,,,,
+lgbm,6,aci-split,holdout,,,,

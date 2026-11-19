@@ -1,0 +1,5 @@
+n_units,n_months,mde_pp,realised_T_pp,model,h,contrast,sample
+11,16,3.5937500000000004,-1.8181818181818177,lgbm,3,aci-rolling,confirmatory
+11,16,9.3359375,-3.03030303030303,lgbm,3,dracp-aci,confirmatory
+11,16,0.546875,-1.78030303030303,lgbm,6,aci-rolling,confirmatory
+11,16,0.546875,-1.78030303030303,lgbm,6,dracp-aci,confirmatory

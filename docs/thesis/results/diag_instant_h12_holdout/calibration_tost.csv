@@ -1,0 +1,3 @@
+model,h,contrast,sample,T,margin_pp,p_lower,p_upper,p_tost,verdict
+lgbm,3,dracp-aci,holdout,,2.0,,,,not shown
+lgbm,6,dracp-aci,holdout,,2.0,,,,not shown

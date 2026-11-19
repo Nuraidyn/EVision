@@ -1,0 +1,2 @@
+DIAGNOSTIC RUN: every interval method received each origin's outcome at origin+1 (as if h=1),
+although the real outcome arrives at origin+h.  Not a valid forecasting setup; not a primary result.
