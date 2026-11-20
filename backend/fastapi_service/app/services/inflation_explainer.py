@@ -70,7 +70,7 @@ class OpenAIClient:
     """OpenAI-compatible chat endpoint (here the LiteLLM proxy): OPENAI_BASE_URL, OPENAI_API_KEY and
     OPENAI_MODEL from app.core.config. Deterministic sampling. Not used by any test."""
 
-    def __init__(self, max_tokens: int = 2000, timeout: float = 120.0) -> None:
+    def __init__(self, max_tokens: int = 8000, timeout: float = 300.0) -> None:
         self.max_tokens = max_tokens
         self.timeout = timeout
 
@@ -96,10 +96,11 @@ class OpenAIClient:
             timeout=self.timeout,
         )
         r.raise_for_status()
-        text = (r.json()["choices"][0]["message"].get("content") or "").strip()
+        choice = r.json()["choices"][0]
+        text = (choice["message"].get("content") or "").strip()
         text = re.sub(r"<think>.*?</think>", "", text, flags=re.S).strip()  # reasoning models
         if not text:
-            raise RuntimeError("LLM returned empty content")
+            raise RuntimeError(f"LLM returned empty content (finish_reason={choice.get('finish_reason')})")
         return text
 
 

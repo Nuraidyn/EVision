@@ -1,0 +1,62 @@
+\documentclass[11pt,a4paper]{article}
+
+\usepackage[T1]{fontenc}
+\usepackage{lmodern}
+\usepackage[utf8]{inputenc}
+\usepackage[margin=2.5cm]{geometry}
+\usepackage{microtype}
+\usepackage{amsmath}
+\usepackage{amssymb}
+\usepackage{amsthm}
+\usepackage{booktabs}
+\usepackage{array}
+\usepackage{multirow}
+\usepackage{graphicx}
+\usepackage{xcolor}
+\usepackage{float}
+\usepackage[font=small,labelfont=bf]{caption}
+\usepackage[round,authoryear]{natbib}
+\usepackage[colorlinks=true,linkcolor=blue!50!black,citecolor=blue!50!black,urlcolor=blue!50!black]{hyperref}
+
+% Typesetting helpers defined for this paper.
+\newsavebox{\tabbox}
+% Scale a table body down to the line width only when it is wider than the line.
+\newcommand{\fittable}[1]{\sbox{\tabbox}{#1}%
+  \ifdim\wd\tabbox>\linewidth\resizebox{\linewidth}{!}{\usebox{\tabbox}}\else\usebox{\tabbox}\fi}
+\newcommand{\ci}[2]{$[#1,\,#2]$}
+\newcommand{\pp}{\,pp}
+\newcommand{\CE}{\mathrm{CE}}
+\newcommand{\Cov}{\mathrm{cov}}
+\newcommand{\MDE}{\mathrm{MDE}}
+\newcommand{\Ind}{\mathbf{1}}
+
+% Status of the language-model explainer evaluation: the single place to replace
+% when results become available (used once in each section that mentions it).
+\newcommand{\ExplainerStatus}{The evaluation of the language-model explanation layer is in progress and is not reported in this version; no claim of this paper depends on it.}
+
+\title{Comparing Methods for Building Reliable Prediction Intervals for Machine-Learning Inflation Forecasts in Commodity-Dependent Economies}
+\author{Nuraidyn Seitkapar}
+\date{Draft of 19 November 2026}
+
+\begin{document}
+\maketitle
+
+\input{sections/abstract}
+
+\input{sections/introduction}
+\input{sections/related}
+\input{sections/methods}
+\input{sections/data}
+\input{sections/results}
+\input{sections/discussion}
+\input{sections/limitations}
+\input{sections/conclusion}
+\input{sections/reproducibility}
+
+\bibliographystyle{plainnat}
+\bibliography{references}
+
+\appendix
+\input{sections/appendix}
+
+\end{document}

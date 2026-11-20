@@ -1,0 +1,107 @@
+\section{Problem formulation and methodology}\label{sec:method}
+
+Notation: $u$ indexes a unit (a country, or a stretch of consecutive months of one country), $t$ the forecast origin (a month), $h\in\{1,3,6,12\}$ the horizon in months, and $\alpha=0.10$ the target miscoverage, so that the nominal coverage is $1-\alpha=0.90$.
+
+\subsection{Target and point forecasters}\label{sec:forecasters}
+
+For a unit with consumer price index $\mathrm{CPI}_t$, the target is the cumulative $h$-month log growth of the index, in percent,
+\begin{equation}\label{eq:target}
+y_{t,h} \;=\; 100\,\ln\!\frac{\mathrm{CPI}_{t+h}}{\mathrm{CPI}_t},
+\end{equation}
+defined only if $\mathrm{CPI}_{t+h}$ lies in the same stretch of consecutive months as $\mathrm{CPI}_t$. A point forecaster maps the information dated at or before $t$ to a forecast $\hat y_{t,h}$; the interval methods take $\hat y_{t,h}$ as given.
+
+Forecasts are made at one origin per month with an expanding window, using only information dated at or before the origin; hyperparameters are fixed in advance and not tuned on the test period, and tests check that corrupting all data after the origin does not change a forecast. The forecasters are naive A ($h$ times the last monthly inflation rate), naive B (the last observed cumulative $h$-month growth), ETS \citep{hyndman2002ets} (additive error, no trend, additive seasonality of period 12, fitted to monthly inflation, $h$ monthly forecasts summed), ARIMA (ARMA$(p,q)$ with $p,q\in\{0,1,2\}$, a constant and two annual harmonics, order chosen by the corrected Akaike criterion every 12 origins, $h$ monthly forecasts summed) and LightGBM \citep{ke2017lightgbm}. LightGBM is a direct forecast with one model per horizon (200 trees, learning rate 0.05, 8 leaves, refitted every 3 origins) on lagged monthly inflation, rolling means, exchange-rate and Brent log changes and calendar-month terms; it is the base model of the primary family and of the decision rules. In the extension, Chronos \citep{ansari2024chronos} is used zero-shot with no fine-tuning and no covariates (\texttt{amazon/chronos-bolt-tiny}, context truncated to 2048 observations, $h$ median forecasts summed); it has no native interval, so conformal methods are applied to its point forecast as to the others. \emph{Leakage flag.} Chronos may have met public CPI series in pretraining. Rows with a target month before 2025-01 are flagged \texttt{possibly\_seen}; the pretraining cutoff was not looked up and not verified, 2025-01 is a conservative assumption, and only target months from 2025-01 are treated as clean.
+
+Forecast origins start no earlier than 2000-01 (the 1990s hyperinflation of Brazil and Mexico made native ARIMA intervals and LightGBM unusable in a check), and each country needs 60 months of training history. Failed ETS or ARIMA fits carry the previous forecast forward and are counted (none in the exploratory run). The conformal methods were run on three base models in the main runs (LightGBM, ARIMA, naive B) and on four in the extension (adding Chronos), which starts at 2010-01.
+
+\subsection{Nonconformity score and interval methods}\label{sec:intervals}
+
+For each origin $j$ whose outcome has been released, the nonconformity score is the absolute residual
+\begin{equation}\label{eq:score}
+s_{j,h} \;=\; \bigl|\,y_{j,h}-\hat y_{j,h}\,\bigr|.
+\end{equation}
+All methods issue a symmetric interval around the point forecast,
+\begin{equation}\label{eq:interval}
+C_{t,h} \;=\; \bigl[\,\hat y_{t,h}-q_{t,h},\;\hat y_{t,h}+q_{t,h}\,\bigr],
+\end{equation}
+and differ only in the radius $q_{t,h}$. Let $\mathcal R_{t}$ be the set of released scores at origin $t$ (Section~\ref{sec:delay}) and $Q_{p}(S)$ the empirical $p$-quantile of a multiset $S$ of size $n$, with the finite-sample level $\lceil (n+1)p\rceil/n$ understood. All six methods are run through the streaming interface of the released \texttt{dracp} package (\texttt{fit}, \texttt{predict\_one}, \texttt{update\_one}) with a pass-through base model that uses our own point forecast unchanged.
+
+\paragraph{Split and rolling conformal.} The split radius is fixed after the warm-up window of $n_{\mathrm{cal}}$ scores and never updated; the rolling radius is the quantile of the most recent $W=120$ released scores,
+\begin{equation}\label{eq:split}
+q^{\mathrm{split}}_{t,h} = Q_{1-\alpha}\bigl(\{s_{j,h}\}_{j=1}^{n_{\mathrm{cal}}}\bigr),\qquad
+q^{\mathrm{roll}}_{t,h} = Q_{1-\alpha}\bigl(\text{the last } W \text{ scores in } \mathcal R_t\bigr).
+\end{equation}
+
+\paragraph{ACI.} \citet{gibbs2021aci} treat the working miscoverage level as a state updated online. With $\mathrm{err}_{j}=\mathbf 1\{y_{j,h}\notin C_{j,h}\}$ the miss indicator of the interval actually issued at origin $j$,
+\begin{align}
+\alpha_{t+1} &= \alpha_t + \gamma\,\bigl(\alpha - \mathrm{err}_t\bigr), \label{eq:aci}\\
+q^{\mathrm{ACI}}_{t,h} &= Q_{1-\alpha_t}\bigl(\text{the last } W \text{ scores in } \mathcal R_t\bigr), \label{eq:aciq}
+\end{align}
+with step size $\gamma=0.02$ and window $W=120$. If $\alpha_t\le 0$ the quantile is infinite, and if $\alpha_t\ge 1$ the interval is empty. Because~\eqref{eq:aci} is a sum of $\alpha-\mathrm{err}_t$, the long-run miss frequency approaches $\alpha$ without assumptions on the data; this concerns the long-run average of a single sequence, not each country, horizon and window, and is derived for the case where $\mathrm{err}_t$ is observed before the next interval is issued.
+
+\paragraph{FACI, conformal PID and DRACP.} FACI \citep{gibbs2024faci} runs $K$ copies of~\eqref{eq:aci} with different step sizes and aggregates their working levels with exponential weights $p^{(k)}_t$ updated from the pinball loss, $\alpha_t=\sum_{k=1}^{K} p^{(k)}_t\,\alpha^{(k)}_t$. Conformal PID \citep{angelopoulos2023pid} tracks the radius by a controller whose integral component is
+\begin{equation}\label{eq:pid}
+q_{t+1} \;=\; q_t + \eta\,\bigl(\mathrm{err}_t-\alpha\bigr),
+\end{equation}
+with proportional, saturation and scorecaster components added; all constants of FACI and PID are the package defaults. DRACP \citep{oancea2026dracp} keeps the form~\eqref{eq:interval} but replaces equal weights by a weighted quantile,
+\begin{equation}\label{eq:dracp}
+q^{\mathrm{DRACP}}_{t,h} \;=\; Q^{w}_{1-\alpha_t}\bigl(\{s_{j,h}\}_{j\in\mathcal R_t}\bigr),\qquad
+w_j(t) \;=\; d_j(t)\,r_j\,k_j(t)\,g_j(t),
+\end{equation}
+where $d_j$ is a temporal decay, $r_j$ a density-ratio correction, $k_j$ a Gaussian kernel with floored effective sample size and $g_j$ a regime-similarity term from a Gaussian mixture; the level $\alpha_t$ is adjusted online as in~\eqref{eq:aci}. The configuration is that of the package reproduction script (calibration window 120, target window 24, decay 0.985, 3 regimes, FACI control). DRACP trains its regime and scale models on the first half of the warm-up rows and calibrates on the second half, whereas the other methods use all warm-up rows. This description is at the level stated by the authors and has not been re-derived.
+
+\subsection{Delayed feedback and interval capping}\label{sec:delay}
+
+For an $h$-step forecast made at origin $j$ the outcome is observed only at month $j+h$. At origin $k$ the released set is
+\begin{equation}\label{eq:released}
+\mathcal R_k \;=\; \{\,j \;:\; j+h\le k\,\},
+\end{equation}
+and the update for origin $j$ uses the miss indicator of the interval actually issued at $j$. With one origin per month the ACI recursion under delay is $\alpha_{k+1}=\alpha_k+\gamma(\alpha-\mathrm{err}_{k+1-h})$, which reduces to~\eqref{eq:aci} at $h=1$. This real-use setting is the default. Rows $0$ to $n_{\mathrm{cal}}-1$ are the initial calibration set and the first evaluated origin is $n_{\mathrm{cal}}+h-1$, so that every warm-up row has been released. A diagnostic option releases each outcome at origin $+1$ regardless of $h$; it is not a valid forecasting setup and serves only to isolate the effect of delay (Section~\ref{sec:feedback}). Infinite radii are capped at 10 times the largest absolute calibration score seen so far and counted; an independent ACI implementation is tested against the package at $h=1$. Native ARIMA (Gaussian) and ETS (simulated) intervals are computed for the post hoc comparison of Section~\ref{sec:native}.
+
+\subsection{Coverage, calibration error and interval score}\label{sec:evalmetrics}
+
+With $\mathcal O_u$ the evaluated origins of unit $u$, coverage, the \emph{calibration error} (CE) of a unit and its mean over units are
+\begin{equation}\label{eq:ce}
+\Cov(u,m)=\frac{1}{|\mathcal O_u|}\sum_{t\in\mathcal O_u}\mathbf 1\bigl\{y_{t,h}\in C^{m}_{t,h}\bigr\},\quad
+\CE(u,m)=\bigl|\Cov(u,m)-(1-\alpha)\bigr|,\quad
+\overline{\CE}(m)=\frac{1}{|\mathcal U|}\sum_{u\in\mathcal U}\CE(u,m).
+\end{equation}
+CE is used instead of pooled coverage because pooled coverage lets opposite deviations cancel: in the exploratory data at $h=3$, split conformal covers 1.000 in Indonesia and 0.822 in Peru, a pooled average close to nominal although neither country is calibrated. The absolute value biases CE upward by sampling noise in small samples; the bias largely cancels in contrasts because both methods share the sample, and percentile bootstrap intervals need not be symmetric around the estimate.
+
+The interval (Winkler) score \citep{winkler1972,gneiting2007scoring} of $[a,b]$ for outcome $y$ is
+\begin{equation}\label{eq:winkler}
+W_\alpha(a,b;y) \;=\; (b-a) + \tfrac{2}{\alpha}\max(a-y,0) + \tfrac{2}{\alpha}\max(y-b,0);
+\end{equation}
+lower is better, and width is reported in percentage points of cumulative growth. A low CE says that the long-run miss rate is close to nominal and nothing about whether the interval is narrow enough to be useful, which is why width and~\eqref{eq:winkler} are reported next to CE.
+
+\subsection{Contrasts, bootstrap, equivalence and power}\label{sec:contrasts}
+
+A contrast between methods $m_1$ and $m_2$ is the equal-unit-weight mean difference of CE over units, using only (unit, origin) cells present for both,
+\begin{equation}\label{eq:contrast}
+T(m_1,m_2) \;=\; \frac{1}{|\mathcal U|}\sum_{u\in\mathcal U}\Bigl[\CE(u,m_1)-\CE(u,m_2)\Bigr];
+\end{equation}
+a negative $T$ means $m_1$ is better calibrated. The primary family has four tests, ACI minus rolling and DRACP minus ACI at $h=3$ and $h=6$ with LightGBM, and Holm's procedure \citep{holm1979} controls the family-wise error rate: with sorted unadjusted $p$-values $p_{(1)}\le\dots\le p_{(M)}$, $M=4$,
+\begin{equation}\label{eq:holm}
+\tilde p_{(i)} \;=\; \min\Bigl\{1,\;\max_{j\le i}\,(M-j+1)\,p_{(j)}\Bigr\}.
+\end{equation}
+ACI minus split is a secondary, descriptive contrast outside the family; the horizons $h=1$ and $h=12$ are descriptive; Winkler contrasts are relative differences of the equal-unit-weight mean score with unadjusted descriptive $p$-values. In the extension Holm is applied within each base model (four tests), not across base models.
+
+Origins of consecutive months overlap in their $h$-step errors and countries share common shocks, so the bootstrap resamples origin calendar months in moving blocks \citep{kunsch1989} of length $L=\max(h,12)$, jointly for all units. With replicates $T^{*}_b$, $b=1,\dots,B$, $B=2000$, we report $T$, a 95 percent percentile interval and the centred two-sided $p$-value
+\begin{equation}\label{eq:pboot}
+p \;=\; \frac{1}{B}\sum_{b=1}^{B}\mathbf 1\bigl\{\,|T^{*}_b-T|\ge |T|\,\bigr\}.
+\end{equation}
+With blocks of 12 and fewer than about 16 months per unit the bootstrap is degenerate (Section~\ref{sec:other}).
+
+A non-significant difference is not evidence of equality, so DRACP against ACI is also tested for equivalence by two one-sided tests \citep[TOST;][]{schuirmann1987tost} with margin $\delta=2$~pp of CE. With centred replicates $D^{*}_b=T^{*}_b-T$,
+\begin{equation}\label{eq:tost}
+p_L=\frac1B\sum_{b}\mathbf 1\{-\delta+D^{*}_b\ge T\},\quad
+p_U=\frac1B\sum_{b}\mathbf 1\{+\delta+D^{*}_b\le T\},\quad
+p_{\mathrm{TOST}}=\max(p_L,p_U),
+\end{equation}
+and equivalence is declared if $p_{\mathrm{TOST}}<0.05$, otherwise the verdict is ``not shown''. The margin is fixed in advance and not justified beyond that; TOST is outside the Holm family.
+
+Power is assessed by simulation that keeps the observed hit pattern of the baseline (so that common shocks and error overlap stay in the data) and constructs the comparison method by thinning or thickening its hits so that its CE is lower by $\Delta$ in each unit on the same side of 0.90; each simulated dataset is tested with the same centred block bootstrap at level $0.05/4$ (the first Holm step), a conservative bound. With $\pi(\Delta)$ the power,
+\begin{equation}\label{eq:mde}
+\MDE \;=\; \min\bigl\{\Delta\in\mathcal G \;:\; \pi(\Delta)\ge 0.80\bigr\},
+\end{equation}
+over a grid $\mathcal G$ of improvements up to 10~pp, and the MDE is undefined if $\pi(10\,\mathrm{pp})<0.80$. Rule R5 follows: a contrast whose MDE is undefined or exceeds 7~pp is inconclusive regardless of its $p$-value. The MDE is also computed on 60 random 15-month windows. The simulation has not been reviewed independently.

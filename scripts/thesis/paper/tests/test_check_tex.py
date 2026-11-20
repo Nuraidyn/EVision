@@ -202,3 +202,12 @@ def test_real_paper_passes():
         pytest.skip("paper/ not present")
     issues = ct.run_checks(paper)
     assert issues == [], "\n".join(str(i) for i in issues)
+
+
+def test_short_paper_passes_and_is_short():
+    paper = REPO / "paper_short"
+    if not (paper / "main.tex").exists():
+        pytest.skip("paper_short/ not present")
+    issues = ct.run_checks(paper)
+    assert issues == [], "\n".join(str(i) for i in issues)
+    assert ct.body_word_count(paper) < 12000

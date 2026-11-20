@@ -1,0 +1,72 @@
+\section{Stable robustness tables}\label{app:extra}
+
+Further per-check detail (the S4 and S5 tables, the shock-rule validity checks, the Kazakhstan analysis, the protocol change log with commit hashes, the data snapshot hashes and the reproduction commands) is in the repository and in the full version of this paper.
+
+\begin{table}[H]
+\centering
+\caption{S1: range of the contrast over leave-one-country-out removals (pp of CE) and number of sign flips of the full-sample estimate.}
+\label{tab:loo}
+\small
+\begin{tabular}{@{}lll@{}}
+\toprule
+Contrast, horizon & Exploratory (13 countries) & First hold-out (7 countries) \\
+\midrule
+ACI $-$ split, $h=3$ & $-5.1$ to $-4.2$, 0 flips & $-4.1$ to $-2.2$, 0 flips \\
+ACI $-$ split, $h=6$ & $-4.1$ to $-2.5$, 0 flips & $-3.5$ to $-2.1$, 0 flips \\
+ACI $-$ rolling, $h=3$ & $-2.5$ to $-1.8$, 0 flips & $-2.2$ to $-1.0$, 0 flips \\
+ACI $-$ rolling, $h=6$ & $-1.7$ to $-1.3$, 0 flips & $-1.3$ to $+0.1$, 1 of 7 flips \\
+DRACP $-$ ACI, $h=3$ & $0.0$ to $+0.4$, 0 flips & $-0.4$ to $-0.1$, 0 flips \\
+DRACP $-$ ACI, $h=6$ & $-0.5$ to $+0.1$, 2 of 13 flips & $-0.7$ to $+0.1$, 1 of 7 flips \\
+\bottomrule
+\end{tabular}
+\end{table}
+
+\begin{table}[H]
+\centering
+\caption{S2 (other base models): ACI minus rolling and DRACP minus ACI by base model (pp of CE; unadjusted bootstrap $p$ in parentheses).}
+\label{tab:s2full}
+\small
+\begin{tabular}{@{}llccc@{}}
+\toprule
+Sample & Contrast, horizon & LightGBM & ARIMA & Naive B \\
+\midrule
+Exploratory & ACI $-$ rolling, 3 & $-2.2$ (0.030) & $-1.7$ (0.059) & $-1.9$ (0.053) \\
+Exploratory & ACI $-$ rolling, 6 & $-1.5$ (0.020) & $-3.3$ (0.016) & $-1.9$ (0.067) \\
+Exploratory & DRACP $-$ ACI, 3 & $+0.2$ (0.70) & $+0.0$ (0.98) & $+0.1$ (0.82) \\
+Exploratory & DRACP $-$ ACI, 6 & $-0.2$ (0.78) & $-0.4$ (0.54) & $+0.4$ (0.54) \\
+Hold-out & ACI $-$ rolling, 3 & $-1.6$ (0.087) & $-3.0$ (0.030) & $-0.9$ (0.22) \\
+Hold-out & ACI $-$ rolling, 6 & $-0.7$ (0.48) & $-1.6$ (0.21) & $-3.2$ (0.053) \\
+Hold-out & DRACP $-$ ACI, 3 & $-0.1$ (0.76) & $-0.2$ (0.80) & $+0.2$ (0.71) \\
+Hold-out & DRACP $-$ ACI, 6 & $-0.3$ (0.66) & $+0.2$ (0.79) & $+0.3$ (0.75) \\
+\bottomrule
+\end{tabular}
+\end{table}
+
+\begin{table}[H]
+\centering
+\caption{Calibration error / Winkler ratio / median width ratio relative to rolling conformal, by panel, interval method and horizon (LightGBM, warm-up 48; a ratio below 1 is better than rolling).}
+\label{tab:width}
+\small
+\fittable{\input{tables/tab_winkler_width.tex}}
+\end{table}
+
+\begin{table}[H]
+\centering
+\caption{Pooled coverage (LightGBM, warm-up 48). Design panel: unit-months 2024, 1972, 1894 and 1738 at $h=1,3,6,12$; first hold-out panel: 1163, 1135, 1093 and 1009.}
+\label{tab:pooled}
+\small
+\begin{tabular}{@{}lcccccccc@{}}
+\toprule
+& \multicolumn{4}{c}{Design (13), exploratory} & \multicolumn{4}{c}{First hold-out (7)} \\
+\cmidrule(lr){2-5}\cmidrule(lr){6-9}
+Method & $h=1$ & $h=3$ & $h=6$ & $h=12$ & $h=1$ & $h=3$ & $h=6$ & $h=12$ \\
+\midrule
+Split conformal & 0.946 & 0.937 & 0.917 & 0.864 & 0.954 & 0.932 & 0.936 & 0.861 \\
+Rolling conformal & 0.917 & 0.916 & 0.900 & 0.869 & 0.924 & 0.918 & 0.921 & 0.872 \\
+ACI & 0.908 & 0.906 & 0.899 & 0.864 & 0.914 & 0.907 & 0.908 & 0.884 \\
+FACI & 0.913 & 0.904 & 0.878 & 0.825 & 0.919 & 0.910 & 0.897 & 0.835 \\
+Conformal PID & 0.917 & 0.907 & 0.883 & 0.837 & 0.912 & 0.910 & 0.909 & 0.833 \\
+DRACP & 0.915 & 0.909 & 0.892 & 0.863 & 0.917 & 0.904 & 0.894 & 0.865 \\
+\bottomrule
+\end{tabular}
+\end{table}

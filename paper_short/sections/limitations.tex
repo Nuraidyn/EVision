@@ -1,0 +1,32 @@
+\section{Limitations}\label{sec:limitations}
+
+All 21 limitations of the full version are kept, grouped; the bracketed numbers give their order in the full version.
+
+\paragraph{Design and inference.}
+\begin{itemize}
+\item[(1, 20)] The hold-out countries are untouched with respect to countries only and share calendar months with the design sample. Methods, contrasts, horizons, the 2~pp margin and the 3~pp and 7~pp thresholds were chosen on the design countries, and R1--R5 were written after the exploratory results were known. Pre-specification is a self-attested commit history of one author (all entries on 2026-11-18 or 2026-11-19), not an external registry. The extension rules E1--E5 were written knowing every earlier result, so it is a replication on new countries and not a blind test.
+\item[(2, 9)] The MDE is undefined on the full first hold-out sample for all four primary contrasts, so null outcomes are inconclusive and not evidence of equality; the 2~pp margin is about the size of ACI's own CE, so equivalence is weak by construction. The MDE simulation is not independently reviewed and assumes that the observed hit pattern describes the true dependence. CE is biased upward in small samples, the validity of its bootstrap at the boundary of the absolute value was not checked by simulation, and the 2~pp margin and the 3~pp threshold of R4 are not justified beyond being fixed in advance.
+\item[(15)] The post hoc additions have no multiplicity correction: S6 is descriptive for one design country with about 137 origins, and S7 uses unadjusted $p$-values and one base model for the contrast.
+\end{itemize}
+
+\paragraph{Data and panels.}
+\begin{itemize}
+\item[(3, 12, 17)] The first hold-out panel has 7 countries, with high-inflation episodes in Ghana and Angola, so pooled results can be driven by few units (removing one country flips ACI against rolling at $h=6$ in one case of seven). The post-2025-06 months of the design countries are degenerate and unused, and $h=12$ has few non-overlapping windows (80 on the first panel). The second panel has 198 months (89 and 83 pooled months at warm-up 48, 41 and 35 at 96, where it shows nothing), the MDE is undefined for every contrast at warm-up 96 and every DRACP minus ACI contrast at 48, and several of its countries failed the first hold-out rule on history length.
+\item[(5, 7)] Data vintages were not checked although the IMF publishes them; evaluation uses revised data of the snapshot date, and Nigeria ends at 2024-12 because of a methodology break. ``Commodity-dependent'' has no measurable criterion (no export-share rule; Georgia and Uruguay are borderline), and the hold-out sets follow IMF data availability.
+\item[(10, 11)] The exchange-rate stress analysis is secondary and exploratory: the flag is a weak proxy for inflation shocks (lift below 2), many deciles, methods and horizons were examined, and pegged and managed currencies were not separated. The protocol mentions a central-bank-target baseline, an exchange-rate-regime split and per-country heterogeneity beyond coverage ranges, which the results do not report; native intervals and Kazakhstan are reported only post hoc or descriptively.
+\end{itemize}
+
+\paragraph{Methods and literature.}
+\begin{itemize}
+\item[(4, 14)] LightGBM is the base model of the decision rules; ARIMA and naive B give the same direction but were not part of them. The four extension base models share countries and months and are not independent replications, with Holm applied within each. Hyperparameters were fixed in advance, the point models are simple, and better forecasts could change absolute calibration and width.
+\item[(8, 6)] The reproduction of DRACP is partial (five countries, one seed, ACI 0.874 and DRACP 0.871 against 0.884 and 0.890 over 48 series and 20 seeds; a published number within 2~pp could not be tested because the published figures average different series). The configuration follows the reproduction script and was not tuned, and the description of DRACP is as given by its authors. No systematic literature search was run, so statements about novelty rest on the author's reading, and several bibliography entries need verification.
+\item[(13)] The platform uses a different point forecast and a smaller minimum calibration size, so the benchmark applies to its interval method only; it is an engineering application.
+\end{itemize}
+
+\paragraph{Extension and interpretation.}
+\begin{itemize}
+\item[(16)] The ACI-against-rolling result depends on the panel and the reason is unknown: R2 is met at warm-up 48 on the second panel (at $h=3$ for LightGBM, ARIMA and naive B, Holm 0.008, 0.004, 0.004; at $h=6$ for ARIMA and naive B, 0.030, 0.039; Chronos at $h=3$ has an undefined MDE and is inconclusive under E5), not shown (inconclusive) on the design and first panels, and not significant (inconclusive) on the earlier 20 countries re-run from 2010-01. Candidate explanations were not tested; the panels are not pooled and none is selected.
+\item[(18)] Chronos may have seen public CPI series in pretraining; the cutoff was not verified and 2025-01 is a conservative assumption. Accuracy claims rest on 22 months (567 cells per horizon) with a short block length, calibration contrasts for Chronos use all months with the flag, only the smallest Chronos-Bolt model was used zero-shot, and on the earlier 20 countries contrasts were analysed only for LightGBM and Chronos, which narrows the E-B analysis of the protocol.
+\item[(19)] \ExplainerStatus{} The 468-prompt, two-condition evaluation (936 calls) is specified; the output of the fake client used to test the code is not a result.
+\item[(21)] Calibrated does not mean useful: the pooled mean width of ACI is 4.28 pp at $h=3$ and 15.5 at $h=12$ in the exploratory data, so better calibration at long horizons is paid for in width or interval score, and no width at which an interval becomes useful is established or compared with a decision-relevant threshold.
+\end{itemize}
