@@ -83,25 +83,30 @@ class OpenAIClient:
 
         if not OPENAI_API_KEY:
             raise RuntimeError("OPENAI_API_KEY is not configured")
-        r = httpx.post(
-            f"{OPENAI_BASE_URL.rstrip('/')}/chat/completions",
-            headers={"Authorization": f"Bearer {OPENAI_API_KEY}"},
-            json={
-                "model": OPENAI_MODEL,
-                "messages": [{"role": "system", "content": system_prompt},
-                             {"role": "user", "content": user_prompt}],
-                "temperature": 0,
-                "max_tokens": self.max_tokens,
-            },
-            timeout=self.timeout,
-        )
-        r.raise_for_status()
-        choice = r.json()["choices"][0]
-        text = (choice["message"].get("content") or "").strip()
-        text = re.sub(r"<think>.*?</think>", "", text, flags=re.S).strip()  # reasoning models
-        if not text:
-            raise RuntimeError(f"LLM returned empty content (finish_reason={choice.get('finish_reason')})")
-        return text
+        budget = self.max_tokens
+        for _ in range(3):  # a reasoning model can spend the whole budget on thinking: retry with 2x
+            r = httpx.post(
+                f"{OPENAI_BASE_URL.rstrip('/')}/chat/completions",
+                headers={"Authorization": f"Bearer {OPENAI_API_KEY}"},
+                json={
+                    "model": OPENAI_MODEL,
+                    "messages": [{"role": "system", "content": system_prompt},
+                                 {"role": "user", "content": user_prompt}],
+                    "temperature": 0,
+                    "max_tokens": budget,
+                },
+                timeout=self.timeout,
+            )
+            r.raise_for_status()
+            choice = r.json()["choices"][0]
+            text = (choice["message"].get("content") or "").strip()
+            text = re.sub(r"<think>.*?</think>", "", text, flags=re.S).strip()  # reasoning models
+            if text and choice.get("finish_reason") != "length":
+                return text
+            if choice.get("finish_reason") != "length":
+                break
+            budget *= 2
+        raise RuntimeError(f"LLM returned no usable answer (finish_reason={choice.get('finish_reason')}, max_tokens={budget})")
 
 
 def tool_payload(country: str, horizon: int, level: float = LEVEL) -> dict:

@@ -1,0 +1,159 @@
+id,condition,language,question_type,stratum,truth_point,truth_lower,truth_upper,truth_level,truth_coverage,truth_n_eval,v2_faithful,v2_omission,v2_overstatement,v1_faithful,v1_omission,v1_overstatement,answer
+UZ-h6-T3-en,ungrounded,en,T3,v1v2_disagree,2.6586920254497035,-0.9833766202697602,6.300760671169167,0.9,0.9527027027027027,148,True,True,False,True,True,True,"Do **not** conclude that Uzbekistan’s inflation at 6 months will definitely fall inside the forecast interval. A forecast interval is a probabilistic range, not a guarantee.
+
+Also avoid assuming:
+- The midpoint is the “most likely” exact outcome.
+- The interval is a policy target or official commitment.
+- Values outside the interval are impossible.
+- The interval’s width means the forecast is wrong; it reflects uncertainty.
+
+In short, treat it as a range of plausible outcomes, not a precise prediction."
+RU-h1-T3-en,grounded,en,T3,v1v2_disagree,0.4068831396961035,-0.46912067777584127,1.2828869571680483,0.9,0.9005681818181818,352,True,False,False,True,False,True,"Do not conclude that Russia’s 1-month cumulative log CPI growth is guaranteed to fall between **-0.47%** and **1.28%**. That is a **90%** forecast interval, a statistical estimate, not a certainty.
+
+In the backtest, the interval covered **90.06%** of outcomes across **352** evaluated points, close to the **90%** nominal level, so it did not under-cover. Some outcomes can still fall outside the interval."
+CO-h12-T3-en,ungrounded,en,T3,v1v2_disagree,5.36589645058843,-2.4371002039452936,13.168893105122153,0.9,0.8863636363636364,616,True,True,False,True,True,True,"You should **not** conclude that Colombia’s 12-month inflation will definitely fall within the forecast interval. The interval is a range of plausible outcomes reflecting uncertainty, not a guarantee.
+
+Also, do not treat the midpoint as the “most likely” exact outcome, or the interval as an official target range or policy commitment. It does not mean inflation will hit the upper or lower bound, nor that the central bank has promised a specific result."
+CO-h6-T3-en,grounded,en,T3,v1v2_disagree,2.682948225294215,-0.5022145475426134,5.868110998131043,0.9,0.8996815286624203,628,True,False,False,True,False,True,"Do not conclude that Colombia’s 6-month cumulative log CPI growth is guaranteed to fall between -0.50% and 5.87%. The interval is a 90% statistical estimate, not a certainty. In the backtest, the measured coverage was 89.97% across 628 evaluated points."
+UZ-h12-T3-en,ungrounded,en,T3,v1v2_disagree,5.317384050899407,0.8804934119005567,9.754274689898256,0.9,0.9411764705882353,136,True,True,False,True,True,True,"Do not conclude that the 12-month forecast interval for Uzbekistan is a guaranteed range. It is an uncertainty band, not a promise that inflation will definitely fall inside it. Also, don’t treat the midpoint as the exact expected outcome or the interval as a policy target. It reflects possible outcomes and model uncertainty, not certainty about the future."
+BR-h3-T3-en,ungrounded,en,T3,v1v2_disagree,1.0547652653586161,-0.6047570018366035,2.714287532553836,0.9,0.8970873786407767,515,True,True,False,True,True,True,"Do not conclude that the 3‑month forecast interval for Brazil is a guaranteed range. It is a probabilistic band of plausible outcomes, not a hard limit. The midpoint is not a certain prediction, and actual inflation can fall outside the interval. Also, do not treat the interval as a policy target, a commitment, or a statement that every value inside it is equally likely."
+UZ-h1-T3-en,ungrounded,en,T3,v1v2_disagree,0.4431153375749506,-0.6655125459375355,1.5517432210874367,0.9,0.9113924050632911,158,True,True,False,True,True,True,"Do not conclude that Uzbekistan’s 1-month inflation is guaranteed to fall within the forecast interval. The interval is a probabilistic range reflecting uncertainty, not a certainty or a policy target. It does not mean the midpoint is the exact expected value, nor that outcomes outside the range are impossible. Actual inflation can differ due to data revisions, economic shocks, or model limitations."
+PE-h12-T1-en,ungrounded,en,T1,v2_overstated,3.7080493717903606,-2.1215335703707745,9.537632313951496,0.9,0.8222222222222222,135,False,True,True,False,True,True,"Peru’s 12-month inflation forecast is **2.5%**, with a forecast interval of **1.5% to 3.5%**."
+PE-h12-T3-en,ungrounded,en,T3,v2_overstated,3.7080493717903606,-2.1215335703707745,9.537632313951496,0.9,0.8222222222222222,135,True,True,True,True,True,True,"Do not conclude that Peru’s 12-month inflation is guaranteed to fall within the forecast interval. The interval is a probabilistic range, not a certainty. Also, don’t assume the midpoint is the exact expected outcome, that all values in the range are equally likely, or that the interval represents a policy target or official commitment. It simply reflects the range of outcomes considered plausible given the forecast model and uncertainty."
+KZ-h12-T2-en,ungrounded,en,T2,v2_overstated,8.333561048957908,-150.58199497837708,167.2491170762929,0.9,0.8469387755102041,196,True,True,True,True,True,True,"I can’t judge reliability without the specific interval and source. In general, a 12-month Kazakhstan inflation forecast interval is moderately reliable if it comes from the National Bank/IMF and includes a wide range; point forecasts are less reliable. Kazakhstan’s inflation is sensitive to oil prices, KZT/RUB exchange rates, fiscal transfers, food prices, and global commodity shocks, so 12-month uncertainty is higher than 3–6 months. Treat the interval as a plausible range, not a guarantee; check whether it covers recent actual inflation and whether it was updated after major shocks."
+KZ-h12-T1-en,ungrounded,en,T1,v2_overstated,8.333561048957908,-150.58199497837708,167.2491170762929,0.9,0.8469387755102041,196,False,True,True,False,True,True,"Kazakhstan’s 12-month inflation forecast is **4.5%**, with an interval of **3.5% to 5.5%**."
+KZ-h12-T3-en,ungrounded,en,T3,v2_overstated,8.333561048957908,-150.58199497837708,167.2491170762929,0.9,0.8469387755102041,196,True,True,True,True,True,True,"Do not conclude that Kazakhstan’s 12-month inflation is certain to fall within the forecast interval. The interval is a probabilistic range, not a guarantee. Also, do not assume the midpoint is the most likely exact outcome, or that the interval represents a policy target or official commitment. Actual inflation can fall outside the range due to shocks, data revisions, or model uncertainty."
+PE-h12-T2-en,ungrounded,en,T2,v2_overstated,3.7080493717903606,-2.1215335703707745,9.537632313951496,0.9,0.8222222222222222,135,False,True,True,False,True,True,"I can’t judge reliability without the actual interval and source. In general, a 12-month inflation forecast interval for Peru is moderately reliable if it comes from a central bank or reputable model and includes a wide enough range, such as an 80–90% confidence interval. It should be treated as a range, not a point estimate.
+
+Key risks that can widen the interval include sol exchange-rate moves, food and fuel prices, commodity terms of trade, monetary policy, and global inflation shocks. If the interval is narrow, it may be overconfident; if it is wide, it is more honest but less precise."
+MN-h12-T1-en,grounded,en,T1,other,12.048102341628695,5.534100993689383,18.56210368956801,0.9,0.918918918918919,185,True,False,False,True,False,False,"For Mongolia, as of 2026-10, the 12-month inflation forecast is **12.05%** cumulative log CPI growth.
+
+The **90% statistical interval** is **5.53% to 18.56%**. This is a statistical estimate, not a guarantee.
+
+In the backtest, the measured coverage was **91.89%** across **185** evaluated points."
+PE-h6-T1-en,grounded,en,T1,other,1.8540246858951803,-1.5633453895292628,5.271394761319623,0.9,0.8639455782312925,147,True,False,False,True,False,False,"For Peru, the 6-month inflation forecast as of 2026-08 is 1.85% cumulative log CPI growth. The 90% forecast interval is -1.56% to 5.27%. This is a statistical estimate, not a guaranteed outcome. In the backtest, measured coverage was 86.39% across 147 evaluated points."
+CO-h6-T1-en,ungrounded,en,T1,other,2.682948225294215,-0.5022145475426134,5.868110998131043,0.9,0.8996815286624203,628,True,True,False,True,True,False,"I don’t have the specific forecast data needed to state Colombia’s 6‑month inflation forecast or its interval. Please provide the forecast source or dataset, and I can give the exact value and interval."
+RU-h6-T1-en,ungrounded,en,T1,other,2.441298838176621,-3.247599233104541,8.130196909457784,0.9,0.8994082840236687,338,True,True,False,True,True,False,"I don’t have a specific 6‑month inflation forecast for Russia or its confidence interval in the information available to me. Please provide the forecast source and date—such as the Bank of Russia, IMF, World Bank, or a specific dataset—and I can give the point forecast and interval."
+BR-h3-T2-en,ungrounded,en,T2,other,1.0547652653586161,-0.6047570018366035,2.714287532553836,0.9,0.8970873786407767,515,False,True,False,False,True,False,"I can’t judge reliability without the actual interval and its historical coverage. Generally, a 3-month Brazil inflation forecast interval is moderately reliable if it is wide enough to reflect policy, exchange-rate, commodity, and fiscal uncertainty. Narrow intervals are less reliable because Brazil’s inflation can shift quickly. Check whether the interval has historically covered actual outcomes—e.g., 80–90% coverage—and whether it widens when uncertainty rises. If you share the interval, I can assess it more specifically."
+RU-h1-T1-en,ungrounded,en,T1,other,0.4068831396961035,-0.46912067777584127,1.2828869571680483,0.9,0.9005681818181818,352,True,True,False,True,True,False,"I don’t have the specific 1‑month inflation forecast or its interval for Russia in the available data. If you provide the forecast table or source, I can give the exact value and interval."
+UZ-h6-T2-en,grounded,en,T2,other,2.6586920254497035,-0.9833766202697602,6.300760671169167,0.9,0.9527027027027027,148,True,False,False,True,False,False,"For Uzbekistan’s 6-month forecast as of 2026-09, the 90% interval is **-0.98% to 6.30%** cumulative log CPI growth. The point forecast is **2.66%**.
+
+In backtesting, the interval covered **95.27%** of outcomes across **148** evaluated points, which is above the **90%** nominal level. That suggests the interval is reasonably reliable, but it remains a statistical estimate, not a guarantee."
+BR-h12-T3-ru,ungrounded,ru,T3,v1v2_disagree,4.219061061434465,-3.7926581887702664,12.230780311639196,0.9,0.8913480885311871,497,True,True,False,True,True,True,"Из интервала прогноза инфляции для Бразилии на 12 месяцев нельзя делать вывод, что фактическая инфляция гарантированно окажется внутри этого диапазона. Нельзя считать, что точечное значение — единственный или наиболее вероятный исход, что все значения в интервале равновероятны, что интервал — это целевой уровень ЦБ или обязательный ориентир, и что прогноз исключает риск выхода за его пределы."
+MN-h6-T3-ru,grounded,ru,T3,v1v2_disagree,6.024051170814348,1.566116724976876,10.48198561665182,0.9,0.9035532994923858,197,True,False,True,False,True,True,"Для Монголии на 6 месяцев интервал: 1.57%–10.48% при номинальном уровне 90%. Точечный прогноз 6.02%. В ретроспективной проверке на 197 точках фактическое покрытие составило 90.36%.
+
+Нельзя делать выводы, что:
+- инфляция точно будет внутри 1.57%–10.48%;
+- 90% — гарантия или обязательный результат;
+- точечное значение 6.02% — верный итог;
+- интервал покрывает 90% будущих случаев с абсолютной уверенностью.
+
+Это статистическая оценка, а не предсказание с гарантией."
+MN-h6-T3-ru,ungrounded,ru,T3,v1v2_disagree,6.024051170814348,1.566116724976876,10.48198561665182,0.9,0.9035532994923858,197,True,True,False,True,True,True,"Из интервала прогноза нельзя делать вывод, что инфляция в Монголии через 6 месяцев точно окажется внутри него. Нельзя считать, что все значения в интервале равновероятны или что прогноз гарантированно сбудется. Нельзя выводить точную точку, устойчивый тренд или причину изменения инфляции. Также нельзя сравнивать Монголию с другими странами без их интервалов, методологии и условий прогноза."
+NG-h6-T3-ru,grounded,ru,T3,v1v2_disagree,14.61353137333434,10.87843284973945,18.34862989692923,0.9,0.8983957219251337,187,True,False,False,True,False,True,"Для Нигерии (6 мес., 2024-12) интервал: 10.88–18.35%, номинальный уровень 90%. В проверке на исторических данных покрытие 89.84% при 187 точках. Нельзя утверждать, что фактический рост обязательно будет внутри интервала, что 90% — гарантия, или что точечный прогноз 14.61% — точное значение. Нельзя переносить интервал за 2024-12: методология индекса потребительских цен изменилась. Интервал — статистическая оценка, а не уверенность."
+ZA-h12-T3-ru,grounded,ru,T3,v1v2_disagree,4.561924564629036,1.4825057518142235,7.6413433774438495,0.9,0.9002590673575129,772,True,False,False,True,False,True,"Из интервала нельзя делать такие выводы:
+
+— нельзя считать, что инфляция в Южной Африке за 12 месяцев гарантированно будет в 1.48–7.64%;  
+— нельзя утверждать, что 90% — гарантия или точная вероятность для этого конкретного прогноза;  
+— нельзя полагать, что значения вне интервала невозможны;  
+— нельзя считать точку 4.56% окончательным будущим значением.
+
+Это статистическая оценка. Номинальный уровень интервала — 90%. В бэктесте измеренное покрытие составило 90.03% при 772 оценённых точках, поэтому явного недопокрытия нет."
+ZA-h6-T3-ru,grounded,ru,T3,v1v2_disagree,2.280962282314518,0.2182444791390501,4.343680085489986,0.9,0.8992346938775511,784,True,False,False,True,False,True,"Для Южной Африки на 6 месяцев на 2026-09 интервал: 0.22–4.34% кумулятивного лог-роста индекса потребительских цен, номинальный уровень 90%. Это статистическая оценка, а не гарантия. Измеренное покрытие в бэктесте: 89.92% при 784 оценённых точках.
+
+Нельзя утверждать, что инфляция точно окажется в этом интервале, что 90% — это гарантия, или что интервал точно охватит будущий результат. Нельзя также считать, что точка 2.28% — обязательный прогноз."
+UZ-h1-T3-ru,grounded,ru,T3,v1v2_disagree,0.4431153375749506,-0.6655125459375355,1.5517432210874367,0.9,0.9113924050632911,158,True,False,False,True,False,True,"Для Узбекистана на 1 месяц (2026-09) 90%-ный интервал: от -0.67% до 1.55%; точечный прогноз 0.44%. Это статистическая оценка, а не гарантия. Бэктест: покрытие 91.14% при 158 точках. Нельзя утверждать, что значение точно будет в этом интервале, что 90% означает гарантированное попадание, что прогноз верен, что интервал гарантирует результат, или что он переносится на другие страны и сроки."
+RU-h3-T3-ru,grounded,ru,T3,v2_overstated,1.2206494190883106,-0.5848511340486526,3.026149972225274,0.9,0.9046242774566474,346,True,False,True,True,False,True,"Для России на 3 месяца интервал: от -0,58% до 3,03% (номинальный уровень 90%). В бэктесте покрытие 90,46% при 346 точках.
+
+Нельзя делать выводы:
+- что фактический рост CPI точно окажется внутри интервала;
+- что интервал гарантирует 90% в будущем;
+- что точка 1,22% — точное значение;
+- что покрытие всегда равно 90% или что ошибка прогноза исключена.
+
+Это статистическая оценка, а не гарантия."
+ID-h1-T3-ru,ungrounded,ru,T3,v2_overstated,0.23339912650093847,-0.24737722765346998,0.7141754806553469,0.9,0.9004524886877828,663,True,True,True,True,True,True,"Из месячного интервала прогноза для Индонезии нельзя делать такие выводы:
+
+- что инфляция точно будет равна середине или границе интервала;
+- что фактическое значение гарантированно окажется внутри интервала;
+- что инфляция будет расти/снижаться именно в этом месяце;
+- что прогноз абсолютно точен или подтверждён;
+- что ЦБ Индонезии точно достигнет цели или изменит политику;
+- что этот месяц определит долгосрочный тренд.
+
+Интервал показывает диапазон возможных значений с учётом неопределённости, а не точный результат."
+AZ-h3-T3-ru,grounded,ru,T3,v2_overstated,1.091389844935052,-0.9315281561316286,3.114307846001733,0.9,0.9345794392523364,214,True,False,True,True,False,True,"Для Азербайджана интервал прогноза кумулятивного лог-роста ИПЦ за 3 месяца: от -0.93% до 3.11%, номинальный уровень 90%. В бэктесте фактическое покрытие составило 93.46% при 214 оценённых точках.
+
+Нельзя делать выводы, что:
+- реальное значение гарантированно окажется внутри интервала;
+- интервал — точная или обязательная граница;
+- прогнозная точка или интервал дают уверенность в конкретном уровне инфляции;
+- покрытие 93.46% обеспечит тот же результат в будущем;
+- интервал применим к другим странам, горизонтам или точкам.
+
+Это статистическая оценка, а не гарантия."
+MN-h3-T3-ru,grounded,ru,T3,v2_overstated,3.012025585407174,0.4937580522624545,5.530293118551893,0.9,0.9064039408866995,203,True,False,True,True,False,True,"Для Монголии на 3 месяца интервал: 0.49–5.53% при номинальном уровне 90%. Точечный прогноз 3.01%. В проверке на прошлых данных покрытие составило 90.64% при 203 оценённых точках.
+
+Нельзя делать выводы:
+- что инфляция точно или гарантированно окажется в 0.49–5.53%;
+- что 3.01% — точное значение;
+- что 90% означает фиксированное число будущих случаев;
+- что интервал является фактом или обязательным диапазоном.
+
+Это статистическая оценка: прошлое покрытие 90.64% при 203 точках выше 90%, но не гарантирует будущий результат."
+UZ-h3-T3-ru,grounded,ru,T3,v2_overstated,1.3293460127248518,-0.9321496687353641,3.590841694185068,0.9,0.9415584415584416,154,True,False,True,True,False,True,"Для Узбекистана на 3 месяца 90%-ный интервал: от -0.93% до 3.59%. В бэктесте покрытие составило 94.16%, число оценённых точек: 154.
+
+Нельзя делать выводы:
+- что реальное значение гарантированно окажется внутри интервала;
+- что интервал — точная или обязательная граница;
+- что будущая частота попадания будет ровно 90%;
+- что модель идеальна: 94.16% — это оценка на 154 точках, а не доказательство;
+- что прогноз является фактом или определённым результатом.
+
+Это статистическая оценка, а не гарантия."
+ZA-h6-T3-ru,ungrounded,ru,T3,v2_overstated,2.280962282314518,0.2182444791390501,4.343680085489986,0.9,0.8992346938775511,784,True,True,True,True,True,True,"Из интервала прогноза инфляции для ЮАР на 6 месяцев нельзя делать такие выводы:
+
+- что инфляция точно будет на нижней или верхней границе;
+- что прогноз гарантированно сбывается;
+- что ЦБ ЮАР точно достигнет цели;
+- что текущий тренд обязательно сохранится;
+- что все значения в интервале равновероятны;
+- что интервал покрывает 100% возможных исходов.
+
+Можно лишь сказать, что при заданной доверительной вероятности ожидаемое значение инфляции находится в этом диапазоне."
+NG-h1-T1-ru,grounded,ru,T1,other,2.43558856222239,1.911943441149132,2.959233683295648,0.9,0.9035532994923858,197,True,False,False,True,False,False,"Для Нигерии на 1 месяц (по состоянию на 2024-12) точечный прогноз — 2.44%.  
+90%-й интервал: от 1.91% до 2.96%. Это статистическая оценка, а не гарантия.  
+В бэктесте на 197 точках фактическое покрытие составило 90.36%."
+CO-h1-T2-ru,grounded,ru,T2,other,0.4471580375490358,-0.17733726100315228,1.071653336101224,0.9,0.8996865203761756,638,True,False,False,True,False,False,"Для Колумбии на 1 месяц 90%-ный интервал прогноза: от -0.18% до 1.07% (точечный прогноз 0.45%). Это статистическая оценка, а не гарантия. В бэктесте на 638 точках фактическое покрытие составило 89.97%, что почти совпадает с номинальным уровнем 90% и не указывает на заметное занижение."
+CL-h3-T2-ru,ungrounded,ru,T2,other,1.172747439960733,-0.4082139748376452,2.753708854759111,0.9,0.8976377952755905,635,True,True,False,True,True,False,"Без конкретного интервала оценить нельзя. Если это 90% доверительный интервал, он должен покрывать фактическую инфляцию примерно в 9 случаях из 10. Для Чили на 3 месяца прогноз обычно умеренно надёжен: инфляция предсказуема, но могут сдвинуть курс песо, цены на сырьё и продукты, решения ЦБ. Узкий интервал — оптимистичен; широкий — учитывает риски. Проверьте источник, ширину и историческое покрытие: если фактические значения часто выходят за границы, интервал ненадёжен."
+ZA-h1-T1-ru,ungrounded,ru,T1,other,0.380160380385753,-0.22089147633185519,0.9812122371033611,0.9,0.9017632241813602,794,True,True,False,True,True,False,"В предоставленных данных нет прогноза инфляции для Южной Африки на 1 месяц и его интервала. Уточните источник, дату или предоставьте значения, и я дам ответ."
+RU-h12-T2-ru,ungrounded,ru,T2,other,4.882597676353242,-5.1067780112267815,14.871973363933266,0.9,0.89375,320,False,True,False,False,True,False,"Без конкретного интервала и источника оценить надёжность нельзя. Для России 12-месячный прогноз инфляции обычно менее надёжен: высокая волатильность курса, санкции, фискальные и монетарные решения, геополитические риски. Надёжный интервал должен быть достаточно широким, основан на исторической ошибке прогноза, включать альтернативные сценарии и покрывать 80–90% вероятности. Узкий интервал без учёта шоков — низкая надёжность; широкий с явными допущениями — выше."
+MN-h6-T1-ru,grounded,ru,T1,other,6.024051170814348,1.566116724976876,10.48198561665182,0.9,0.9035532994923858,197,True,False,False,True,False,False,"Для Монголии (MN) на горизонте 6 месяцев точечный прогноз кумулятивного лог-роста CPI составляет 6.02%. 90%-й статистический интервал: от 1.57% до 10.48%. Это оценка, а не гарантия. В бэктесте на 197 точках фактическое покрытие составило 90.36%."
+NG-h12-T2-ru,grounded,ru,T2,other,29.22706274666868,20.241376353602607,38.212749139734754,0.9,0.8685714285714285,175,True,False,False,True,False,False,"Для Нигерии на 12 мес. (на 2024-12) 90%-ный интервал: 20.24–38.21% кумулятивного лог-роста ИПЦ; точечный прогноз 29.23%. Это статистическая оценка, а не гарантия. В бэктесте на 175 точках фактическое покрытие составило 86.86% при номинальном уровне 90%. Интервал немного ниже заявленного, поэтому явного предупреждения о недопокрытии нет."
+CO-h1-T3-kk,ungrounded,kk,T3,v1v2_disagree,0.4471580375490358,-0.17733726100315228,1.071653336101224,0.9,0.8996865203761756,638,True,True,False,True,True,True,"1 айлық болжам интервалы нақты нәтижені кепілдік бермейді. Сондықтан Колумбияда инфляция міндетті түрде сол интервалдың ішінде болады, нақты мәні дәл осы, немесе интервалдан тыс болмайды деп қорытынды жасауға болмайды. Бұл тек белгілі бір сенім деңгейіндегі мүмкін ауқым ғана."
+MX-h12-T3-kk,grounded,kk,T3,v1v2_disagree,2.5340743972774025,-0.671292822673728,5.7394416172285325,0.9,0.9044585987261147,628,True,False,False,True,False,True,"Мексика үшін 12 айлық болжам интервалы: -0.67% – 5.74%, номиналды деңгейі 90%. Бұл интервалдан нақты CPI өсімі міндетті түрде осы шектерде болады деп қорытынды жасауға болмайды; ол статистикалық баға ғана. Артқы тексеруде өлшенген қамту 90.45%, бағаланған нүктелер саны 628. Бұл номиналды 90% деңгейіне жақын, сондықтан интервал артқы тексеруде қамтуы төмен деген ескерту қажет емес."
+NG-h3-T2-kk,grounded,kk,T2,v1v2_disagree,7.30676568666717,5.559284370788587,9.054247002545752,0.9,0.9015544041450777,193,True,False,False,False,True,False,"Нигерия үшін 2024-12 айынан бастап 3 айға арналған баға индексінің логарифмдік өсуінің жиынтық пайыздық болжамы: 5.56%–9.05% (нүктелік болжам 7.31%). Бұл 90% деңгейдегі статистикалық интервал, яғни кепілдік емес. Артқы тексеруде 193 нүкте бағаланды және нақты қамту 90.16% болды. Сондықтан интервал болжамның сенімділігін шамамен 90% деңгейде көрсетеді, бірақ нақты нәтиже осы шектен тыс болуы мүмкін."
+NG-h3-T1-kk,grounded,kk,T1,v1v2_disagree,7.30676568666717,5.559284370788587,9.054247002545752,0.9,0.9015544041450777,193,True,False,False,False,True,False,"Нигерия үшін 2024-12 айынан бастап 3 айға CPI логарифмдік өсімінің жиынтық болжамы 7.31%. 90% деңгейдегі статистикалық интервал: 5.56%–9.05%. Бұл интервал нақты нәтижені кепілдік бермейді; ол статистикалық баға. Артқы тексеруде 193 нүкте бағаланды және өлшенген қамту 90.16% болды, яғни 90% номиналды деңгейге жақын."
+UZ-h12-T1-kk,grounded,kk,T1,v1v2_disagree,5.317384050899407,0.8804934119005567,9.754274689898256,0.9,0.9411764705882353,136,True,False,False,True,False,True,"2026-09 мәліметі бойынша Өзбекстанда 12 айға инфляцияның нүктелік болжамы 5.32%. 90% деңгейдегі болжам интервалы 0.88% пен 9.75% аралығын құрайды. Бұл интервал статистикалық баға, нақты нәтижені кепілдікпен көрсетпейді. Артқы тексеруде 136 нүкте бағаланды және өлшенген қамту 94.12% болды, яғни 90% номиналды деңгейден жоғары."
+NG-h1-T3-kk,grounded,kk,T3,v1v2_disagree,2.43558856222239,1.911943441149132,2.959233683295648,0.9,0.9035532994923858,197,True,False,False,False,True,False,"Нигерия, 2024-12, 1 ай: 90% болжам интервалы 1.91%–2.96% (нүкте 2.44%). Бұл интервал статистикалық баға; оны кепілдік немесе нақты болжам деп қорытындылауға болмайды. 197 бақылау нүктесінде өлшенген қамту 90.36%, яғни номиналды 90% деңгейінен төмен емес. Сондықтан интервал «инфляция міндетті түрде осы шектерде болады» деген қорытынды жасауға негіз болмайды."
+NG-h3-T3-kk,grounded,kk,T3,v1v2_disagree,7.30676568666717,5.559284370788587,9.054247002545752,0.9,0.9015544041450777,193,True,False,False,False,True,True,"2024-12 негізіндегі Нигерия бойынша 3 айлық болжам интервалы: 5.56%–9.05%, номиналды деңгейі 90%. Бұл интервал нақты баға индексінің логарифмдік өсімінің міндетті түрде осы шектерде болатынын дәлелдей алмайды; ол статистикалық баға. Бәк-тестте 193 нүкте қаралып, өлшенген қамту 90.16% болды. Сондықтан интервалды кепілдік немесе нақты болашақ мән ретінде қабылдауға болмайды."
+MX-h12-T3-kk,ungrounded,kk,T3,v2_overstated,2.5340743972774025,-0.671292822673728,5.7394416172285325,0.9,0.9044585987261147,628,True,True,True,True,True,True,"12 айлық болжам интервалы Мексикадағы инфляцияның (немесе сәйкес көрсеткіштің) **нақты қандай мән болатынын дәл айта алмайды**. Ол тек мүмкін ауқымды көрсетеді.
+
+Сондықтан интервалға сүйеніп:
+- нақты бір мәнді кепілдік ретінде алуға,
+- интервалдан тыс болу мүмкіндігі жоқ деп айтуға,
+- болашақты дәл болжауға
+
+**қорытынды жасауға болмайды**."
+PE-h12-T2-kk,ungrounded,kk,T2,v2_overstated,3.7080493717903606,-2.1215335703707745,9.537632313951496,0.9,0.8222222222222222,135,True,True,True,True,True,True,"Перу бойынша 12 айлық инфляция болжам интервалының сенімділігі әдетте қысқа мерзімді болжамдарға қарағанда төменірек. Себебі бір жыл ішінде сұраныс, баға белгілеу, валюта бағамы, энергия мен тауар бағалары, сыртқы шоктар және саяси-макроэкономикалық факторлар өзгеруі мүмкін. Сондықтан 12 айлық интервал кеңірек болады және нақты нәтиже болжамнан айтылуы ықтимал. Нақты сенімділікті бағалау үшін берілген болжамның сандық мәні, сенім деңгейі және дереккөз қажет."
+KZ-h12-T1-kk,ungrounded,kk,T1,v2_overstated,8.333561048957908,-150.58199497837708,167.2491170762929,0.9,0.8469387755102041,196,True,True,True,True,True,True,"Менің деректерімде Қазақстан бойынша қазіргі 12 айлық инфляцияның нақты ресми болжамы мен сенімділік интервалы жоқ. Нақты санды Ұлттық банк, Экономика министрлігі немесе халықаралық ұйымдардың соңғы есептерінен тексеру керек. Әдетте мұндай болжам 12 айлық инфляцияны пайызбен көрсетеді, ал интервал көбінесе ±1–2 пайыздық аралық болуы мүмкін."
+KZ-h12-T3-kk,ungrounded,kk,T3,v2_overstated,8.333561048957908,-150.58199497837708,167.2491170762929,0.9,0.8469387755102041,196,True,True,True,True,True,True,"12 айлық болжам интервалы нақты бір инфляция мәнін кепілдік бермейді. Сондықтан осы интервал бойынша инфляция дәл сол аралықтағы белгілі бір санды болады, яғни нақты нүкте болжамы дәл орындалады деп қорытынды жасауға болмайды. Интервал тек ықтимал ауқымды және сенім деңгейін көрсетеді."
+KZ-h12-T2-kk,ungrounded,kk,T2,v2_overstated,8.333561048957908,-150.58199497837708,167.2491170762929,0.9,0.8469387755102041,196,True,True,True,True,True,True,"12 айлық инфляция болжамы Қазақстан үшін орташа сенімділікке ие. Қысқа мерзімге қарағанда сенімділігі төмендеп, болжам интервалы кеңейеді. Негізгі белгісіздіктер: теңге бағамы, азық-түлік бағалары, сыртқы сұраныс, энергия мен шикізат бағалары, монетарлық және бюджеттік саясат. Егер бұл факторлар тұрақты болса, болжам дәлдігі жоғарылайды; ал сыртқы шоктар немесе баға шоктары болса, интервал едәуір кеңейуі мүмкін."
+PE-h12-T3-kk,ungrounded,kk,T3,v2_overstated,3.7080493717903606,-2.1215335703707745,9.537632313951496,0.9,0.8222222222222222,135,True,True,True,True,True,True,12 айлық болжам интервалы инфляцияның нақты қандай мән болатынын дәл айта алмайды. Сондықтан «12 айда инфляция нақты X% болады» немесе «инфляция міндетті түрде осы интервалда болады» деп қорытынды жасауға болмайды. Интервал тек мүмкін ауқымды көрсетеді.
+BR-h3-T1-kk,grounded,kk,T1,other,1.0547652653586161,-0.6047570018366035,2.714287532553836,0.9,0.8970873786407767,515,True,False,False,True,False,False,"Бразилия бойынша 2026-09 мәліметіне сүйене отырып, 3 айға бағалар индексінің жиынтық логарифмдік өсуінің нүктелік болжамы 1.05%. 90% деңгейдегі статистикалық интервал: -0.60% пен 2.71% арасы. Бұл кепілдік емес, ықтималдық бағасы. Артқы тексеруде 515 нүкте бағаланды; нақты қамту 89.71% болды, яғни 90% номиналды деңгейге жақын."
+AZ-h3-T3-kk,ungrounded,kk,T3,other,1.091389844935052,-0.9315281561316286,3.114307846001733,0.9,0.9345794392523364,214,True,True,False,True,True,False,"3 айлық болжам интервалынан нақты бір инфляция мәнін немесе нақты уақыттағы деңгейді сенімді анықтауға болмайды. Ол тек мүмкіндіктер аясын көрсетеді, сондықтан «инфляция дәл осы мөлшерде болады» деп қорытынды жасау дұрыс емес."
+ID-h1-T3-kk,ungrounded,kk,T3,other,0.23339912650093847,-0.24737722765346998,0.7141754806553469,0.9,0.9004524886877828,663,True,True,False,True,True,False,1 айлық болжам интервалы нақты мәннің кепілдігін бермейді. Сондықтан Индонезияда инфляцияның дәл сол интервалдың ішінде немесе дәл орташа мәнде болатынын 100% анық айтуға болмайды. Ол тек ықтимал аймақты көрсетеді.
+PE-h6-T3-kk,ungrounded,kk,T3,other,1.8540246858951803,-1.5633453895292628,5.271394761319623,0.9,0.8639455782312925,147,True,True,False,True,True,False,"6 айлық болжам интервалы нақты инфляция мәнін дәл көрсетпейді; ол тек мүмкіндіктер аясын береді. Сондықтан осы интервалдан нақты бір инфляция деңгейін, 6 айдан кейінгі нақты мәнді немесе интервалдан тыс кезеңдер туралы қорытынды жасауға болмайды."
+KZ-h3-T1-kk,grounded,kk,T1,other,2.083390262239477,-1.2842571994717975,5.451037723950751,0.9,0.9112149532710281,214,True,False,False,True,False,False,"Қазақстан үшін 2026-09 мәліметтері бойынша 3 айға инфляция өлшемі (CPI логарифмдік өсімі) нүктелік болжамы 2.08%. 90% деңгейдегі статистикалық болжам интервалы: -1.28% ... 5.45%. Бұл интервал нақты нәтижені кепілдік бермейді, ол ықтималдық бағасы. Артқы тексеруде 214 нүкте қаралып, өлшенген қамту 91.12% болды; бұл 90% номиналды деңгейден сәл жоғары."
+MX-h1-T1-kk,ungrounded,kk,T1,other,0.21117286643978353,-0.33182874097576365,0.7541744738553307,0.9,0.9015384615384615,650,False,True,False,False,True,False,"Нақты 1 айлық инфляция болжамы мен оның интервалы берілген дереккөзге/модельге байланысты. Менде қазіргі ресми болжам жоқ. Әдетте бұл Мексикалық статистика (INEGI) немесе банк/қаржы институттарының болжамында орташа мәні және сенімділік интервалы (мысалы, ±0,1–0,3 п.п.) ретінде көрсетіледі. Нақты сан алу үшін дереккөзді көрсетіңіз."
+UZ-h3-T2-kk,ungrounded,kk,T2,other,1.3293460127248518,-0.9321496687353641,3.590841694185068,0.9,0.9415584415584416,154,True,True,False,True,True,False,"3 айлық инфляция болжамының сенімділігі модельге, деректер сапасына және сыртқы шоктарға байланысты. Әдетте 3 айлық горизонт ұзақ мерзімге қарағанда дәлірек, бірақ толық кепілдік бермейді. Егер интервал 90% сенімділікпен берілсе, бұл нақты инфляцияның сол аралықта болу ықтималдығы шамамен 90% дегенді білдіреді. Өзбекстанда баға деңгейіне тамақ өнімдері, валюта бағамы, мұнай бағасы, бюджеттік саясат және маусымдық факторлар әсер етеді. Сондықтан интервал тар болса, болжам сенімдірек; кең болса, белгісіздік жоғары."

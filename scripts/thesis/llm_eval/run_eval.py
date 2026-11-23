@@ -9,6 +9,8 @@ import argparse
 import json
 import os
 import sys
+import threading
+from concurrent.futures import ThreadPoolExecutor
 from pathlib import Path
 
 import common  # noqa: F401
@@ -30,6 +32,7 @@ def main(argv=None) -> int:
     ap.add_argument("--client", choices=("fake", "openai"), default="fake")
     ap.add_argument("--fake-mode", choices=MODES, default="faithful")
     ap.add_argument("--yes-spend", action="store_true")
+    ap.add_argument("--workers", type=int, default=3, help="parallel requests (openai client)")
     ap.add_argument("--out", default="out")
     ap.add_argument("--limit", type=int, default=0, help="use only the first N prompts (smoke test)")
     a = ap.parse_args(argv)
@@ -58,28 +61,46 @@ def main(argv=None) -> int:
 
     client = build_client(a.client, a.fake_mode)
     truths: dict[tuple, dict] = {}
+    for p in prompts:
+        key = (p["country"], p["horizon"])
+        if key not in truths:
+            t = tool_payload(*key)
+            truths[key] = {"point": t["forecast"]["point"], "lower": t["forecast"]["lower"],
+                           "upper": t["forecast"]["upper"], "level": t["level"],
+                           "empirical_coverage": t["empirical_coverage"], "n_eval": t["n_eval"],
+                           "mean_width": t["mean_width"]}
+    pending = [(p, c) for p in prompts for c in ("grounded", "ungrounded") if (p["id"], c) not in done]
+    lock = threading.Lock()
+    failures = []
+
+    def work(item):
+        p, cond = item
+        try:
+            ans = explain(p["country"], p["horizon"], p["question_type"], p["language"],
+                          cond == "grounded", client)
+        except Exception as e:  # recorded, never silently dropped
+            with lock:
+                failures.append({"id": p["id"], "condition": cond, "error": str(e)[:300]})
+            return
+        with lock:
+            done[(p["id"], cond)] = ans
+            with raw.open("a", encoding="utf-8") as fh:
+                fh.write(json.dumps({"id": p["id"], "condition": cond, "answer": ans},
+                                    ensure_ascii=False) + "\n")
+
+    print(f"{len(pending)} calls to make, {len(done)} already done, workers={a.workers}")
+    with ThreadPoolExecutor(max_workers=max(1, a.workers)) as ex:
+        list(ex.map(work, pending))
+    if failures:
+        (out / "errors.json").write_text(json.dumps(failures, ensure_ascii=False, indent=1), encoding="utf-8")
+        print(f"WARNING: {len(failures)} calls failed (see errors.json); they are excluded from the rates")
     rows = []
-    with raw.open("a", encoding="utf-8") as fh:
-        for p in prompts:
-            key = (p["country"], p["horizon"])
-            if key not in truths:
-                t = tool_payload(*key)
-                truths[key] = {"point": t["forecast"]["point"], "lower": t["forecast"]["lower"],
-                               "upper": t["forecast"]["upper"], "level": t["level"],
-                               "empirical_coverage": t["empirical_coverage"], "n_eval": t["n_eval"],
-                               "mean_width": t["mean_width"]}
-            for cond in ("grounded", "ungrounded"):
-                k = (p["id"], cond)
-                if k in done:
-                    ans = done[k]
-                else:
-                    ans = explain(p["country"], p["horizon"], p["question_type"], p["language"],
-                                  cond == "grounded", client)
-                    fh.write(json.dumps({"id": p["id"], "condition": cond, "answer": ans},
-                                        ensure_ascii=False) + "\n")
-                    fh.flush()
-                m = evaluate_answer(ans, truths[key])
-                rows.append({**p, "condition": cond, "answer": ans, **m})
+    for p in prompts:
+        for cond in ("grounded", "ungrounded"):
+            if (p["id"], cond) in done:
+                ans = done[(p["id"], cond)]
+                rows.append({**p, "condition": cond, "answer": ans,
+                             **evaluate_answer(ans, truths[(p["country"], p["horizon"])])})
 
     write_csv(str(out / "per_answer.csv"), rows)
     md = []

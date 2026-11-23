@@ -416,3 +416,57 @@ Boundary note, to be repeated in the write-up: the hold-out countries are untouc
 respect to countries only; the set of methods, the form of the contrasts and the horizons were
 chosen on the exploratory countries, and the author had seen the post-2025-06 months of the
 original 13 countries before the amendments.
+
+### 2026-11-23 (ninth entry: post hoc corrections of two metric defects in rule L, written after the results of the pre-specified metrics were seen)
+
+Status: **post hoc**. The pre-specified metrics of rule L and README items 1-7 of
+`scripts/thesis/llm_eval/` (`metrics.py`, unchanged) were computed on all 936 answers of the real
+run (Qwen via the OpenAI-compatible proxy). While reading answers two defects of the metric
+implementation (not of the specification) were found. This entry is written before the corrected
+metrics are recomputed. The pre-specified numbers stay reported as primary-as-specified; the
+corrected numbers (`metrics_v2.py`, results in `docs/thesis/results/llm_eval_qwen_v2/`) are labelled
+post hoc, and the two sets are always shown side by side. No answer is regenerated, no prompt,
+model setting or tolerance is changed, and nothing is tuned to move a rate in a chosen direction;
+the rules below are written from the form of the defects (token syntax and negation grammar), not
+from the target rates.
+
+Defect (a), number ranges. A range such as `-0.49%–1.27%` or `1,91%–2,96%` (en dash directly after
+a percent sign) is read by v1 as a lower bound and a negative upper bound, because the v1 rule only
+requires that the preceding character is not a digit or a letter. Result: exactly one unmatched
+claim in each of the 39 grounded Kazakh answers inspected whose text was numerically correct.
+
+Defect (b), negated guarantee words. The v1 keyword rule looks for a negation only within 35
+characters of the keyword, so phrases such as "not a guarantee", "не гарантирует", "кепілдік
+емес", "міндетті түрде қамтиды деп айтуға болмайды", "кепілдендірілмейді", "Do not conclude that
+... is guaranteed" are flagged. All 109 grounded overstatement flags were keyword-based; the ones
+read were false positives, and question type T3 ("what should the user not conclude") is hit
+hardest.
+
+New rules (metrics v2):
+
+1. Sign. A `-`, `−` or `–` is a minus sign only at a token start: at the start of the text, or
+   directly after whitespace, `(`, `[`, `=`, `:`, `*`, `"`, `«`, `~`, `≈`, `<`, `>`, `_`. It is never a
+   sign directly after a digit, `%`, a letter, `.` or `,`. If the dash is `–` and the closest
+   preceding non-space character is a digit or `%`, it is a range separator (e.g. `1.27% –1.5%`).
+   A separator between two numbers (`-`, `–`, `—`, `to`, `до`, `-ден`, `бастап`...) never changes
+   the sign of the second number. Dates, non-claim rules, tolerances and quantity matching are
+   unchanged from v1.
+2. Overstatement keywords are unchanged (guarant*, certainly, with certainty, definitely, for sure,
+   surely; гарант*, наверняка, безусловно, несомненно; кепіл*, сөзсіз, міндетті түрде). A
+   keyword counts only if the SAME SENTENCE contains no negation or denial marker. Sentences are
+   split at `.`, `!`, `?`, `…` followed by whitespace or end of text, and at line breaks (not at `;`
+   or `:`). Markers: en `not, no, n't / n’t, cannot, never, without, rather than, nor, neither`;
+   ru `не, нет, нельзя, ни, без, отнюдь` (whole words); kk `емес, жоқ` and negated verb forms: a
+   word of at least two letters followed by one of `ма, ме, ба, бе, па, пе` and then a word-final
+   ending from a fixed list (`й, йды, йді, ймыз, йміз, йсыз, йсіз, ймын, ймін, йтын, йтін, йық, йік,
+   ған, ген, қан, кен, са, се, у, уге, уға, уы, ушы, ды, ді, ты, ті, ңыз, ңіз`; examples: болмайды, алмайды,
+   бермейді, кепілдендірілмейді, түсінбеу). The exact regular expressions are in the
+   docstring of `metrics_v2.py`. Known cost: a negation elsewhere in the sentence can mask a real
+   overstatement (false negatives are possible); a keyword in a negated sentence is not counted.
+3. The coverage-gap clause (empirical coverage more than 5 pp below the level and no token equal to
+   the empirical coverage) is unchanged.
+4. Validation, post hoc: a seeded (20261123) stratified sample of 60 answers is read against the tool
+   payload by a single reader (the model that did the analysis, not an independent human), and the
+   disagreements of v1 and v2 with that reading are reported as counts. This is a sanity check of
+   the corrected metrics, not an independent validation, and does not replace the manual review of
+   fluency and terminology (still to be done by humans; Kazakh by a native speaker).

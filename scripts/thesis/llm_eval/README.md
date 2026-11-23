@@ -55,3 +55,36 @@ negation window is a heuristic; hedged phrasing without keywords is not detected
 review covers these.
 
 The fake client (`fake_client.py`) only exercises the harness; its tables are not results.
+
+## Metrics v2 (post hoc, ninth Changes entry, 2026-11-23)
+
+`metrics_v2.py` corrects two defects of the implementation found after the v1 results were seen;
+`metrics.py` is unchanged and its numbers stay the pre-specified ones (primary-as-specified).
+v2 numbers are always labelled post hoc. Everything not listed here is imported from v1.
+
+1. Sign rule. `-`, `−`, `–` is a minus only at a token start: start of text, or directly after
+   whitespace or one of `( [ = : * " « ~ ≈ < > _`; never directly after a digit, `%`, letter, `.` or `,`.
+   `–` after whitespace that follows a digit or `%` is a range separator. Ranges such as
+   `-0.49%–1.27%` or `1,91%–2,96%` read as -0.49/1.27 and 1.91/2.96.
+2. Overstatement keywords (unchanged list) count only if the same sentence has no negation marker.
+   Sentences split after `. ! ? …` followed by whitespace or end, and at line breaks (not `;`, `:`).
+   Markers: en `not no never cannot without nor neither`, `n't`/`n’t`, `rather than`;
+   ru `не нет нельзя ни без отнюдь`; kk `емес жоқ` and negated verb forms (word of >= 2 letters +
+   `ма/ме/ба/бе/па/пе` + a word-final ending from a fixed list; e.g. болмайды, алмайды, бермейді,
+   кепілдендірілмейді, түсінбеу). Exact regular expressions: docstring and code of `metrics_v2.py`.
+3. Coverage-gap clause unchanged.
+
+Known remaining limits of v2 (found when reading, not corrected, to be handled only through a new
+Changes entry): a bullet item under a negating lead-in line ("Нельзя делать выводы:" followed by
+"- что ... гарантированно ...") is a separate sentence and is flagged; an abbreviation such as
+"мес." splits a sentence; any number is a claim, so generic benchmarks ("80-90% coverage") in
+ungrounded answers count as unmatched; a negation elsewhere in the sentence can mask a real
+overstatement.
+
+Re-analysis (no LLM call, reads `answers.jsonl` only):
+
+    python reanalyze_v2.py --answers ../../../docs/thesis/results/llm_eval_qwen/answers.jsonl --out ../../../docs/thesis/results/llm_eval_qwen_v2
+    python make_validation_sample.py --out ../../../docs/thesis/results/llm_eval_qwen_v2   # seed 20261123
+    python judge_validation.py --out ../../../docs/thesis/results/llm_eval_qwen_v2          # single-reader judgements
+
+(run from `backend/fastapi_service` with the thesis venv). Tests: `tests/test_metrics_v2.py`.
