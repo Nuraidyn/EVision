@@ -30,13 +30,13 @@ The text follows the CSV in each case, with one exception noted last.
 
 ## Items marked [VERIFY] or [CITATION NEEDED]
 
-- [VERIFY] Section 2.3: the description of DRACP is as read by the project author from the HTML version of arXiv 2608.17079v2 (Sections 3 and 5 to 7). It should be checked against the paper (section numbers and wording) before submission.
+- Section 2.3 (checked 2026-11-23): the description of DRACP was compared with the HTML version 2 of arXiv 2608.17079 (author Bogdan Oancea; v1 2026-08-17, v2 2026-10-19). Four points are recorded in Section 2.3 (no numeric hyperparameters in the paper; the paper's controller is a heuristic distinct from FACI; SAOCP has the best interval score; DRACP coverage falls with the horizon). Appendices other than B and C were not read.
 - [VERIFY] The exact command lines of the runs `explore_v2_ncal96` and `diag_instant_h12` (Section 9).
-- [VERIFY] Bibliographic details in `references.md`, including the first name or initial of the DRACP author.
-- [CITATION NEEDED] Statements about inflation volatility and regimes in commodity-dependent economies (Section 1).
-- [CITATION NEEDED] Statements about inflation forecast uncertainty in emerging markets (Section 2.4), including the Dallas Fed working paper (authors and title to be verified).
-- [CITATION NEEDED] ARIMA/ARMA modelling and the AICc criterion (Section 4.2).
-- [CITATION NEEDED] The novelty statement in Section 1 (no systematic literature search was run).
+- Bibliographic details in `references.md` were checked on 2026-11-23 against primary records (the record is named per entry). Unresolved: the 2005 publisher record of Vovk et al. (second edition 2022 confirmed), the TMLR page of Chronos (OpenReview did not load; venue confirmed through the model card, the repository BibTeX and a search result), and the JSTOR page of Holm (bibliographic data from search results).
+- Section 1, commodity-dependent economies: Gelos and Ustyugova (2017) cited for the exposure of inflation to commodity price shocks; the statement that regimes change within a few years has no source and says so.
+- Section 2.4: the Dallas Fed working paper is Duncan and Martinez-Garcia (WP 338, 2018; IJF 2019), about point forecasts. A limited search (2026-11-23) found conformal intervals for inflation in BRIC (Sengupta et al., 2025) and Tunisia (Brahem, 2026), which limits the novelty claim: it is now a coverage benchmark of several adaptive conformal methods, not conformal intervals for emerging-economy inflation as such.
+- Section 4.2: AICc cited (Hurvich and Tsai, 1989); no source is cited for ARMA modelling.
+- Novelty statement in Section 1: rewritten as "not found to our knowledge" after a limited, non-systematic search (Section 2.4).
 
 Resolved in this revision: the commit of the fourth protocol entry is `0ff08d8` and that of the fifth entry is `1480604`; the shock rule document is dated 2026-11-18 and the first commit that contains it is `58871dc`.
 
@@ -60,7 +60,6 @@ Hold-out countries are untouched with respect to countries only; they share cale
 - The size of the CE bootstrap at the boundary of the absolute value was not checked by simulation (Section 8, item 9).
 - The criterion for "commodity-dependent" is not measurable (no export-share rule); consider either adding a measurable criterion post hoc, labelled as such, or softening the title wording in the text.
 - The Kazakh abstract and the Russian abstract need a native-speaker check of terminology (see `abstracts.md`).
-- The Dallas Fed reference and the other [CITATION NEEDED] items need sources or removal.
 - `results-robustness-v1.md` should be corrected for the S2 p-value range (0.016 to 0.48) and for the roundings listed above, so that the documents agree.
 - The `workshop.md` version omits the commit history, the stress validity analysis and the platform; keep it consistent with `main.md` if numbers change.
 
@@ -92,10 +91,10 @@ Numbers in the new sections 6.11 to 6.13 of `main.md` come from `results-extensi
 
 Remaining [VERIFY] and [CITATION NEEDED] items added by the extension:
 
-- [VERIFY] the Chronos reference (authors, venue, year) in `references.md`.
+- Chronos reference verified (2026-11-23); the model card states no pretraining cutoff, the repository gives the Chronos-Bolt release date 2024-11-26.
 - [VERIFY] the exact command lines of the extension runs (Section 9); they are reconstructed from the options of `exp.run` and the run names.
-- [VERIFY] the version of the `chronos` package and the pretraining cutoff of `amazon/chronos-bolt-tiny` (not looked up; 2025-01 is a conservative assumption).
-- [CITATION NEEDED] studies of foundation-model forecasts for inflation and of their interval calibration (Section 2.5).
+- [VERIFY] the version of the `chronos` package (not looked up). The cutoff of `amazon/chronos-bolt-tiny` is not stated on the model card; 2025-01 stays a conservative assumption.
+- Section 2.5: Jetwiriyanon et al. (2025) and Michael et al. (2026) added (abstracts only); no study of interval calibration of foundation models for inflation found.
 - The test counts (81 in `scripts/thesis/exp`, 18 in the LLM layer: 4 in `test_inflation_explainer.py` and 14 in `llm_eval/tests`; 31 together with the 13 platform-service tests of `test_inflation_calibration.py`) are as given by the author and were not re-run here.
 
 Wording rules for the extension, kept in all three files: "R2 met" is a statement about one panel at the primary warm-up; the conclusion about ACI against a rolling window is "depends on the panel"; the panels are not averaged and the favourable panel is not selected; warm-up 96 on the second panel "shows nothing"; Holm is applied within each base model and not across the four base models, which share countries and months; the language-model explainer result (936 answers, one model) is reported as pre-specified v1 and post hoc v2 side by side, with both metric defects, the single-reader (model, not human) validation, the unscored manual review and no claim that grounding works in general or that the model is faithful in general (status updated 2026-11-23; numbers from `docs/thesis/results-llm-eval-v1.md`).

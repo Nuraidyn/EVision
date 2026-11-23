@@ -14,7 +14,7 @@ braces, environments, placeholders, defined macros). Expect to fix small typeset
 |---|---|
 | `main.tex` | Preamble, `\input` of `numbers.tex` (optional) and of the sections |
 | `sections/*.tex` | One file per section (abstract, introduction, related, methods, architecture, data, results, discussion, limitations, conclusion, reproducibility, appendix) |
-| `references.bib` | Bibliography (entries marked "details to verify" in the `note` field must be checked) |
+| `references.bib` | Bibliography (every entry checked against a primary record on 2026-11-23; see `docs/thesis/manuscript/references.md`) |
 | `figures/*.pdf`, `tables/*.tex`, `numbers.tex` | Generated; do not edit by hand |
 
 Packages used: amsmath, amssymb, amsthm, booktabs, array, multirow, graphicx, xcolor, float,
