@@ -45,7 +45,7 @@ Embedded in the analysis workspace — ask a question about any chart and receiv
 | **AI Mentor** | Full conversational AI with session memory, follow-up suggestions, and report export |
 | **Chart Insight** | Per-chart AI explanations inline with the analysis |
 | **Saved presets** | Save and reload your analysis configurations |
-| **Calibrated inflation intervals** | Monthly inflation forecasts for 13 commodity-dependent economies with conformally calibrated intervals (ACI) and the measured backtest coverage next to the nominal level (`/inflation-intervals`). ACI is used because adaptive calibration was better calibrated than a calibration done once; the thesis benchmark did not establish that it beats a rolling window (see `docs/thesis/results-holdout-v1.md`) |
+| **Calibrated inflation intervals** | Monthly inflation forecasts for 13 emerging economies, 11 of which are commodity-dependent by the UNCTAD 60% criterion (commodities at least 60% of merchandise exports, 2021-2023), with conformally calibrated intervals (ACI) and the measured backtest coverage next to the nominal level (`/inflation-intervals`). ACI is used because adaptive calibration was better calibrated than a calibration done once; the thesis benchmark did not establish that it beats a rolling window (see `docs/thesis/results-holdout-v1.md`) |
 
 ---
 
@@ -54,7 +54,10 @@ Embedded in the analysis workspace — ask a question about any chart and receiv
 EVision is the practical part of a master's thesis in Data Science:
 **Comparing Methods for Building Reliable Prediction Intervals for Machine-Learning Inflation Forecasts in Commodity-Dependent Economies.**
 The title in Russian and Kazakh, the research question and the contribution are in
-[`docs/thesis/topic.md`](docs/thesis/topic.md).
+[`docs/thesis/topic.md`](docs/thesis/topic.md). "Commodity-dependent" is defined there by the UNCTAD
+60% criterion (commodities at least 60% of merchandise exports, 2021-2023, applied post hoc): 27 of the
+30 economies of the three panels meet it; Mexico, Indonesia and Georgia do not and are kept as
+comparison cases.
 
 - Design and rules: [`docs/thesis/README.md`](docs/thesis/README.md),
   [`experiment-protocol.md`](docs/thesis/experiment-protocol.md),

@@ -20,6 +20,12 @@ Research question. Do prediction intervals for monthly inflation in commodity-de
 economies keep their nominal coverage across forecast horizons (1, 3, 6, 12 months), and do
 adaptive conformal methods shown to work on euro-area and US data transfer to this setting?
 
+Setting. "Commodity-dependent" is defined by an external measured criterion applied after the
+panels were chosen (post hoc): commodities at least 60% of merchandise exports, 2021-2023
+average (UNCTAD, The State of Commodity Dependence 2025). 27 of the 30 economies of the three
+panels meet it; Mexico (18.2%), Indonesia (55.9%) and Georgia (46.4%) do not and are kept as
+comparison cases.
+
 Contribution. (1) A calibration benchmark of split, rolling, adaptive (ACI, FACI), conformal
 PID and regime-aware (DRACP) intervals on 20 economies (13 used to design the study and 7
 hold-out economies that were untouched until the pre-specified run), with calibration
@@ -42,6 +48,12 @@ platform module that serves calibrated inflation intervals.
 экономиках заявленное покрытие на горизонтах 1, 3, 6 и 12 месяцев и переносятся ли на эту
 среду адаптивные conformal-методы, показавшие себя на данных еврозоны и США?
 
+Среда. Термин «сырьевая экономика» определён внешним измеряемым критерием, применённым после
+выбора панелей (post hoc): доля сырья в товарном экспорте не менее 60% (среднее за 2021-2023 гг.,
+UNCTAD, The State of Commodity Dependence 2025). Критерию удовлетворяют 27 из 30 экономик трёх
+панелей; Мексика (18,2%), Индонезия (55,9%) и Грузия (46,4%) ему не удовлетворяют и сохранены
+как страны сравнения.
+
 Вклад. (1) Бенчмарк калибровки интервалов split, rolling, адаптивных (ACI, FACI), conformal
 PID и режимно-адаптивного DRACP на 20 экономиках (13 использованы при проектировании
 исследования и 7 контрольных, не тронутых до заранее зафиксированного прогона) с ошибкой
@@ -63,6 +75,12 @@ PID и режимно-адаптивного DRACP на 20 экономиках 
 Зерттеу сұрағы. Шикізатқа тәуелді экономикалардағы айлық инфляция болжамының интервалдары
 1, 3, 6 және 12 айлық горизонттарда мәлімделген қамтуды сақтай ма және еуроаймақ пен АҚШ
 деректерінде жақсы көрсеткен бейімделгіш конформды әдістер бұл ортаға қолданыла ала ма?
+
+Орта. «Шикізатқа тәуелді» ұғымы панельдер таңдалғаннан кейін (post hoc) қолданылған сыртқы
+өлшенетін өлшемшартпен анықталады: шикізаттың тауар экспортындағы үлесі кемінде 60% (2021-2023
+жж. орташа, UNCTAD, The State of Commodity Dependence 2025). Үш панельдегі 30 экономиканың 27-сі
+бұл өлшемшартқа сәйкес келеді; Мексика (18,2%), Индонезия (55,9%) және Грузия (46,4%) сәйкес
+келмейді және салыстыру елдері ретінде сақталды.
 
 Үлесі. (1) 20 экономикада (13-і зерттеуді жобалауда пайдаланылды, 7-і алдын ала
 бекітілген есептеуге дейін қолданылмаған бақылау экономикалары) split, rolling, бейімделгіш

@@ -58,7 +58,7 @@ Hold-out countries are untouched with respect to countries only; they share cale
 
 - Notify the author of DRACP before the text is posted (arXiv or a workshop). The study is a transfer study of a published method; it attributes to the author only the limitation that the authors themselves state (the advantage is specific to one-step-ahead forecasting and depends on the point forecaster), and it asks for a courtesy notice and for a check of the description in Section 2.3.
 - The size of the CE bootstrap at the boundary of the absolute value was not checked by simulation (Section 8, item 9).
-- The criterion for "commodity-dependent" is not measurable (no export-share rule); consider either adding a measurable criterion post hoc, labelled as such, or softening the title wording in the text.
+- Resolved in part: a measured post hoc criterion (UNCTAD 60%, 2021-2023) is now defined in the text; 27 of 30 qualify, Mexico, Indonesia and Georgia are kept as comparison cases, and the title is unchanged. Remaining caveats: the classification was applied after the panels were chosen and part of the shares had been read before it was written down; no dependent versus other comparison is possible (`results-commodity-v1.md`).
 - The Kazakh abstract and the Russian abstract need a native-speaker check of terminology (see `abstracts.md`).
 - `results-robustness-v1.md` should be corrected for the S2 p-value range (0.016 to 0.48) and for the roundings listed above, so that the documents agree.
 - The `workshop.md` version omits the commit history, the stress validity analysis and the platform; keep it consistent with `main.md` if numbers change.

@@ -4,7 +4,7 @@
 
 All series are monthly. Consumer price indices (all items) come from the IMF, through DBnomics for the first snapshot and the IMF SDMX API for the later ones. The exchange rate is the monthly average of domestic currency per US dollar (IMF IFS), and the Brent crude price is from the IMF primary commodity price series; both enter the LightGBM features. Dated snapshots with SHA-256 hashes were taken (two for the design countries and one file per hold-out panel; the hashes are in the repository).
 
-\paragraph{Design countries (13).} Brazil, Mexico, Chile, Colombia, Peru, South Africa, Indonesia (core long-history group); Kazakhstan, Russia, Azerbaijan, Uzbekistan (regional group); Nigeria, Mongolia (control group). These countries shaped the design (the start date, the contrasts and the horizons). No measurable criterion, such as an export share, was applied to call them commodity-dependent (Section~\ref{sec:scope}).
+\paragraph{Design countries (13).} Brazil, Mexico, Chile, Colombia, Peru, South Africa, Indonesia (core long-history group); Kazakhstan, Russia, Azerbaijan, Uzbekistan (regional group); Nigeria, Mongolia (control group). These countries shaped the design (the start date, the contrasts and the horizons). No export-share rule was applied to select them (Section~\ref{sec:scope}).
 
 \paragraph{First hold-out panel (7).} Bolivia, Paraguay, Uruguay, Ghana, Georgia, Kyrgyzstan, Angola. The candidate list (14 names in a fixed order) and the eligibility rule (at least 220 months of IMF monthly CPI and exchange rate within 2000-01 to 2026-06, at most 3 missing CPI months, first 10 eligible candidates kept) were written before any forecast was computed for these countries. Only 7 candidates met the rule, and it was not relaxed. Target months run from 2009-02 to 2026-06.
 
@@ -46,9 +46,26 @@ The rules R1--R5 apply to LightGBM, the primary family with Holm correction over
 
 The extension (eighth entry, 2026-11-19) runs all four base models (LightGBM, ARIMA, naive B, Chronos) on the second panel at warm-up 48 (primary) and 96 (sensitivity, not promoted), starting at 2010-01, and re-runs the earlier 20 countries from 2010-01 as a secondary analysis, whose numbers are therefore not comparable cell by cell with the earlier sections. Its rules are applied separately for each base model. \textbf{E1:} a statement of R1, R2 or R3 is ``replicated'' only if the same rule is met in the same direction; warm-up 96 results are a sensitivity analysis and are not promoted. \textbf{E2:} contrasts for the four base models are reported side by side, without a threshold. \textbf{E3:} Chronos accuracy is descriptive. \textbf{E4:} accuracy claims for Chronos use only target months from 2025-01 pooled over all 30 countries, with the thinness of the sample stated, while calibration contrasts use all months with the flag. \textbf{E5:} a contrast with an undefined MDE or an MDE above 7~pp is inconclusive. Holm is applied within each base model and not across them; the four base models share countries and months, so they are not independent replications, and no statement rests on pooling them. Two deviations from the protocol are stated: calibration contrasts for the earlier 20 countries were analysed only for LightGBM and Chronos although four base models were run, and the all-months accuracy table has no intervals and no ETS, which was not part of the extension runs. A first analysis of the new panel failed because the country code NA (Namibia) was read as a missing value; the reader was fixed, the forecasts were not affected, and only the analysis was repeated.
 
-\subsection{Scope of the term ``commodity-dependent''}\label{sec:scope}
+\subsection{Commodity dependence of the panel}\label{sec:scope}
 
-No export-share rule was applied to select countries, and Georgia and Uruguay are borderline cases. The hold-out sets were determined by IMF data availability under fixed rules (7 of 14 candidates qualified for the first panel; the first 10 eligible candidates formed the second). The phrase in the title describes the intended setting and not a tested property of the panels, and the study does not compare commodity-dependent with other economies.
+``Commodity-dependent'' is defined by a measured criterion: commodities at least 60\% of merchandise exports, averaged over 2021--2023 (UNCTAD, \emph{The State of Commodity Dependence 2025}). It was applied after the panels were chosen (post hoc), and part of the shares had been read before the criterion was written down. Table~\ref{tab:commodity} shows that 27 of the 30 economies qualify; Mexico, Indonesia and Georgia do not and are kept as comparison cases, and Uruguay (82.9\%) is strongly dependent. The hold-out sets followed IMF data availability under fixed rules. No comparison of dependent with other economies is possible, and the descriptive calibration error by class is inconclusive.
+
+\begin{table}[t]
+\centering
+\caption{Commodity dependence of the three panels (UNCTAD, share of commodities in merchandise exports, average 2021--2023; classification applied post hoc).}
+\label{tab:commodity}
+\small
+\fittable{\begin{tabular}{lrrrrl}
+\toprule
+Panel & Countries & $\geq 60\%$ & 40--60\% & $<40\%$ & Not qualifying at 60\% (share, \%) \\
+\midrule
+Design & 13 & 11 & 1 & 1 & Mexico (18.2), Indonesia (55.9) \\
+Hold-out 1 & 7 & 6 & 1 & 0 & Georgia (46.4) \\
+Hold-out 2 & 10 & 10 & 0 & 0 & none \\
+All & 30 & 27 & 2 & 1 & \\
+\bottomrule
+\end{tabular}}
+\end{table}
 
 \subsection{Pipeline and platform (engineering)}\label{sec:architecture}
 

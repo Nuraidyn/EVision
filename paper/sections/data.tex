@@ -16,7 +16,7 @@ Table~\ref{tab:panels} summarises the three panels; the selection rules follow.
 \fittable{\input{tables/tab_panels.tex}}
 \end{table}
 
-\paragraph{Design countries (13).} Core long-history group: Brazil, Mexico, Chile, Colombia, Peru, South Africa, Indonesia. Regional group: Kazakhstan, Russia, Azerbaijan, Uzbekistan. Control group: Nigeria, Mongolia. These countries were used to shape the design (the stress rule, the start date, the contrasts and the horizons). No measurable criterion, for example an export-share rule, was applied to call them commodity-dependent (Section~\ref{sec:scope}).
+\paragraph{Design countries (13).} Core long-history group: Brazil, Mexico, Chile, Colombia, Peru, South Africa, Indonesia. Regional group: Kazakhstan, Russia, Azerbaijan, Uzbekistan. Control group: Nigeria, Mongolia. These countries were used to shape the design (the stress rule, the start date, the contrasts and the horizons). No export-share rule was applied to select them; the measured classification is in Section~\ref{sec:scope}.
 
 \paragraph{First hold-out panel (7).} Bolivia, Paraguay, Uruguay, Ghana, Georgia, Kyrgyzstan, Angola. The candidate list (14 names in a fixed order) and the eligibility rule were written in the fetching script before any forecast was computed for these countries. The rule required at least 220 months of IMF monthly CPI and of exchange rate per US dollar within 2000-01 to 2026-06, with at most 3 missing CPI months, and the first 10 eligible candidates were to be kept. Only 7 candidates met the rule (six candidates start in 2009 or 2010 and one has no CPI series), so the panel has 7 countries and the rule was not relaxed. Target months run from 2009-02 to 2026-06, and all months of these countries are labelled \texttt{holdout}.
 
@@ -108,6 +108,23 @@ The eighth protocol entry (2026-11-19) specifies the extension before any foreca
 
 A committee review scored the frozen exchange-rate-based shock rule 5.5 out of 10, objecting that an exchange-rate flag measures currency turbulence and not an inflation shock. Two checks were run on the 13 design countries; they are exploratory because the same countries shaped the design. With the discrete label, the share of the top-decile one-step errors of a naive forecast that falls inside shock windows exceeded the share of shock months by a lift of 1.49 to 1.87, below the committee's bar of 2 (Appendix~\ref{app:extra}). With the continuous stress variable, the pooled within-country rank correlation with the naive one-step error was 0.075 (permutation $p=0.001$) for origin stress over all months and 0.050 ($p=0.0495$) since 2015-09, and the relation is not monotone. Because the association is weak and concentrated in the upper tail, the main contribution does not depend on shocks. Parameters of the rule were not tuned to raise the lift, and the upper decile was not promoted to a primary threshold after the fact. Kazakhstan has fewer than 10 independent episodes after 2015-09 and is therefore a descriptive case inside a pooled panel, not a stand-alone inferential unit.
 
-\subsection{Scope of the term ``commodity-dependent''}\label{sec:scope}
+\subsection{Commodity dependence of the panel}\label{sec:scope}
 
-No export-share rule was applied to select the countries, and Georgia and Uruguay are borderline cases. The hold-out sets were determined by IMF data availability under fixed rules: 7 of 14 candidates qualified for the first panel, and the first 10 eligible candidates formed the second panel. The phrase ``commodity-dependent economies'' in the title describes the intended setting and not a tested property of the panel, and the study does not compare commodity-dependent with other economies.
+``Commodity-dependent'' is defined by a measured external criterion: the share of commodities in merchandise exports of at least 60\% (strong) or 40--60\% (moderate), averaged over 2021--2023 (UNCTAD, \emph{The State of Commodity Dependence 2025}; second window 2012--2014). No export-share rule was applied to select the countries. The classification was applied afterwards, so it is post hoc and descriptive, and part of the shares had been read before the criterion was written down (tenth protocol entry). Table~\ref{tab:commodity} shows that 27 of the 30 economies qualify at 60\%. Mexico, Indonesia (62.4\% in 2012--2014) and Georgia do not and are kept as comparison cases; Uruguay (82.9\%) is strongly dependent. The hold-out sets were determined by IMF data availability under fixed rules: 7 of 14 candidates qualified for the first panel, and the first 10 eligible candidates formed the second panel. With three non-qualifying countries the study cannot compare commodity-dependent with other economies, and the descriptive calibration error by class is inconclusive.
+
+\begin{table}[t]
+\centering
+\caption{Commodity dependence of the three panels (UNCTAD, share of commodities in merchandise exports, average 2021--2023; classification applied post hoc).}
+\label{tab:commodity}
+\small
+\fittable{\begin{tabular}{lrrrrl}
+\toprule
+Panel & Countries & $\geq 60\%$ & 40--60\% & $<40\%$ & Not qualifying at 60\% (share, \%) \\
+\midrule
+Design & 13 & 11 & 1 & 1 & Mexico (18.2), Indonesia (55.9) \\
+Hold-out 1 & 7 & 6 & 1 & 0 & Georgia (46.4) \\
+Hold-out 2 & 10 & 10 & 0 & 0 & none \\
+All & 30 & 27 & 2 & 1 & \\
+\bottomrule
+\end{tabular}}
+\end{table}
