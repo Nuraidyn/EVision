@@ -1,0 +1,31 @@
+country,name,panel,share_2021_2023,class_2021_2023,share_2012_2014,class_2012_2014
+KZ,Kazakhstan,design13,83.5,strong,89.0,strong
+RU,Russian Federation (the),design13,76.6,strong,83.9,strong
+AZ,Azerbaijan,design13,96.0,strong,97.9,strong
+UZ,Uzbekistan,design13,63.1,strong,72.9,strong
+CO,Colombia,design13,80.2,strong,83.4,strong
+CL,Chile,design13,83.5,strong,86.5,strong
+PE,Peru,design13,91.1,strong,87.4,strong
+BR,Brazil,design13,75.3,strong,66.7,strong
+MX,Mexico,design13,18.2,not,23.8,not
+NG,Nigeria,design13,96.3,strong,97.3,strong
+MN,Mongolia,design13,98.9,strong,97.5,strong
+ID,Indonesia,design13,55.9,moderate,62.4,strong
+ZA,South Africa,design13,63.9,strong,58.1,moderate
+BO,Bolivia (Plurinational State of),holdout1,95.3,strong,95.4,strong
+PY,Paraguay,holdout1,85.6,strong,91.5,strong
+UY,Uruguay,holdout1,82.9,strong,77.2,strong
+GH,Ghana,holdout1,93.9,strong,92.8,strong
+GE,Georgia,holdout1,46.4,moderate,40.3,moderate
+KG,Kyrgyzstan,holdout1,74.7,strong,72.9,strong
+AO,Angola,holdout1,97.9,strong,98.0,strong
+ZM,Zambia,holdout2,89.7,strong,87.6,strong
+AM,Armenia,holdout2,69.8,strong,76.4,strong
+TZ,United Republic of Tanzania (the),holdout2,89.8,strong,87.0,strong
+UG,Uganda,holdout2,80.6,strong,70.2,strong
+KE,Kenya,holdout2,69.6,strong,65.7,strong
+IQ,Iraq,holdout2,99.5,strong,99.8,strong
+BW,Botswana,holdout2,94.3,strong,94.4,strong
+NA,Namibia,holdout2,82.2,strong,76.8,strong
+MZ,Mozambique,holdout2,95.6,strong,93.2,strong
+CI,Côte d’Ivoire,holdout2,92.3,strong,87.4,strong

@@ -470,3 +470,49 @@ New rules (metrics v2):
    disagreements of v1 and v2 with that reading are reported as counts. This is a sanity check of
    the corrected metrics, not an independent validation, and does not replace the manual review of
    fluency and terminology (still to be done by humans; Kazakh by a native speaker).
+
+### 2026-11-23 (tenth entry: external, measurable criterion for "commodity-dependent", written before the classification is run)
+
+Status: **post hoc, descriptive**. Reason: the 30 countries of the three panels (design 13, hold-out 1,
+hold-out 2) were assembled by data availability and judgement, not by a measured criterion, while the
+title and the question speak of "commodity-dependent economies". This entry fixes a public external
+criterion and applies it to all 30 countries. It changes no forecast, no interval method, no contrast,
+no threshold of rules R1-R5 and no panel; it only adds a descriptive classification and a descriptive
+cut of already committed results.
+
+Disclosure of order of events: the extraction of the source tables was checked against the report's
+published headline counts (103 dependent economies in 2021-2023 and 106 in 2012-2014, both reproduced
+exactly), and while checking the extraction the author read the extracted shares of most of the 30
+countries. The thresholds below are the ones UNCTAD itself uses (60%) plus a round 40% band fixed here;
+they were not chosen from those values and are not tuned on any result.
+
+1. **Source.** UNCTAD, *The State of Commodity Dependence 2025* (UNCTAD/DITC/COM/2025/3, July 2025),
+   country profile pages, indicator "Commodity exports as share of all allocated product exports
+   (percentage)" (trade data in UNCTADstat as of November 2024). URL
+   `https://unctad.org/system/files/official-document/ditccom2025d3_en.pdf`, retrieved 2026-11-23,
+   PDF SHA-256 `e0799b129601d5c1dd5182cdc7110d2a313cd344a4d0ccad9b1573565a7c3122`. A machine-readable
+   UNCTADstat table was not found at a stable URL (the UNCTADstat bulk-download endpoints could not be
+   identified), so the profile tables were extracted from the PDF with `pdftotext` (script
+   `scripts/thesis/extract_unctad_profiles.py`); the 195 extracted rows are stored in
+   `scripts/thesis/data/commodity/unctad_scd2025_profiles.csv`. Commodities follow UNCTAD's definition
+   (SITC-based list of primary commodities including energy, ores, metals, precious stones and
+   non-monetary gold); the denominator is allocated merchandise exports.
+2. **Windows.** Primary: the 3-year average 2021-2023 (the most recent in the report). Second window:
+   2012-2014 (the report's earlier window). The average over each country's whole sample is not
+   available from this source and is not computed.
+3. **Class (fixed).** share >= 60%: "strongly commodity-dependent" (the UNCTAD rule; the report states
+   it as more than 60%, the two readings are compared in the output and differ for no country if no
+   share equals exactly 60.0); 40% <= share < 60%: "moderately"; share < 40%: "not". "Qualifies" at
+   the 60% level means share >= 60%; "qualifies at the 40% level" means share >= 40%. The class is
+   assigned from the primary window; agreement with the second window is reported, not used to change
+   the class.
+4. **Missing data.** A country absent from the source or without a share is reported as missing and
+   is not imputed.
+5. **Descriptive cut of existing results.** From the committed `interval_summary.csv` files only (no
+   forecast is recomputed): primary configuration (LightGBM base, warm-up 48), mean over countries of
+   |coverage - 0.90| per method x horizon for qualifying versus non-qualifying countries, per panel and
+   pooled, with the number of countries per cell. No hypothesis tests. The block bootstrap of
+   `exp/calibration.py` is not reused, since it tests contrasts between methods over the whole panel
+   and does not define a faithful test for the difference between subsets; with 2-9 countries per cell
+   and no power calculation for this contrast, any subset difference is inconclusive, and "no
+   difference" is not concluded.
