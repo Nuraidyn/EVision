@@ -44,8 +44,9 @@ scripts/thesis/.venv/Scripts/python.exe -m pytest scripts/thesis/paper/tests -q
 
 ## Notes
 
-- The status of the language-model explanation layer evaluation (in progress, not reported) is
-  the macro `\ExplainerStatus` in `main.tex`; replace it there when results exist.
+- The one-sentence result of the language-model explanation layer evaluation (one model, v1 and
+  post hoc v2) is the macro `\ExplainerStatus` in `main.tex`; the longer text and the table are in
+  `sections/results.tex`.
 - Moved out of the main text (see the full version in `../paper/` and the repository): per-check
   detail (S4/S5 tables, shock-rule validity, Kazakhstan, stress), the protocol change log with
   commit hashes, data snapshot hashes and the long reproduction commands.

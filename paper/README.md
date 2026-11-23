@@ -63,6 +63,7 @@ unescaped `_`, `&`, `#`). It does not replace a compiler run.
 - Outcomes of R1-R5 and E1-E5 are stated as in `docs/thesis/manuscript/main.md`.
 - A contrast with an undefined or above 7 pp minimum detectable difference is "inconclusive".
 - S6 and S7 are post hoc; Chronos accuracy claims are limited to the 22 clean months and
-  flagged as leakage-uncertain; the language-model explainer evaluation has not been run.
+  flagged as leakage-uncertain; the language-model explainer evaluation is reported as pre-specified v1 and post hoc v2
+  (one model, single-reader validation by the model, no human review).
 - Numbers in the running text were written from `main.md`; tables and figures come from the
   committed results through `build_paper_assets.py`.

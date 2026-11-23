@@ -98,6 +98,13 @@ Remaining [VERIFY] and [CITATION NEEDED] items added by the extension:
 - [CITATION NEEDED] studies of foundation-model forecasts for inflation and of their interval calibration (Section 2.5).
 - The test counts (81 in `scripts/thesis/exp`, 18 in the LLM layer: 4 in `test_inflation_explainer.py` and 14 in `llm_eval/tests`; 31 together with the 13 platform-service tests of `test_inflation_calibration.py`) are as given by the author and were not re-run here.
 
-Wording rules for the extension, kept in all three files: "R2 met" is a statement about one panel at the primary warm-up; the conclusion about ACI against a rolling window is "depends on the panel"; the panels are not averaged and the favourable panel is not selected; warm-up 96 on the second panel "shows nothing"; Holm is applied within each base model and not across the four base models, which share countries and months; the language-model explainer has no result because its evaluation (936 calls, needs an API key) has not been run.
+Wording rules for the extension, kept in all three files: "R2 met" is a statement about one panel at the primary warm-up; the conclusion about ACI against a rolling window is "depends on the panel"; the panels are not averaged and the favourable panel is not selected; warm-up 96 on the second panel "shows nothing"; Holm is applied within each base model and not across the four base models, which share countries and months; the language-model explainer result (936 answers, one model) is reported as pre-specified v1 and post hoc v2 side by side, with both metric defects, the single-reader (model, not human) validation, the unscored manual review and no claim that grounding works in general or that the model is faithful in general (status updated 2026-11-23; numbers from `docs/thesis/results-llm-eval-v1.md`).
 
 Keep the Kazakh and Russian sentences about the extension for the native-speaker check (see `abstracts.md`).
+
+## Explainer evaluation (2026-11-23): what to check
+
+- Numbers in `main.md` Section 6.13, `workshop.md`, `abstracts.md` (EN/RU/KK), `paper/` and `paper_short/` all come from `docs/thesis/results-llm-eval-v1.md`: v1 grounded 90.6% / 9.0% / 23.3%, ungrounded 69.0% / 100% / 26.5%; v2 grounded 100% / 0% / 3.0%, ungrounded 69.0% / 100% / 13.0%; 145 of 156 ungrounded answers with numbers have an unmatched number; validation 56/60, 60/60, 52/60.
+- The v2 validation was made by the model that wrote the analysis, knowing the flags; it is not an independent review. A human review of `manual_review_sample.csv` (90 rows) is still open, and Kazakh fluency needs a native speaker.
+- The Kazakh abstract sentence on the explainer and the Russian one are new and need a native-speaker check.
+- Ungrounded v2 overstatement (13.0%) is not informative (coverage-gap cases by construction plus list-item false alarms); do not present it as a finding.
