@@ -67,7 +67,7 @@ Hold-out countries are untouched with respect to countries only; they share cale
 
 The title in `main.md`, `workshop.md` and `abstracts.md` is unchanged:
 
-- Current (EN): Comparing Methods for Building Reliable Prediction Intervals for Machine-Learning Inflation Forecasts in Commodity-Dependent Economies.
+- Current (EN): Evaluating Methods for Building Reliable Prediction Intervals for Machine-Learning Inflation Forecasts in Commodity-Dependent Economies.
 - Proposal, to be adopted only once the extension is accepted by the supervisor or committee, adding the pretrained models:
   - RU: «Сравнение методов построения надёжных интервалов прогноза инфляции с помощью моделей машинного обучения и предобученных моделей временных рядов в странах, зависящих от сырья»
   - EN: Comparing Methods for Building Reliable Prediction Intervals for Machine-Learning and Foundation-Model Inflation Forecasts in Commodity-Dependent Economies

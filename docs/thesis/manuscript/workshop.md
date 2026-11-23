@@ -1,4 +1,4 @@
-# Comparing Methods for Building Reliable Prediction Intervals for Machine-Learning Inflation Forecasts in Commodity-Dependent Economies
+# Evaluating Methods for Building Reliable Prediction Intervals for Machine-Learning Inflation Forecasts in Commodity-Dependent Economies
 
 Short version for a workshop on conformal prediction and forecasting, or for arXiv. Draft 2026-11-19. Full text: `main.md`. Notes for the reviewer: `REVIEW_NOTES.md`.
 

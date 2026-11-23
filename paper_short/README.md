@@ -1,7 +1,7 @@
 # Condensed paper (paper_short): build instructions
 
 Condensed, journal-length version (about 11,000 words of running text, appendix of stable
-robustness tables only) of "Comparing Methods for Building Reliable Prediction Intervals for
+robustness tables only) of "Evaluating Methods for Building Reliable Prediction Intervals for
 Machine-Learning Inflation Forecasts in Commodity-Dependent Economies". The full version is in
 `../paper/` and is not changed by this directory.
 

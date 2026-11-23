@@ -1,6 +1,6 @@
 # Paper: build instructions
 
-LaTeX article "Comparing Methods for Building Reliable Prediction Intervals for
+LaTeX article "Evaluating Methods for Building Reliable Prediction Intervals for
 Machine-Learning Inflation Forecasts in Commodity-Dependent Economies".
 
 **Status: the LaTeX source has NOT been compiled.** No LaTeX compiler exists on the machine on

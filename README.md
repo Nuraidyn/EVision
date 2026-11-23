@@ -52,7 +52,7 @@ Embedded in the analysis workspace — ask a question about any chart and receiv
 ## Research Component (Master's Thesis)
 
 EVision is the practical part of a master's thesis in Data Science:
-**Comparing Methods for Building Reliable Prediction Intervals for Machine-Learning Inflation Forecasts in Commodity-Dependent Economies.**
+**Evaluating Methods for Building Reliable Prediction Intervals for Machine-Learning Inflation Forecasts in Commodity-Dependent Economies.**
 The title in Russian and Kazakh, the research question and the contribution are in
 [`docs/thesis/topic.md`](docs/thesis/topic.md). "Commodity-dependent" is defined there by the UNCTAD
 60% criterion (commodities at least 60% of merchandise exports, 2021-2023, applied post hoc): 27 of the

@@ -1,4 +1,4 @@
-# Comparing Methods for Building Reliable Prediction Intervals for Machine-Learning Inflation Forecasts in Commodity-Dependent Economies
+# Evaluating Methods for Building Reliable Prediction Intervals for Machine-Learning Inflation Forecasts in Commodity-Dependent Economies
 
 Draft manuscript, 2026-11-19. Source documents: `docs/thesis/` and `scripts/thesis/exp/` on branch `thesis/inflation-calibration`. Notes for the reviewer are in `REVIEW_NOTES.md`.
 

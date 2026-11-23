@@ -13,7 +13,7 @@ robustness analyses so that it claims no more than the evidence shows.
 
 ## English
 
-**Comparing Methods for Building Reliable Prediction Intervals for Machine-Learning Inflation
+**Evaluating Methods for Building Reliable Prediction Intervals for Machine-Learning Inflation
 Forecasts in Commodity-Dependent Economies**
 
 Research question. Do prediction intervals for monthly inflation in commodity-dependent
@@ -41,7 +41,7 @@ platform module that serves calibrated inflation intervals.
 
 ## Русский
 
-**Сравнение методов построения надёжных интервалов прогноза инфляции с помощью моделей
+**Оценка методов построения надёжных интервалов прогноза инфляции с помощью моделей
 машинного обучения в странах, зависящих от сырья**
 
 Исследовательский вопрос. Сохраняют ли интервалы прогноза месячной инфляции в сырьевых
@@ -70,7 +70,7 @@ PID и режимно-адаптивного DRACP на 20 экономиках 
 ## Қазақша
 
 **Шикізатқа тәуелді елдерде машиналық оқыту модельдері арқылы инфляцияны болжаудың
-сенімді интервалдарын құру әдістерін салыстыру**
+сенімді интервалдарын құру әдістерін бағалау**
 
 Зерттеу сұрағы. Шикізатқа тәуелді экономикалардағы айлық инфляция болжамының интервалдары
 1, 3, 6 және 12 айлық горизонттарда мәлімделген қамтуды сақтай ма және еуроаймақ пен АҚШ

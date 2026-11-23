@@ -1,6 +1,6 @@
 # Abstracts
 
-Title: Comparing Methods for Building Reliable Prediction Intervals for Machine-Learning Inflation Forecasts in Commodity-Dependent Economies
+Title: Evaluating Methods for Building Reliable Prediction Intervals for Machine-Learning Inflation Forecasts in Commodity-Dependent Economies
 
 All numbers are those of `main.md` and the CSV tables in `docs/thesis/results/`.
 
