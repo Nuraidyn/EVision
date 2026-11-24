@@ -12,6 +12,7 @@ import CountryAnalysisPage from "./pages/CountryAnalysisPage";
 import IncomeAnalysisPage from "./pages/IncomeAnalysisPage";
 import ForecastPage from "./pages/Forecast";
 import InflationIntervalsPage from "./pages/InflationIntervalsPage";
+import InflationResearchPage from "./pages/InflationResearchPage";
 import SavedPage from "./pages/Saved";
 import AIMentorPage from "./pages/AIMentorPage";
 import VerifyEmailPage from "./pages/VerifyEmailPage";
@@ -37,6 +38,7 @@ export default function App() {
                     <Route path="/income-analysis" element={<IncomeAnalysisPage />} />
                     <Route path="/forecast" element={<ForecastPage />} />
                     <Route path="/inflation-intervals" element={<InflationIntervalsPage />} />
+                    <Route path="/inflation-research" element={<InflationResearchPage />} />
                     <Route path="/saved" element={<SavedPage />} />
                     <Route path="/ai-mentor" element={<AIMentorPage />} />
                     <Route path="/verify-email" element={<VerifyEmailPage />} />

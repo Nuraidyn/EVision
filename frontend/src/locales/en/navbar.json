@@ -12,6 +12,8 @@
   "navbar.productForecastDesc": "Scenario & baseline projections",
   "navbar.productInflation": "Calibrated inflation",
   "navbar.productInflationDesc": "Prediction intervals with checked coverage",
+  "navbar.productInflationResearch": "Thesis research",
+  "navbar.productInflationResearchDesc": "Method comparison, findings and the LLM explanation layer",
   "navbar.productAIMentor": "AI Mentor",
   "navbar.productAIMentorDesc": "Chat with an AI economic advisor",
   "navbar.productNews": "News",

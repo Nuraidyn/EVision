@@ -31,6 +31,9 @@ Topic: see `topic.md` (English, Russian, Kazakh).
 | `scripts/thesis/extra_descriptive.py` | Post hoc descriptive additions S6 and S7 |
 | `backend/fastapi_service/app/services/inflation_calibration.py` | Platform service for calibrated inflation intervals |
 | `frontend/` (calibrated inflation page) | User-facing view of those intervals |
+| `scripts/thesis/build_demo_data.py` | Builds `backend/fastapi_service/app/data/thesis_benchmark.json` from the committed results (deterministic; `--check` detects a stale file) |
+| `backend/fastapi_service/app/services/inflation_compare.py`, `inflation_faithfulness.py`, `thesis_benchmark.py` | Live method comparison, numeric check of LLM answers, benchmark loader behind `/inflation/compare`, `/inflation/explain`, `/inflation/benchmark` |
+| `frontend/` `/inflation-research` | Demo page: forecast, methods compared, what the thesis found, LLM explanation layer, each result labelled pre-specified, exploratory or post hoc |
 
 Python for the experiments: `scripts/thesis/.venv` (Python 3.12; pandas, statsmodels,
 scikit-learn, LightGBM, `dracp`). Create it with

@@ -72,6 +72,34 @@ The platform applies the same ACI procedure as the benchmark but with a simpler 
 benchmark's models, so the coverage it reports is its own backtest coverage and not the
 benchmark's numbers.
 
+### Demo: the thesis inside the product (`/inflation-research`)
+
+A presenter can show the thesis live on one page with four tabs (also linked from the Navbar and from
+`/inflation-intervals`). Every number carries an evidence tag (pre-specified, exploratory or post hoc) and
+every tab has a disclaimer box (research prototype, not advice, descriptive results).
+
+| Tab | What it shows | Endpoint |
+|---|---|---|
+| Forecast | The existing calibrated forecast page | `GET /api/v1/inflation/calibrated-forecast` |
+| Methods compared | Live rolling-origin backtest of split, rolling-window and ACI intervals for any country and horizon: coverage against the 90% nominal level, calibration error, mean width, interval band with covered and missed outcomes, running coverage. Warm-up 48 residuals by default (the forecast page uses 30) | `GET /api/v1/inflation/compare?country=KZ&horizon=3` |
+| What we found | Precomputed results: calibration error by method, horizon, panel and base model; primary contrasts with Holm p, minimum detectable difference and the verdict shown / not shown / inconclusive (rule R5/E5: MDE undefined or above 7 pp is inconclusive); UNCTAD commodity badge per country; Chronos accuracy on clean months; feedback delay at h=12; native versus ACI intervals | `GET /api/v1/inflation/benchmark` |
+| Explain it | The LLM explanation layer (en/ru/kk): grounded (sees the forecast service output) versus ungrounded (no data), the numbers the model saw, and a programmatic numeric check. Evaluated on one model with post hoc corrected metrics (grounded 100% numerically faithful under v2, 90.6% under the pre-specified v1) | `POST /api/v1/inflation/explain` |
+
+The benchmark JSON is built offline and committed; rebuild it after any change to `docs/thesis/results/`:
+
+```bash
+cd scripts/thesis
+.venv/Scripts/python.exe build_demo_data.py          # writes backend/fastapi_service/app/data/thesis_benchmark.json
+.venv/Scripts/python.exe build_demo_data.py --check  # fails if the committed file is stale
+```
+
+Run the demo: start the backend (`cd backend/fastapi_service && .venv-thesis-check/Scripts/python.exe -m uvicorn app.main:app --port 8001`)
+and the frontend (`cd frontend && npm run dev`), then open `/inflation-research`. The first three tabs need no
+credentials. The "Explain it" tab calls an OpenAI-compatible endpoint configured in `.env` (`OPENAI_BASE_URL`,
+`OPENAI_API_KEY`, `OPENAI_MODEL`); without a key it answers 503 with a clear message and the rest of the page keeps
+working. The endpoint is public like the other inflation routes and has an in-process cap
+(`INFLATION_EXPLAIN_MAX_PER_MINUTE`, default 20) and a token limit (`INFLATION_EXPLAIN_MAX_TOKENS`, default 4000).
+
 ---
 
 ## Tech Stack

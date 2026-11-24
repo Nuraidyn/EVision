@@ -70,9 +70,10 @@ class OpenAIClient:
     """OpenAI-compatible chat endpoint (here the LiteLLM proxy): OPENAI_BASE_URL, OPENAI_API_KEY and
     OPENAI_MODEL from app.core.config. Deterministic sampling. Not used by any test."""
 
-    def __init__(self, max_tokens: int = 8000, timeout: float = 300.0) -> None:
+    def __init__(self, max_tokens: int = 8000, timeout: float = 300.0, max_attempts: int = 3) -> None:
         self.max_tokens = max_tokens
         self.timeout = timeout
+        self.max_attempts = max_attempts  # 1 = never raise the token budget (used by the API endpoint)
 
     def complete(self, system_prompt: str, user_prompt: str) -> str:
         import re
@@ -84,7 +85,7 @@ class OpenAIClient:
         if not OPENAI_API_KEY:
             raise RuntimeError("OPENAI_API_KEY is not configured")
         budget = self.max_tokens
-        for _ in range(3):  # a reasoning model can spend the whole budget on thinking: retry with 2x
+        for _ in range(self.max_attempts):  # a reasoning model can spend the whole budget on thinking: retry with 2x
             r = httpx.post(
                 f"{OPENAI_BASE_URL.rstrip('/')}/chat/completions",
                 headers={"Authorization": f"Bearer {OPENAI_API_KEY}"},

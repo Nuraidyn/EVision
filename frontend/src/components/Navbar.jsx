@@ -137,6 +137,17 @@ const PRODUCTS = [
     ),
   },
   {
+    labelKey: "navbar.productInflationResearch",
+    descKey:  "navbar.productInflationResearchDesc",
+    to: "/inflation-research",
+    icon: (
+      <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+        strokeWidth="1.7" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
+        <path d="M9 3h6" /><path d="M10 3v6L5 19a2 2 0 0 0 2 3h10a2 2 0 0 0 2-3l-5-10V3" />
+      </svg>
+    ),
+  },
+  {
     labelKey: "navbar.productAIMentor",
     descKey:  "navbar.productAIMentorDesc",
     to: "/ai-mentor",

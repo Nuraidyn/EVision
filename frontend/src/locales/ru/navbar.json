@@ -12,6 +12,8 @@
   "navbar.productForecastDesc": "Сценарные и базовые прогнозы",
   "navbar.productInflation": "Интервалы инфляции",
   "navbar.productInflationDesc": "Предсказательные интервалы с проверенным покрытием",
+  "navbar.productInflationResearch": "Исследование (диссертация)",
+  "navbar.productInflationResearchDesc": "Сравнение методов, результаты и слой LLM-объяснений",
   "navbar.productAIMentor": "AI Ментор",
   "navbar.productAIMentorDesc": "Чат с ИИ-советником по экономике",
   "navbar.productNews": "Новости",

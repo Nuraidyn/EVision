@@ -27,5 +27,6 @@
   "inflation.ppUnit": "p.p.",
   "inflation.noCalibration": "Calibration statistics are not available for this selection.",
   "inflation.explain": "The interval is conformally calibrated: its width is adjusted from past forecast errors so that, in the long run, the stated share of actual outcomes falls inside it. Coverage is the share of past months in which the realized inflation did land inside the interval.",
-  "inflation.caveat": "Caveat: the guarantee is on average, not for every month. After shocks (currency devaluations, commodity price crashes) coverage can fall below the nominal level for a while, until the method adapts."
+  "inflation.caveat": "Caveat: the guarantee is on average, not for every month. After shocks (currency devaluations, commodity price crashes) coverage can fall below the nominal level for a while, until the method adapts.",
+  "inflation.researchLink": "Open the research view: method comparison, findings and the LLM explanation layer"
 }

@@ -1,4 +1,5 @@
 import React, { useEffect, useMemo, useState } from "react";
+import { Link, useInRouterContext } from "react-router-dom";
 import { Line } from "react-chartjs-2";
 import { Chart as ChartJS } from "chart.js/auto";
 
@@ -87,6 +88,7 @@ const isCanceled = (err) => err?.code === "ERR_CANCELED" || err?.name === "Cance
 export default function InflationIntervalsPage() {
   const { t } = useI18n();
   const { theme } = useTheme();
+  const inRouter = useInRouterContext();
   const isDark = theme === "dark";
   const axisColor = isDark ? "#94a3b8" : "#475569";
   const gridColor = isDark ? "rgba(148,163,184,0.12)" : "rgba(71,85,105,0.12)";
@@ -177,6 +179,17 @@ export default function InflationIntervalsPage() {
         <p className="hero-kicker">{t("inflation.kicker")}</p>
         <h3 className="panel-title">{t("inflation.title")}</h3>
         <p className="text-sm text-muted mt-2 max-w-2xl">{t("inflation.subtitle")}</p>
+        <p className="text-xs mt-2" data-testid="research-link">
+          {inRouter ? (
+            <Link to="/inflation-research" className="underline">
+              {t("inflation.researchLink")}
+            </Link>
+          ) : (
+            <a href="/inflation-research" className="underline">
+              {t("inflation.researchLink")}
+            </a>
+          )}
+        </p>
       </div>
 
       <div className="mt-6 surface p-4 grid sm:grid-cols-2 gap-4">

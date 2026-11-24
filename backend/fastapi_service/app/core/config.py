@@ -105,3 +105,13 @@ INFLATION_CONFIRMATORY_PATH = os.getenv(
     "INFLATION_CONFIRMATORY_PATH",
     str((_PROJECT_ROOT / "scripts" / "thesis" / "data" / "confirmatory.json").resolve()),
 )
+
+# Precomputed thesis benchmark served by /inflation/benchmark (built offline by
+# scripts/thesis/build_demo_data.py). Default: app/data/thesis_benchmark.json
+INFLATION_BENCHMARK_PATH = os.getenv(
+    "INFLATION_BENCHMARK_PATH",
+    str((_SERVICE_DIR / "app" / "data" / "thesis_benchmark.json").resolve()),
+)
+# Live LLM explanation endpoint: in-process cap (calls per minute, all clients) and token limit.
+INFLATION_EXPLAIN_MAX_PER_MINUTE = int(os.getenv("INFLATION_EXPLAIN_MAX_PER_MINUTE", "20"))
+INFLATION_EXPLAIN_MAX_TOKENS = int(os.getenv("INFLATION_EXPLAIN_MAX_TOKENS", "4000"))

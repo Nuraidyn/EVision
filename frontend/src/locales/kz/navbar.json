@@ -12,6 +12,8 @@
   "navbar.productForecastDesc": "Сценарийлік және базалық болжамдар",
   "navbar.productInflation": "Инфляция интервалдары",
   "navbar.productInflationDesc": "Қамтуы тексерілген болжау интервалдары",
+  "navbar.productInflationResearch": "Зерттеу (диссертация)",
+  "navbar.productInflationResearchDesc": "Әдістерді салыстыру, нәтижелер және LLM түсіндіру қабаты",
   "navbar.productAIMentor": "AI Ментор",
   "navbar.productAIMentorDesc": "Экономика бойынша AI кеңесшісімен сөйлесіңіз",
   "navbar.productNews": "Жаңалықтар",
